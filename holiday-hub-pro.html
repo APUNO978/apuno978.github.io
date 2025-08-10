@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Holiday Hub — USA 2025</title>
+<style>
+/* --- Design tokens --- */
+:root{
+  --bg:#f6f7fb;
+  --surface:#ffffff;
+  --ink:#0b1220;
+  --muted:#5b6477;
+  --line:#e7e9f0;
+  --accent:#0a84ff;
+  --accent-2:#34c759;
+  --radius:20px;
+  --shadow:0 12px 30px rgba(18,22,33,.06), 0 2px 6px rgba(18,22,33,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0f16;
+    --surface:#0f141b;
+    --ink:#eef2fa;
+    --muted:#97a0b6;
+    --line:#1b2330;
+    --shadow:0 12px 30px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+  }
+}
+
+/* --- Base --- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.6 ui-sans-serif, -apple-system, system-ui, "SF Pro Text", "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+a{color:var(--accent); text-decoration:none}
+img{max-width:100%; display:block}
+.container{max-width:1100px; margin:0 auto; padding:28px clamp(16px, 3vw, 28px)}
+
+/* --- Header --- */
+.header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter:saturate(1.2) blur(12px);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:14px; padding:14px clamp(16px, 3vw, 28px)}
+.logo{
+  width:40px; height:40px; border-radius:12px;
+  background: linear-gradient(180deg,#e6eefb,#ffffff);
+  border:1px solid #dbe2f0;
+  box-shadow: 0 4px 12px rgba(0,0,0,.06), inset 0 0 0 4px #f7f9ff;
+}
+.brand h1{margin:0; font-weight:700; letter-spacing:.2px; font-size:clamp(18px,2.2vw,24px)}
+.brand h1 small{display:block; color:var(--muted); font-weight:500; font-size:.82em}
+
+/* --- Segmented nav --- */
+.nav{display:flex; gap:8px; padding:0 clamp(16px, 3vw, 28px) 16px; align-items:center; flex-wrap:wrap}
+.segment{
+  display:inline-flex; background:var(--surface); border:1px solid var(--line);
+  border-radius:999px; padding:4px; box-shadow:var(--shadow);
+}
+.segment a{
+  display:inline-block; padding:8px 14px; border-radius:999px; color:var(--muted); font-weight:600;
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+.segment a:hover{transform:translateY(-1px)}
+.segment a:is(:target, .active){background:color-mix(in srgb, var(--accent) 8%, transparent); color:var(--ink)}
+
+/* --- Sections --- */
+.section{margin-top:20px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px}
+.section h2{margin:0 0 10px 0; font-size:20px; letter-spacing:.2px}
+.kpis{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:14px; margin-top:8px}
+.kpi{padding:16px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, #fff, #fafbff); box-shadow:var(--shadow)}
+.kpi .label{text-transform:uppercase; letter-spacing:.3px; font-size:12px; color:var(--muted)}
+.kpi .value{margin-top:6px; font-weight:800; font-size:20px}
+
+/* --- Flight timeline --- */
+.timeline{list-style:none; margin:0; padding:0 0 0 18px; position:relative}
+.timeline::before{content:""; position:absolute; left:6px; top:2px; bottom:2px; width:2px; background:var(--line)}
+.flight{display:flex; gap:12px; padding:10px 0; animation:fadeUp .5s ease both; animation-delay:.04s}
+.flight .dot{width:14px; height:14px; border-radius:50%; border:2px solid var(--accent); background:#fff; margin-left:-18px; margin-top:8px; box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent)}
+.flight .content{background:linear-gradient(180deg,#fff,#f7f9ff); border:1px solid var(--line); border-radius:14px; padding:12px 14px; flex:1; box-shadow:var(--shadow)}
+.flight .route{font-weight:700}
+.flight .meta{color:var(--muted); font-size:13px; margin-top:4px}
+
+/* --- Accordion --- */
+.accordion{border:1px solid var(--line); border-radius:16px; overflow:hidden; background:linear-gradient(180deg,#fff,#fafbff); box-shadow:var(--shadow); margin:10px 0}
+.accordion > summary{list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; cursor:pointer; font-weight:700; transition: background .2s ease}
+.accordion > summary:hover{background:color-mix(in srgb, var(--accent) 6%, transparent)}
+.accordion > summary::-webkit-details-marker{display:none}
+.accordion > summary svg{width:20px; height:20px; opacity:.6; transition:transform .2s ease}
+.accordion[open] > summary svg{transform:rotate(180deg)}
+.acc-body{padding:0 16px 16px}
+.clean-list{margin:0; padding:0; list-style:none}
+.clean-list li{padding:10px 0; border-bottom:1px dashed var(--line)}
+.clean-list li:last-child{border-bottom:none}
+
+/* --- Chips --- */
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.chip{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:linear-gradient(180deg,#fff,#f7f9ff); border:1px solid var(--line); box-shadow:var(--shadow); font-weight:700; font-size:13px}
+.chip .dot{width:8px; height:8px; border-radius:50%; background:var(--accent)}
+.chip.success .dot{background:var(--accent-2)}
+
+/* --- Motion --- */
+@keyframes fadeUp{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+.section{animation:fadeUp .45s ease both} 
+.kpi, .chip, .accordion, .flight .content{animation:fadeUp .6s ease both}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+}
+
+/* --- Utilities --- */
+.meta{color:var(--muted)}
+.empty{color:var(--muted); padding:12px 0}
+.footer{text-align:center; color:var(--muted); padding:20px 0; font-size:13px}
+
+/* --- Smooth anchors --- */
+html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <h1>Holiday Hub <small>USA 2025 • Central Planner</small></h1>
+  </div>
+  <nav class="nav">
+    <div class="segment">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#flights">Flights</a>
+      <a href="#plans">Plans</a>
+    </div>
+  </nav>
+</header>
+
+<main class="container">
+  <section id="overview" class="section">
+    <h2>Overview</h2>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="label">Itinerary</div>
+        <div class="value">San Francisco • Yosemite • Las Vegas • NYC</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Budget</div>
+        <div class="value">£16,774.48</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Status</div>
+        <div class="value">Planning</div>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip"><span class="dot"></span> iCloud-ready (single file)</div>
+      <div class="chip success"><span class="dot"></span> Offline friendly</div>
+      <div class="chip"><span class="dot"></span> No JavaScript</div>
+    </div>
+  </section>
+
+  <section id="flights" class="section">
+    <h2>Flights</h2>
+    <ul class='timeline'>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">LHR T3 - San Fran</div>
+            <div class="meta">d11:15 - a14:20</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">LV - NYC</div>
+            <div class="meta">d13:35 - a21:49</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">NYC - LHR</div>
+            <div class="meta">d23:00 - a11:10</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">Hotels</div>
+            <div class="meta"></div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">San Fran</div>
+            <div class="meta">Booking.com: The Pickwick Hotel</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">Yosemite</div>
+            <div class="meta">Airbnb: Oakhurst</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">Vegas</div>
+            <div class="meta">RCI: The Boulevard, a Hilton Grand Vacations Club</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">NYC</div>
+            <div class="meta">Agoda: Tuscany Hotel by LuxUrban</div>
+          </div>
+        </li>
+        <li class="flight">
+          <div class="dot"></div>
+          <div class="content">
+            <div class="route">Car Rental</div>
+            <div class="meta"></div>
+          </div>
+        </li></ul>
+  </section>
+
+  <section id="plans" class="section">
+    <h2>Locations & Activities</h2>
+    
+        <details class="accordion">
+          <summary><span>San Francisco</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <ul class="clean-list"><li>DAY1 • DAY 2 • DAY 3 • DAY 4 • DAY 5 • Ideas</li><li>Free Walking Tour 10am • Checkout • Muir woods</li><li>Head to Yosemite (4 hours) • Alcatraz</li><li>Golden Gate bridge</li><li>Bay area/silicon valley</li><li>Fisherman&#x27;s Wharf</li><li>San Francisco: Alcatraz Tour with Muir Woods and Sausalito • £118pp • 7hrs • https://www.getyourguide.com/san-francisco-l61/alcatraz-with-muir-woods-and-sausalito-small-group-tour-t437532/?utm_medium=sharing&amp;utm_campaign=activity_details_desktop</li></ul>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary><span>Yosemite</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <ul class="clean-list"><li>DAY 1 • DAY 2 • DAY 3 • DAY 4 • Scenic Drives:</li><li>Many of Yosemite&#x27;s most iconic views can be reached by car, including Glacier Point, Tunnel View, and various waterfalls.</li><li>Mist Trail to Vernal and Nevada falls</li><li>Sentinel Dome</li><li>Mirror Lake</li><li>Mariposa Grove</li><li>Glacier Point stargazing drive</li></ul>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary><span>Las Vegas</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <ul class="clean-list"><li>DAY 1 • DAY 2 • DAY 3 • DAY 4 • DAY 5 • DAY 6 • Things to do:</li><li>Hoover Dam • Grand Canyon? • Check out • Grand Canyon West Rim / South Rim • Las Vegas: Grand Canyon, Antelope Canyon, Horseshoe Bend • 241.0 • 17hrs • https://www.getyourguide.com/las-vegas-l58/las-vegas-grand-canyon-antelope-canyon-horseshoe-bend-t391464/</li><li>Return car • Go airport 9:30 • Cirque du Soleil</li><li>gamble • Red Rock Canyon</li><li>MSG sphere</li><li>Places to eat:</li><li>Nobu (Japanese restaurant- Caesar palace)</li><li>Celebrity chef restaurant</li></ul>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary><span>New York City</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <ul class="clean-list"><li>DAY 1 • DAY 2 • DAY 3 • DAY 4</li></ul>
+          </div>
+        </details>
+  </section>
+
+  <p class="footer">Built from your “USA 2025 Planning.xlsx”. Update the sheet and we can regenerate a fresh build anytime.</p>
+</main>
+</body>
+</html>
