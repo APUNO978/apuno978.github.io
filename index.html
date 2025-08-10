@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA 2025 Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #007AFF;
+            --secondary: #5856D6;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --dark: #1D1D1F;
+            --light: #F2F2F7;
+            --glass: rgba(255, 255, 255, 0.72);
+            --glass-dark: rgba(0, 0, 0, 0.3);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --border-radius: 20px;
+            --animation-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--dark);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #FF6B6B, transparent);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #4ECDC4, transparent);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 5s;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #FFE66D, transparent);
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s var(--animation-curve);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.3s var(--animation-curve);
+            font-weight: 500;
+            color: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 122, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 100px;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: slideInDown 1s var(--animation-curve);
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--dark);
+            opacity: 0.8;
+            animation: slideInUp 1s var(--animation-curve);
+            margin-bottom: 40px;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            animation: slideInUp 1.2s var(--animation-curve);
+        }
+
+        .countdown-item {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            min-width: 100px;
+        }
+
+        .countdown-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        /* Stats Dashboard */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s var(--animation-curve);
+        }
+
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        /* Budget Overview Card */
+        .budget-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s var(--animation-curve);
+        }
+
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .budget-title {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .budget-total {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--success), #32D74B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .budget-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .budget-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .budget-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .budget-item-label {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+
+        .budget-item-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Budget Progress */
+        .budget-progress {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #32D74B);
+            border-radius: 10px;
+            transition: width 1s var(--animation-curve);
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        /* Weather Section */
+        .weather-section {
+            margin-bottom: 60px;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .weather-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-location {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .weather-temp {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .weather-icon {
+            font-size: 40px;
+            margin: 10px 0;
+        }
+
+        .weather-desc {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.7;
+        }
+
+        /* Location Cards */
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .location-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: all 0.5s var(--animation-curve);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s var(--animation-curve);
+            position: relative;
+        }
+
+        .location-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: var(--border-radius);
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s var(--animation-curve);
+        }
+
+        .location-card:hover::before {
+            opacity: 1;
+        }
+
+        .location-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .location-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .location-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .location-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .location-details {
+            padding: 25px;
+        }
+
+        .location-dates {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .location-hotel {
+            font-size: 16px;
+            color: var(--dark);
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .location-activities {
+            margin-top: 20px;
+        }
+
+        .activity-chip {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 4px;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .activity-chip:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Flight Cards */
+        .flights-container {
+            margin-bottom: 60px;
+        }
+
+        .flight-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s var(--animation-curve);
+            animation: fadeIn 1s var(--animation-curve);
+        }
+
+        .flight-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-route {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flight-icon {
+            font-size: 30px;
+        }
+
+        .flight-cities {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .flight-time {
+            color: var(--dark);
+            opacity: 0.7;
+            font-size: 16px;
+        }
+
+        .flight-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Epic Moments Section */
+        .epic-moments {
+            margin-bottom: 60px;
+        }
+
+        .moments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .moment-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            border: 2px solid;
+            transition: all 0.3s var(--animation-curve);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .moment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.5s var(--animation-curve);
+        }
+
+        .moment-card:hover::before {
+            opacity: 1;
+        }
+
+        .moment-card.adventure {
+            border-color: rgba(52, 199, 89, 0.4);
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), transparent);
+        }
+
+        .moment-card.party {
+            border-color: rgba(255, 59, 48, 0.4);
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.1), transparent);
+        }
+
+        .moment-card.culture {
+            border-color: rgba(88, 86, 214, 0.4);
+            background: linear-gradient(135deg, rgba(88, 86, 214, 0.1), transparent);
+        }
+
+        .moment-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .moment-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .moment-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .moment-card p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .hype-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .stars {
+            font-size: 18px;
+        }
+
+        /* Checklist Section */
+        .checklist-section {
+            margin-bottom: 60px;
+            padding: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .checklist-card {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            border-radius: 16px;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .checklist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-card h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checklist label {
+            cursor: pointer;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .checklist input[type="checkbox"]:checked + label {
+            color: var(--success);
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            margin-bottom: 60px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s var(--animation-curve);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: var(--border-radius);
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s var(--animation-curve);
+        }
+
+        .link-card:hover::before {
+            opacity: 1;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .link-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .link-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .link-desc {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.7;
+        }
+
+        /* Important Notes */
+        .notes-section {
+            margin-bottom: 60px;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .note-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 2px solid;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .note-card.warning {
+            border-color: rgba(255, 149, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.05), transparent);
+        }
+
+        .note-card.info {
+            border-color: rgba(0, 122, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), transparent);
+        }
+
+        .note-card.success {
+            border-color: rgba(52, 199, 89, 0.3);
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.05), transparent);
+        }
+
+        .note-card.primary {
+            border-color: rgba(88, 86, 214, 0.3);
+            background: linear-gradient(135deg, rgba(88, 86, 214, 0.05), transparent);
+        }
+
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .note-card h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .note-card ul {
+            list-style: none;
+        }
+
+        .note-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 15px;
+        }
+
+        .note-card li:last-child {
+            border-bottom: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-dark);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            animation: fadeIn 0.3s var(--animation-curve);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.3s var(--animation-curve);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s var(--animation-curve);
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 48px; }
+            .hero-subtitle { font-size: 18px; }
+            .nav-links { display: none; }
+            .timeline-line { left: 20px; }
+            .timeline-item { flex-direction: column !important; }
+            .timeline-content { padding: 0 0 0 50px; }
+            .timeline-dot { left: 20px; }
+            .locations-grid { grid-template-columns: 1fr; }
+            .countdown { flex-wrap: wrap; gap: 15px; }
+            .countdown-item { min-width: 80px; padding: 15px 20px; }
+            .flight-card { flex-direction: column; gap: 20px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">USA 2025 ✈️</div>
+            <ul class="nav-links">
+                <li class="nav-link active" onclick="scrollToSection('overview')">Overview</li>
+                <li class="nav-link" onclick="scrollToSection('destinations')">Destinations</li>
+                <li class="nav-link" onclick="scrollToSection('flights')">Flights</li>
+                <li class="nav-link" onclick="scrollToSection('timeline')">Timeline</li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1 class="hero-title">Your American Adventure</h1>
+        <p class="hero-subtitle">September 19 - October 3, 2025 • 15 Days of Wonder</p>
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-value" id="days">--</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="minutes">--</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="seconds">--</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Quick Stats Dashboard -->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-icon">✈️</div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">Cities</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌅</div>
+                <div class="stat-value">15</div>
+                <div class="stat-label">Days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏨</div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">Hotels</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📸</div>
+                <div class="stat-value">20+</div>
+                <div class="stat-label">Activities</div>
+            </div>
+        </div>
+
+        <!-- Budget Overview -->
+        <div id="overview" class="budget-card">
+            <div class="budget-header">
+                <h2 class="budget-title">Trip Budget</h2>
+                <div class="budget-total">£8,387.24</div>
+            </div>
+            <div class="budget-items">
+                <div class="budget-item">
+                    <div class="budget-item-label">✈️ Flights</div>
+                    <div class="budget-item-value">£5,007.62</div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-item-label">🏨 Hotels</div>
+                    <div class="budget-item-value">£2,958.62</div>
+                </div>
+                <div class="budget-item">
+                    <div class="budget-item-label">🚗 Car Rental</div>
+                    <div class="budget-item-value">£421.00</div>
+                </div>
+            </div>
+            <div class="budget-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;"></div>
+                </div>
+                <p class="progress-label">Budget tracking available when needed</p>
+            </div>
+        </div>
+
+        <!-- Weather Widget -->
+        <div class="weather-section">
+            <h2 style="font-size: 36px; margin-bottom: 30px; font-weight: 700;">Expected Weather</h2>
+            <div class="weather-grid">
+                <div class="weather-card">
+                    <div class="weather-location">San Francisco</div>
+                    <div class="weather-temp">18-22°C</div>
+                    <div class="weather-icon">☀️</div>
+                    <div class="weather-desc">Sunny with fog</div>
+                </div>
+                <div class="weather-card">
+                    <div class="weather-location">Yosemite</div>
+                    <div class="weather-temp">15-25°C</div>
+                    <div class="weather-icon">🌤️</div>
+                    <div class="weather-desc">Perfect hiking weather</div>
+                </div>
+                <div class="weather-card">
+                    <div class="weather-location">Las Vegas</div>
+                    <div class="weather-temp">25-35°C</div>
+                    <div class="weather-icon">☀️</div>
+                    <div class="weather-desc">Hot & dry</div>
+                </div>
+                <div class="weather-card">
+                    <div class="weather-location">New York</div>
+                    <div class="weather-temp">16-23°C</div>
+                    <div class="weather-icon">⛅</div>
+                    <div class="weather-desc">Mild autumn days</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Destinations -->
+        <h2 id="destinations" style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Destinations</h2>
+        <div class="locations-grid">
+            <div class="location-card" onclick="showLocationDetails('sanfran')">
+                <div class="location-image" style="background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%), url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="location-overlay">
+                        <div class="location-name">San Francisco</div>
+                    </div>
+                </div>
+                <div class="location-details">
+                    <div class="location-dates">📅 Sept 19-23</div>
+                    <div class="location-hotel">🏨 Hotel Booked</div>
+                    <div class="location-activities">
+                        <span class="activity-chip">Free Walking Tour</span>
+                        <span class="activity-chip">Golden Gate Bridge</span>
+                        <span class="activity-chip">Alcatraz</span>
+                        <span class="activity-chip">Fisherman's Wharf</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card" onclick="showLocationDetails('yosemite')">
+                <div class="location-image" style="background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%), url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="location-overlay">
+                        <div class="location-name">Yosemite</div>
+                    </div>
+                </div>
+                <div class="location-details">
+                    <div class="location-dates">📅 Sept 23-26</div>
+                    <div class="location-hotel">🏨 Accommodation Booked</div>
+                    <div class="location-activities">
+                        <span class="activity-chip">Glacier Point</span>
+                        <span class="activity-chip">Mist Trail</span>
+                        <span class="activity-chip">Sentinel Dome</span>
+                        <span class="activity-chip">Stargazing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card" onclick="showLocationDetails('vegas')">
+                <div class="location-image" style="background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%), url('https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="location-overlay">
+                        <div class="location-name">Las Vegas</div>
+                    </div>
+                </div>
+                <div class="location-details">
+                    <div class="location-dates">📅 Sept 26 - Oct 1</div>
+                    <div class="location-hotel">🏨 Hotel Booked</div>
+                    <div class="location-activities">
+                        <span class="activity-chip">Grand Canyon</span>
+                        <span class="activity-chip">Hoover Dam</span>
+                        <span class="activity-chip">MSG Sphere</span>
+                        <span class="activity-chip">Cirque du Soleil</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card" onclick="showLocationDetails('nyc')">
+                <div class="location-image" style="background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%), url('https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="location-overlay">
+                        <div class="location-name">New York City</div>
+                    </div>
+                </div>
+                <div class="location-details">
+                    <div class="location-dates">📅 Oct 1-3</div>
+                    <div class="location-hotel">🏨 Hotel Booked</div>
+                    <div class="location-activities">
+                        <span class="activity-chip">Manhattan</span>
+                        <span class="activity-chip">Broadway</span>
+                        <span class="activity-chip">Central Park</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flights Section -->
+        <h2 id="flights" style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Flight Itinerary</h2>
+        <div class="flights-container">
+            <div class="flight-card">
+                <div class="flight-route">
+                    <div class="flight-icon">✈️</div>
+                    <div>
+                        <div class="flight-cities">London → San Francisco</div>
+                        <div class="flight-time">Flight details available when needed</div>
+                    </div>
+                </div>
+                <div class="flight-price">Booked ✓</div>
+            </div>
+
+            <div class="flight-card">
+                <div class="flight-route">
+                    <div class="flight-icon">✈️</div>
+                    <div>
+                        <div class="flight-cities">Las Vegas → New York</div>
+                        <div class="flight-time">Flight details available when needed</div>
+                    </div>
+                </div>
+                <div class="flight-price">Booked ✓</div>
+            </div>
+
+            <div class="flight-card">
+                <div class="flight-route">
+                    <div class="flight-icon">✈️</div>
+                    <div>
+                        <div class="flight-cities">New York → London</div>
+                        <div class="flight-time">Flight details available when needed</div>
+                    </div>
+                </div>
+                <div class="flight-price">Booked ✓</div>
+            </div>
+        </div>
+
+        <!-- Epic Moments -->
+        <h2 id="timeline" style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Epic Moments Planned 🔥</h2>
+        <div class="epic-moments">
+            <div class="moments-grid">
+                <div class="moment-card adventure">
+                    <div class="moment-icon">🏔️</div>
+                    <h3>Yosemite Stargazing</h3>
+                    <p>Late night drive to Glacier Point for epic Milky Way shots. The lads vs the universe!</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="moment-card party">
+                    <div class="moment-icon">🎰</div>
+                    <h3>Vegas Boys Night</h3>
+                    <p>What happens in Vegas... gets posted on the group chat anyway. Blackjack and chaos!</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="moment-card culture">
+                    <div class="moment-icon">🗽</div>
+                    <h3>NYC Street Food Tour</h3>
+                    <p>From pizza slices bigger than our heads to bagels that'll change your life. Food coma incoming!</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="moment-card adventure">
+                    <div class="moment-icon">🌉</div>
+                    <h3>Golden Gate at Sunrise</h3>
+                    <p>Early morning mission for those Instagram shots. Worth the 6am wake up call... probably.</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="moment-card party">
+                    <div class="moment-icon">🍻</div>
+                    <h3>Rooftop Bars NYC</h3>
+                    <p>Sky-high drinks with Manhattan views. Time to pretend we're in a movie!</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="moment-card culture">
+                    <div class="moment-icon">🎪</div>
+                    <h3>Cirque du Soleil</h3>
+                    <p>Mind-bending acrobatics that'll make us question our life choices. Prepare to be amazed!</p>
+                    <div class="hype-level">
+                        <span>Hype Level:</span>
+                        <div class="stars">⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Packing Checklist -->
+        <div class="checklist-section">
+            <h2 style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Packing Essentials</h2>
+            <div class="checklist-grid">
+                <div class="checklist-card">
+                    <h3>📄 Documents</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="passport"><label for="passport">Passports</label></li>
+                        <li><input type="checkbox" id="esta"><label for="esta">ESTA Approval</label></li>
+                        <li><input type="checkbox" id="insurance"><label for="insurance">Travel Insurance</label></li>
+                        <li><input type="checkbox" id="bookings"><label for="bookings">Hotel Confirmations</label></li>
+                        <li><input type="checkbox" id="license"><label for="license">Driving License</label></li>
+                    </ul>
+                </div>
+                <div class="checklist-card">
+                    <h3>👕 Clothing</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="layers"><label for="layers">Layered clothing (SF fog!)</label></li>
+                        <li><input type="checkbox" id="hiking"><label for="hiking">Hiking boots</label></li>
+                        <li><input type="checkbox" id="swimwear"><label for="swimwear">Swimwear (Vegas pools)</label></li>
+                        <li><input type="checkbox" id="smart"><label for="smart">Smart outfit (Vegas/NYC)</label></li>
+                        <li><input type="checkbox" id="comfort"><label for="comfort">Comfortable walking shoes</label></li>
+                    </ul>
+                </div>
+                <div class="checklist-card">
+                    <h3>🎒 Essentials</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="adapters"><label for="adapters">US Power adapters</label></li>
+                        <li><input type="checkbox" id="chargers"><label for="chargers">Phone/device chargers</label></li>
+                        <li><input type="checkbox" id="camera"><label for="camera">Camera & SD cards</label></li>
+                        <li><input type="checkbox" id="sunscreen"><label for="sunscreen">Sunscreen</label></li>
+                        <li><input type="checkbox" id="meds"><label for="meds">Medications</label></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <h2 style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Quick Links & Resources</h2>
+            <div class="links-grid">
+                <a href="#" class="link-card" onclick="event.preventDefault(); alert('Add your booking confirmation link here')">
+                    <div class="link-icon">🏨</div>
+                    <div class="link-title">Hotel Bookings</div>
+                    <div class="link-desc">Access all confirmations</div>
+                </a>
+                <a href="#" class="link-card" onclick="event.preventDefault(); alert('Add your car rental link here')">
+                    <div class="link-icon">🚗</div>
+                    <div class="link-title">Car Rental</div>
+                    <div class="link-desc">Pickup details & docs</div>
+                </a>
+                <a href="#" class="link-card" onclick="event.preventDefault(); alert('Add your flight check-in link here')">
+                    <div class="link-icon">✈️</div>
+                    <div class="link-title">Flight Check-in</div>
+                    <div class="link-desc">Online check-in 24h before</div>
+                </a>
+                <a href="#" class="link-card" onclick="event.preventDefault(); alert('Add emergency contacts here')">
+                    <div class="link-icon">📞</div>
+                    <div class="link-title">Emergency Contacts</div>
+                    <div class="link-desc">Important numbers</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="notes-section">
+            <h2 style="font-size: 48px; margin-bottom: 40px; text-align: center; font-weight: 700;">Important Reminders</h2>
+            <div class="notes-grid">
+                <div class="note-card warning">
+                    <div class="note-icon">⚠️</div>
+                    <h3>Pre-Travel</h3>
+                    <ul>
+                        <li>Check ESTA status is valid</li>
+                        <li>Confirm all hotel bookings</li>
+                        <li>Download offline maps</li>
+                        <li>Notify bank of travel dates</li>
+                    </ul>
+                </div>
+                <div class="note-card info">
+                    <div class="note-icon">ℹ️</div>
+                    <h3>Flight Info</h3>
+                    <ul>
+                        <li>Arrive 3 hours early for international</li>
+                        <li>2 hours for domestic flights</li>
+                        <li>Baggage allowance: 23kg checked</li>
+                        <li>Download airline apps</li>
+                    </ul>
+                </div>
+                <div class="note-card success">
+                    <div class="note-icon">💰</div>
+                    <h3>Money Tips</h3>
+                    <ul>
+                        <li>Notify cards of travel</li>
+                        <li>Tipping: 15-20% standard</li>
+                        <li>Have some cash for tips</li>
+                        <li>Use contactless where possible</li>
+                    </ul>
+                </div>
+                <div class="note-card primary">
+                    <div class="note-icon">📱</div>
+                    <h3>Stay Connected</h3>
+                    <ul>
+                        <li>Check roaming charges</li>
+                        <li>Consider US SIM/eSIM</li>
+                        <li>Save offline maps</li>
+                        <li>Hotel WiFi passwords</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for detailed location info -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const tripDate = new Date('September 19, 2025 11:15:00').getTime();
+            const now = new Date().getTime();
+            const distance = tripDate - now;
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            } else {
+                document.querySelector('.countdown').innerHTML = '<h2 style="color: var(--success);">Trip in Progress! 🎉</h2>';
+            }
+        }
+
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Save checklist state
+        document.querySelectorAll('.checklist input[type="checkbox"]').forEach(checkbox => {
+            // Load saved state
+            const savedState = localStorage.getItem(checkbox.id);
+            if (savedState === 'true') {
+                checkbox.checked = true;
+            }
+
+            // Save state on change
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(this.id, this.checked);
+            });
+        });
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (!element) return;
+            
+            const offset = 100;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+
+            // Update active nav
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Update active nav on scroll
+        window.addEventListener('scroll', () => {
+            const sections = ['overview', 'destinations', 'flights', 'timeline'];
+            const scrollPosition = window.pageYOffset + 150;
+
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.textContent.toLowerCase().includes(sectionId.substring(0, 4))) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        // Location details data
+        const locationDetails = {
+            sanfran: {
+                title: 'San Francisco',
+                dates: 'September 19-23, 2025',
+                hotel: {
+                    name: 'Hotel Accommodation',
+                    address: 'Details available when needed',
+                    checkout: 'Standard checkout',
+                    cost: 'Booked',
+                    confirmation: 'Confirmation available'
+                },
+                activities: [
+                    { day: 'Day 1 (Sept 19)', activity: 'Arrival & Hotel Check-in' },
+                    { day: 'Day 2 (Sept 20)', activity: 'Free Walking Tour' },
+                    { day: 'Day 3 (Sept 21)', activity: 'Explore Silicon Valley / Bay Area' },
+                    { day: 'Day 4 (Sept 22)', activity: 'Golden Gate Bridge & Fisherman\'s Wharf' },
+                    { day: 'Day 5 (Sept 23)', activity: 'Checkout & Drive to Yosemite' }
+                ],
+                highlights: ['Muir Woods', 'Alcatraz Island', 'Golden Gate Bridge', 'Bay Area/Silicon Valley', 'Fisherman\'s Wharf'],
+                tour: {
+                    name: 'Alcatraz with Muir Woods and Sausalito',
+                    price: 'Tour details available',
+                    duration: '7 hours'
+                }
+            },
+            yosemite: {
+                title: 'Yosemite National Park',
+                dates: 'September 23-26, 2025',
+                hotel: {
+                    name: 'Accommodation Booked',
+                    address: 'Details available when needed',
+                    checkout: 'Standard checkout',
+                    cost: 'Booked',
+                    confirmation: 'Confirmation available'
+                },
+                activities: [
+                    { day: 'Day 1 (Sept 23)', activity: 'Arrival from San Francisco' },
+                    { day: 'Day 2 (Sept 24)', activity: 'Glacier Point stargazing drive' },
+                    { day: 'Day 3 (Sept 25)', activity: 'Hiking & Exploring' },
+                    { day: 'Day 4 (Sept 26)', activity: 'Departure to Las Vegas' }
+                ],
+                highlights: ['Glacier Point', 'Tunnel View', 'Mist Trail to Vernal and Nevada Falls', 'Sentinel Dome', 'Mirror Lake', 'Mariposa Grove'],
+                tips: 'Many of Yosemite\'s most iconic views can be reached by car, including Glacier Point, Tunnel View, and various waterfalls.'
+            },
+            vegas: {
+                title: 'Las Vegas',
+                dates: 'September 26 - October 1, 2025',
+                hotel: {
+                    name: 'Hotel Accommodation',
+                    address: 'Details available when needed',
+                    checkout: 'Standard checkout',
+                    cost: 'Booked',
+                    confirmation: 'Confirmation available'
+                },
+                activities: [
+                    { day: 'Day 1 (Sept 26)', activity: 'Arrival & Strip exploration' },
+                    { day: 'Day 2 (Sept 27)', activity: 'Hoover Dam visit, Return car, Evening entertainment' },
+                    { day: 'Day 3 (Sept 28)', activity: 'Relaxation & Entertainment' },
+                    { day: 'Day 4 (Sept 29)', activity: 'More Vegas experiences' },
+                    { day: 'Day 5 (Sept 30)', activity: 'Optional Grand Canyon tour' },
+                    { day: 'Day 6 (Oct 1)', activity: 'Checkout & Airport transfer' }
+                ],
+                highlights: ['Grand Canyon Tour', 'Hoover Dam', 'Cirque du Soleil', 'MSG Sphere', 'Red Rock Canyon', 'Fine Dining'],
+                tour: {
+                    name: 'Grand Canyon, Antelope Canyon, Horseshoe Bend',
+                    price: 'Tour details available',
+                    duration: '17 hours'
+                }
+            },
+            nyc: {
+                title: 'New York City',
+                dates: 'October 1-3, 2025',
+                hotel: {
+                    name: 'Hotel Accommodation',
+                    address: 'Details available when needed',
+                    checkout: 'Standard checkout',
+                    cost: 'Booked',
+                    confirmation: 'Confirmation available'
+                },
+                activities: [
+                    { day: 'Day 1 (Oct 1)', activity: 'Arrival from Vegas' },
+                    { day: 'Day 2 (Oct 2)', activity: 'Manhattan exploration' },
+                    { day: 'Day 3 (Oct 3)', activity: 'More NYC adventures & Checkout' },
+                    { day: 'Day 4 (Oct 3)', activity: 'Departure to London' }
+                ],
+                highlights: ['Times Square', 'Central Park', 'Broadway Show', 'Statue of Liberty', 'Brooklyn Bridge', 'One World Trade Center']
+            }
+        };
+
+        // Show location details modal
+        function showLocationDetails(location) {
+            const details = locationDetails[location];
+            if (!details) return;
+            
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <h2 style="font-size: 36px; margin-bottom: 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${details.title}</h2>
+                <p style="font-size: 20px; color: var(--primary); margin-bottom: 30px;">${details.dates}</p>
+                
+                <div style="background: rgba(0, 122, 255, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 15px;">🏨 Accommodation</h3>
+                    <p><strong>${details.hotel.name}</strong></p>
+                    <p style="opacity: 0.8;">${details.hotel.address}</p>
+                    <p style="opacity: 0.8;">Checkout: ${details.hotel.checkout}</p>
+                    ${details.hotel.confirmation ? `<p style="opacity: 0.8;">Confirmation: ${details.hotel.confirmation}</p>` : ''}
+                    <p style="color: var(--success); font-weight: 600;">Cost: ${details.hotel.cost}</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 15px;">📅 Daily Itinerary</h3>
+                    ${details.activities.map(item => `
+                        <div style="padding: 12px; background: rgba(0, 0, 0, 0.02); border-radius: 8px; margin-bottom: 10px;">
+                            <strong style="color: var(--primary);">${item.day}:</strong> ${item.activity}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 15px;">✨ Must-See Highlights</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${details.highlights.map(highlight => `
+                            <span style="padding: 8px 16px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 20px; font-weight: 500;">${highlight}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                ${details.tips ? `
+                    <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.05), rgba(34, 199, 89, 0.05)); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 10px;">💡 Tip</h3>
+                        <p>${details.tips}</p>
+                    </div>
+                ` : ''}
+                
+                ${details.tour ? `
+                    <div style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.05), rgba(255, 59, 48, 0.05)); padding: 20px; border-radius: 12px;">
+                        <h3 style="margin-bottom: 10px;">🎫 Recommended Tour</h3>
+                        <p><strong>${details.tour.name}</strong></p>
+                        <p>Duration: ${details.tour.duration} | Price: ${details.tour.price}</p>
+                        ${details.tour.link ? `<a href="${details.tour.link}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500;">View Tour Details →</a>` : ''}
+                    </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('locationModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('locationModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('locationModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Remove parallax effect - no longer needed
+        // window.addEventListener('scroll', () => {
+        //     const scrolled = window.pageYOffset;
+        //     const parallax = document.querySelector('.hero');
+        //     if (parallax) {
+        //         parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        //     }
+        // });
+
+        // Add progress animation on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const progressFill = document.querySelector('.progress-fill');
+                if (progressFill) {
+                    progressFill.style.transition = 'width 2s var(--animation-curve)';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
