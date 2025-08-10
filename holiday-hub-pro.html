@@ -1650,6 +1650,15 @@
             }
         }
 
+        // Remove parallax effect - no longer needed
+        // window.addEventListener('scroll', () => {
+        //     const scrolled = window.pageYOffset;
+        //     const parallax = document.querySelector('.hero');
+        //     if (parallax) {
+        //         parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        //     }
+        // });
+
         // Add progress animation on page load
         window.addEventListener('load', () => {
             setTimeout(() => {
