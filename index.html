@@ -886,9 +886,8 @@ let exchangeRate = 1.35; // Default rate
 let trendChart = null; 
 
 async function fetchExchangeRate() {
-  // IMPORTANT: Replace 'YOUR_API_KEY_HERE' with your actual free key from exchangerate-api.com
-  const apiKey = 'YOUR_API_KEY_HERE'; 
-  const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/GBP`;
+  // Using the free, open access API from exchangerate-api.com (no API key required)
+  const url = 'https://open.er-api.com/v6/latest/GBP';
   
   const rateEl = document.getElementById('exchangeRate');
   const usdRateEl = document.getElementById('usdRate');
@@ -898,8 +897,8 @@ async function fetchExchangeRate() {
     if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
     const data = await response.json();
     
-    if (data.result === 'success' && data.conversion_rates.USD) {
-      exchangeRate = data.conversion_rates.USD;
+    if (data.result === 'success' && data.rates && data.rates.USD) {
+      exchangeRate = data.rates.USD;
       // For the chart, we create a plausible history around the current rate
       const history = Array.from({length: 6}, () => exchangeRate + (Math.random() - 0.5) * 0.05);
       history.push(exchangeRate); // Add current rate as the last point
