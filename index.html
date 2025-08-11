@@ -472,7 +472,7 @@ nav{
     animation: vegasFlash 1.5s ease-in-out infinite alternate;
 }
 
-/* Keyframes for Animations */
+/* Keyframes for Animations (Desktop) */
 @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
 @keyframes neonPulse { 0%, 100% { filter: drop-shadow(0 0 20px var(--vegas-pink)) drop-shadow(0 0 40px var(--vegas-purple)); } 50% { filter: drop-shadow(0 0 30px var(--vegas-pink)) drop-shadow(0 0 60px var(--vegas-purple)); } }
 @keyframes vegasFlash { 0% { text-shadow: 0 0 10px var(--vegas-gold), 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-orange); } 100% { text-shadow: 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-gold), 0 0 40px var(--vegas-orange); } }
@@ -564,10 +564,40 @@ nav{
 }
 @keyframes toastSlide { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
-/* Desktop Adjustments */
-@media (min-width: 768px) {
-    .vegas-birthday-section .countdown-display { grid-template-columns: repeat(4, 1fr); }
+/* Mobile-Specific Neon Adjustments */
+@media (max-width: 768px) {
+    .vegas-birthday-section .countdown-display { grid-template-columns: repeat(2, 1fr); }
+
+    /* Toned-down glow for mobile */
+    .vegas-birthday-section .neon-text-large {
+        filter: drop-shadow(0 0 12px var(--vegas-pink)) 
+                drop-shadow(0 0 25px var(--vegas-purple));
+    }
+    .vegas-birthday-section .neon-text-vegas {
+        text-shadow: 
+            0 0 8px var(--vegas-gold),
+            0 0 18px var(--vegas-orange);
+    }
+
+    /* Redefine animations for mobile with reduced glow */
+    @keyframes neonPulse {
+        0%, 100% {
+            filter: drop-shadow(0 0 12px var(--vegas-pink)) drop-shadow(0 0 25px var(--vegas-purple));
+        }
+        50% {
+            filter: drop-shadow(0 0 18px var(--vegas-pink)) drop-shadow(0 0 35px var(--vegas-purple));
+        }
+    }
+    @keyframes vegasFlash {
+        0% {
+            text-shadow: 0 0 8px var(--vegas-gold), 0 0 18px var(--vegas-orange);
+        }
+        100% {
+            text-shadow: 0 0 12px var(--vegas-gold), 0 0 25px var(--vegas-orange);
+        }
+    }
 }
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
     .vegas-birthday-section *, .vegas-birthday-section *::before, .vegas-birthday-section *::after {
@@ -593,7 +623,6 @@ nav{
 .location-details{padding:18px}
 .location-dates{font-weight:700;color:var(--primary);margin-bottom:8px}
 .location-hotel{font-size:14px;color:var(--muted)}
-.location-activities{margin-top:10px}
 /* .activity-chip is defined in the main CSS, this keeps it consistent */
 .location-card .activity-chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3b5bdb;font-size:12px;margin:3px;transition:transform 0.2s var(--curve)}
 .location-card .activity-chip:hover{transform:scale(1.05)}
