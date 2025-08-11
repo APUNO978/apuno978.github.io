@@ -111,11 +111,11 @@ nav{
   display:grid;grid-template-columns:repeat(6,1fr);
   gap:clamp(6px,1.8vw,16px);position:relative;z-index:2;
 }
-.route66__stop{display:grid;grid-template-rows:auto 16px auto;align-items:center;justify-items:center;text-align:center;padding-inline:6px;background:none;border:0;cursor:pointer}
+.route66__stop{display:grid;grid-template-rows:auto 20px auto auto;align-items:center;justify-items:center;text-align:center;padding-inline:6px;background:none;border:0;cursor:pointer}
 .route66__date{font-size:clamp(10px,1.4vw,12px);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
 .route66__dot{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--primary)}
 .route66__icon{color:var(--primary);font-size:clamp(20px,3vw,28px);line-height:1;margin-top:6px}
-.route66__label{font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15;margin-top:3px}
+.route66__label{font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15;margin-top:8px}
 .route66__progress{
   position:absolute;top:50%;transform:translateY(-50%);
   width:12px;height:12px;border-radius:50%;
@@ -123,7 +123,18 @@ nav{
   z-index:3;animation:r66move 38s linear infinite;
 }
 @keyframes r66move{0%{left:0%}100%{left:100%}}
-@media (max-width:560px){ .route66__label{font-size:clamp(11px,3.6vw,13px)} .route66{padding-bottom:16px} }
+@media (max-width:768px){ 
+  .route66{
+    padding:12px clamp(8px,3vw,16px) 14px;
+    min-height:auto;
+  }
+  .route66__track{min-height:120px}
+  .route66__stops{gap:clamp(4px,1vw,8px)}
+  .route66__stop{grid-template-rows:auto 16px auto auto;padding-inline:2px}
+  .route66__date{font-size:clamp(9px,2.2vw,10px)}
+  .route66__icon{font-size:clamp(16px,4vw,20px)}
+  .route66__label{font-size:clamp(10px,2.8vw,12px);margin-top:6px}
+}
 
 /* ========== NEXT UP SLIDER ========== */
 .nu-section{margin:22px 0}
@@ -361,7 +372,7 @@ nav{
             <div class="route66__date">Sep 26–27</div>
             <div class="route66__dot" aria-hidden="true"></div>
             <div class="route66__icon" aria-hidden="true">🏜️</div>
-            <div class="route66__label">Death Valley<br>(Pass-through)</div>
+            <div class="route66__label">Death Valley</div>
           </div>
 
           <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
