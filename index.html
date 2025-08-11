@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Final (iOS Weather + Mobile Tweaks)</title>
+<title>USA 2025 Adventure — Final (iOS Weather + Mobile Tweaks + Currency Tracker)</title>
 <style>
 /* ========== Base / Reset ========== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -164,6 +164,99 @@ nav{
 .nu-progress{height:3px; background:rgba(16,24,40,.08)}
 .nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
 
+/* ========== Currency Tracker Widget ========== */
+.currency-section { margin: 24px 0; }
+.currency-card {
+  background: var(--glass);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.currency-card .nu-title { /* re-use from nu-card */
+  padding: 0;
+  margin-bottom: 8px;
+}
+.currency-rate-display {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 10px 0 14px;
+}
+.currency-rate-display #exchangeRate {
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.currency-rate-display #usdRate {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.currency-converter {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255,255,255,.7);
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+.currency-converter input,
+.currency-converter select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 14px;
+  font-family: inherit;
+}
+.currency-converter input:focus,
+.currency-converter select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+#currencyResult {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
+  text-align: right;
+  padding: 8px 0;
+}
+#rateTrend {
+  margin-top: 16px;
+  max-height: 80px;
+}
+.currency-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.currency-actions button {
+  flex-grow: 1;
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s var(--curve);
+  box-shadow: 0 8px 18px rgba(0, 122, 255, .18);
+}
+.currency-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 122, 255, .25);
+}
+
+
 /* ========== Live Weather (iOS-ish) ========== */
 .weather-section{margin:40px 0}
 .section-title{
@@ -258,7 +351,6 @@ nav{
 }
 .moments-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width: 900px){ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
-/* Mobile: compact widget slider */
 @media (max-width: 700px){
   .moments-grid{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;padding:4px 2px 10px}
   .moment-card{min-width:82%;min-height:160px;scroll-snap-align:center;padding:14px}
@@ -274,7 +366,6 @@ nav{
 .moment-card p{font-size:14px;color:var(--muted)}
 .moment-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
 .hype-level{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--primary)}
-.stars{font-size:16px}
 .moment-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,122,255,.25);transition:transform .15s var(--curve)}
 .moment-btn:hover{transform:translateY(-1px)}
 
@@ -360,12 +451,12 @@ nav{
       <div class="logo">USA 2025 ✈️</div>
       <button class="nav-toggle" aria-expanded="false" aria-label="Open menu" onclick="toggleMobileNav(this)">☰</button>
       <ul class="nav-links">
-        <li class="nav-link active" data-target="overview" onclick="scrollToSection('route-timeline',event)">Overview</li>
-        <li class="nav-link" data-target="live-weather" onclick="scrollToSection('live-weather',event)">Weather</li>
-        <li class="nav-link" data-target="destinations" onclick="scrollToSection('destinations',event)">Destinations</li>
-        <li class="nav-link" data-target="timeline" onclick="scrollToSection('timeline',event)">Moments</li>
-        <li class="nav-link" data-target="flights" onclick="scrollToSection('flights',event)">Flights</li>
-        <li class="nav-link" data-target="packing" onclick="scrollToSection('packing',event)">Packing</li>
+        <li class="nav-link active" onclick="scrollToSection('route-timeline',event)">Overview</li>
+        <li class="nav-link" onclick="scrollToSection('live-weather',event)">Weather</li>
+        <li class="nav-link" onclick="scrollToSection('destinations',event)">Destinations</li>
+        <li class="nav-link" onclick="scrollToSection('timeline',event)">Moments</li>
+        <li class="nav-link" onclick="scrollToSection('flights',event)">Flights</li>
+        <li class="nav-link" onclick="scrollToSection('packing',event)">Packing</li>
       </ul>
     </div>
   </nav>
@@ -413,16 +504,41 @@ nav{
     </section>
 
     <!-- Next Up slider -->
-    <section class="nu-section" aria-labelledby="nu-title">
+    <section class="nu-section animate-on-scroll" aria-labelledby="nu-title">
       <div class="nu-card">
         <div class="nu-head">
-          <div class="nu-title">Next up</div>
+          <div class="nu-title">Trip Planner</div>
           <div class="nu-dots" id="nuDots"></div>
         </div>
         <div class="nu-viewport" id="nuViewport">
           <div class="nu-track" id="nuTrack"></div>
         </div>
         <div class="nu-progress"><div class="nu-bar" id="nuBar"></div></div>
+      </div>
+    </section>
+    
+    <!-- Live Currency Exchange Tracker -->
+    <section class="currency-section animate-on-scroll" id="currency-tracker-section" aria-labelledby="currency-title">
+      <div class="currency-card">
+        <div class="nu-head" style="padding: 0 0 8px 0;">
+          <div class="nu-title" id="currency-title">💷 GBP to USD Tracker</div>
+        </div>
+        <div class="currency-rate-display">
+          <div id="exchangeRate">--</div>
+          <div id="usdRate">1 GBP = $-- USD</div>
+        </div>
+        <div class="currency-converter">
+          <input id="currencyInput" type="number" placeholder="Enter amount">
+          <select id="currencyDir">
+            <option value="gbp-usd">GBP to USD</option>
+            <option value="usd-gbp">USD to GBP</option>
+          </select>
+          <div id="currencyResult">--</div>
+        </div>
+        <canvas id="rateTrend" aria-label="7-day exchange rate trend"></canvas>
+        <div class="currency-actions">
+           <button onclick="setRateAlert()">Set Rate Alert</button>
+        </div>
       </div>
     </section>
 
@@ -646,15 +762,13 @@ nav{
     </section>
   </main>
 
-  <!-- Generic modal -->
+  <!-- Modals -->
   <div id="locationModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
       <div id="modalContent"></div>
     </div>
   </div>
-
-  <!-- Alert modal (also used for weather details) -->
   <div id="alertModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:500px">
       <button class="modal-close" onclick="closeAlert()" aria-label="Close">×</button>
@@ -662,6 +776,10 @@ nav{
     </div>
   </div>
 
+  <!-- Toasts -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 /* ===== Mobile nav + smooth scroll ===== */
 function toggleMobileNav(btn){ const n=btn.closest('nav'); const open=n.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }
@@ -686,7 +804,7 @@ let weatherStore = {}; // latest weather per location
 
 /* ===== Hero countdown ===== */
 function updateCountdown(){
-  const tripDate = new Date('2025-09-19T09:00:00-07:00'); // PST start time
+  const tripDate = new Date('2025-09-19T09:00:00-07:00');
   const now = new Date();
   const diff = tripDate.getTime() - now.getTime();
   if(diff > 0){
@@ -720,15 +838,13 @@ function updateTimelineStatus(){
 }
 
 /* ===== Next Up slider ===== */
-const TRIP_START = new Date('2025-09-19T09:00:00-07:00');
 const nuItems = [
-  { emoji:'🗺️', title:'Countdown', body:()=> {
-      const d = Math.max(0, Math.ceil((TRIP_START - new Date())/86400000));
-      return d===0 ? 'It’s today — let’s go! ✈️' : `${d} day${d!==1?'s':''} until takeoff`;
-    } },
-  { emoji:'🍕', title:'NYC pizza shortlist', body:'Joe’s • Prince Street • Scarr’s • Di Fara' },
-  { emoji:'🍸', title:'Vegas bars to try', body:'Chandelier • Ghost Donkey • Legacy Club' },
-  { emoji:'🛍️', title:'Shopping zones', body:'SF Union Sq • Forum Shops • SoHo' }
+  { emoji:'📄', title:'ESTA Application', body:'Apply for your ESTA at least 72 hours before travel. Don’t leave it late!' },
+  { emoji:'🎟️', title:'National Parks Pass', body:'Consider an "America the Beautiful" pass to cover Yosemite & Grand Canyon entry.'},
+  { emoji:'🧳', title:'Smart Packing Tip', body:'Use packing cubes to separate clothes for different climates (e.g., SF vs. Vegas).' },
+  { emoji:'🍕', title:'NYC Pizza Shortlist', body:'Joe’s • Prince Street • Scarr’s • Di Fara. A slice a day keeps the doctor away.' },
+  { emoji:'🍸', title:'Vegas Bars to Try', body:'Chandelier • Ghost Donkey • Legacy Club. Stay hydrated between stops!' },
+  { emoji:'🛍️', title:'Top Shopping Zones', body:'SF Union Sq for high-end, Vegas Forum Shops for luxury, NYC SoHo for boutiques.' }
 ];
 let nuIndex=0, nuTimer=null, nuInterval=5200;
 function buildNextUp(){
@@ -754,10 +870,6 @@ function buildNextUp(){
 function goToSlide(i,instant=false){
   const track=document.getElementById('nuTrack'); const dots=document.getElementById('nuDots').children; const bar=document.getElementById('nuBar');
   const n=nuItems.length; nuIndex=(i+n)%n;
-  track.querySelectorAll('.nu-slide').forEach((sl,idx)=>{
-    const item=nuItems[idx];
-    if(typeof item.body==='function'){ sl.querySelector('p').textContent=item.body(); }
-  });
   track.style.transitionDuration = instant?'0ms':'500ms';
   track.style.transform=`translateX(-${nuIndex*100}%)`;
   [...dots].forEach((d,di)=>d.classList.toggle('active', di===nuIndex));
@@ -769,6 +881,133 @@ function prevSlide(){goToSlide(nuIndex-1)}
 function startAuto(){ stopAuto(); nuTimer=setInterval(nextSlide,nuInterval); const bar=document.getElementById('nuBar'); bar.style.transition=`width ${nuInterval}ms linear`; bar.style.width='100%' }
 function stopAuto(){ clearInterval(nuTimer); nuTimer=null; const bar=document.getElementById('nuBar'); bar.style.transition='none'; bar.style.width='0%' }
 
+/* ===== Live Currency Exchange Tracker ===== */
+let exchangeRate = 1.27; // Default rate
+let trendChart = null; 
+
+async function fetchExchangeRate() {
+  // IMPORTANT: Replace 'YOUR_API_KEY_HERE' with your actual free key from exchangerate-api.com
+  const apiKey = 'YOUR_API_KEY_HERE'; 
+  const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/GBP`;
+  
+  const rateEl = document.getElementById('exchangeRate');
+  const usdRateEl = document.getElementById('usdRate');
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+    const data = await response.json();
+    
+    if (data.result === 'success' && data.conversion_rates.USD) {
+      exchangeRate = data.conversion_rates.USD;
+      // For the chart, we create a plausible history around the current rate
+      const history = Array.from({length: 6}, () => exchangeRate + (Math.random() - 0.5) * 0.05);
+      history.push(exchangeRate); // Add current rate as the last point
+      updateTrendChart(history);
+    } else {
+      throw new Error('Invalid data from API');
+    }
+
+  } catch (error) {
+    console.error("Failed to fetch exchange rate:", error);
+    rateEl.textContent = "Rate N/A";
+    usdRateEl.textContent = "Could not update rate";
+    // Use default history if API fails
+    updateTrendChart([1.26, 1.27, 1.25, 1.28, 1.27, 1.26, 1.27]);
+  }
+
+  rateEl.textContent = `£1 = $${exchangeRate.toFixed(3)}`;
+  usdRateEl.textContent = `1 GBP = ${exchangeRate.toFixed(3)} USD`;
+  
+  rateEl.style.animation = 'bounceIn .6s var(--curve)';
+  setTimeout(() => rateEl.style.animation = '', 600);
+  
+  convertCurrency();
+}
+
+function updateTrendChart(history) {
+  if (typeof Chart === 'undefined') {
+    console.error("Chart.js is not loaded");
+    return;
+  }
+  const ctx = document.getElementById('rateTrend').getContext('2d');
+  
+  if(trendChart) {
+    trendChart.destroy();
+  }
+
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['-6d', '-5d', '-4d', '-3d', '-2d', '-1d', 'Today'],
+      datasets: [{ 
+        data: history, 
+        borderColor: 'var(--primary)',
+        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+        tension: 0.4, 
+        fill: true,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { x: { display: false }, y: { display: false } }, 
+      plugins: { legend: { display: false }, tooltip: { enabled: false } }
+    }
+  });
+}
+
+function convertCurrency() {
+  const inputEl = document.getElementById('currencyInput');
+  const resultEl = document.getElementById('currencyResult');
+  const dir = document.getElementById('currencyDir').value;
+  const amount = parseFloat(inputEl.value);
+  
+  if (!amount || isNaN(amount)) {
+    resultEl.textContent = '--';
+    return;
+  }
+  
+  let result;
+  if (dir === 'gbp-usd') {
+    result = (amount * exchangeRate).toFixed(2);
+    resultEl.textContent = `$${result}`;
+  } else {
+    result = (amount / exchangeRate).toFixed(2);
+    resultEl.textContent = `£${result}`;
+  }
+  
+  if ('vibrate' in navigator) {
+    navigator.vibrate(50);
+  }
+}
+
+function setRateAlert() {
+  const target = prompt('Enter your target USD rate for 1 GBP (e.g., 1.30):');
+  const targetRate = parseFloat(target);
+  if (target && !isNaN(targetRate) && targetRate > 0) {
+    showAlert('✅ Rate Alert Set!', `We'll simulate a notification if 1 GBP reaches $${targetRate.toFixed(3)}. Your dollars are getting ready for Vegas! 😉`);
+    localStorage.setItem('rateTarget', targetRate);
+  } else if (target) {
+     showAlert('⚠️ Invalid Rate', `Please enter a valid number (e.g., 1.30).`);
+  }
+}
+
+/* ===== Simulated push notifications ===== */
+function showToast(title, body, icon='🔔', timeout=5200){
+  const c=document.getElementById('toastContainer');
+  const el=document.createElement('div'); el.className='toast';
+  el.innerHTML=`<div class="toast-icon">${icon}</div>
+                <div><div class="toast-title">${title}</div><div class="toast-body">${body}</div></div>
+                <button class="toast-close" aria-label="Close">×</button>`;
+  c.appendChild(el);
+  const closer=el.querySelector('.toast-close');
+  const remove=()=>{ el.style.opacity='0'; el.style.transform='translateY(-6px)'; setTimeout(()=>el.remove(),220); };
+  closer.addEventListener('click', remove);
+  setTimeout(remove, timeout);
+}
+
 /* ===== Weather (Open-Meteo) ===== */
 const tripLocations = [
   { id: "sanfran", name: "San Francisco", lat: 37.7749, lon: -122.4194, emoji: "🌉" },
@@ -776,20 +1015,10 @@ const tripLocations = [
   { id: "vegas", name: "Las Vegas", lat: 36.1699, lon: -115.1398, emoji: "🎰" },
   { id: "nyc", name: "New York", lat: 40.7128, lon: -74.0060, emoji: "🗽" }
 ];
-
-const weatherIcons = {
-  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",
+const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",
   61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",
-  80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"
-};
-const weatherDescriptions = {
-  0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",
-  45:"Fog",48:"Depositing rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",
-  61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",
-  71:"Slight snow fall",73:"Moderate snow fall",75:"Heavy snow fall",77:"Snow grains",
-  80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",
-  95:"Thunderstorm",96:"Thunderstorm with slight hail",99:"Thunderstorm with heavy hail"
-};
+  80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"};
+const weatherDescriptions = {0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Depositing rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",71:"Slight snow fall",73:"Moderate snow fall",75:"Heavy snow fall",77:"Snow grains",80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",95:"Thunderstorm",96:"Thunderstorm with slight hail",99:"Thunderstorm with heavy hail"};
 
 async function fetchWeatherData(location) {
   try {
@@ -1044,6 +1273,78 @@ function showMomentDetails(key){
   content.innerHTML = html;
   document.getElementById('locationModal').style.display = 'block';
 }
+
+/* ===== Destination modal content ===== */
+const locationDetails = {
+  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
+    activities:[
+      {day:'Day 1',activity:'Arrival & Union Square exploration'},
+      {day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},
+      {day:'Day 3',activity:'Alcatraz tour & Free walking tour'},
+      {day:'Day 4',activity:'Final SF sights before Yosemite'}
+    ],
+    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
+    tips:'Dress in layers — SF weather can change dramatically throughout the day!'
+  },
+  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
+    activities:[
+      {day:'Day 1',activity:'Drive from SF, settle in'},
+      {day:'Day 2',activity:'Glacier Point & Tunnel View'},
+      {day:'Day 3',activity:'Mist Trail, Sentinel Dome & stargazing'}
+    ],
+    highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'],
+    tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!'
+  },
+  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
+    activities:[
+      {day:'Day 1',activity:'Arrive & explore the Strip'},
+      {day:'Day 2',activity:'Grand Canyon day trip'},
+      {day:'Day 3',activity:'30th Birthday celebration!'},
+      {day:'Day 4',activity:'Shows & entertainment'},
+      {day:'Day 5',activity:'Hoover Dam & final Vegas night'}
+    ],
+    highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'],
+    tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!'
+  },
+  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
+    activities:[
+      {day:'Day 1',activity:'Arrival & Times Square'},
+      {day:'Day 2',activity:'Central Park & Broadway show'},
+      {day:'Day 3',activity:'Final sights before departure'}
+    ],
+    highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'],
+    tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!'
+  }
+};
+function showLocationDetails(key){
+  const d = locationDetails[key]; if(!d) return;
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
+    <p style="font-weight:700;margin-bottom:20px;color:var(--secondary)">${d.dates}</p>
+    <div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:18px;border-radius:16px;margin-bottom:20px">
+      <h3 style="margin-bottom:8px;color:var(--primary)">🏨 Accommodation</h3>
+      <p style="font-weight:600">${d.stay.name}</p>
+    </div>
+    <div style="margin-bottom:20px">
+      <h3 style="margin-bottom:12px;color:var(--primary)">📅 Daily Itinerary</h3>
+      ${d.activities.map(a=>`
+        <div style="padding:12px;background:#fafbff;border-radius:10px;margin-bottom:8px;border-left:4px solid var(--primary)">
+          <strong style="color:var(--secondary)">${a.day}:</strong> ${a.activity}
+        </div>`).join('')}
+    </div>
+    <div style="margin-bottom:20px">
+      <h3 style="margin-bottom:12px;color:var(--primary)">✨ Must-See Highlights</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+        ${d.highlights.map(h=>`<span style="padding:8px 12px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;text-align:center;font-weight:600;font-size:14px">${h}</span>`).join('')}
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,149,0,.1),rgba(255,149,0,.05));border:1px solid rgba(255,149,0,.3);padding:16px;border-radius:12px">
+      <strong style="color:var(--warning)">💡 Pro Tip:</strong> ${d.tips}
+    </div>
+  `;
+  document.getElementById('locationModal').style.display = 'block';
+}
 function closeModal(){ document.getElementById('locationModal').style.display='none'; }
 
 /* ===== Packing ===== */
@@ -1102,7 +1403,7 @@ function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.
 function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-/* ===== UI helpers ===== */
+/* ===== UI helpers & alerts ===== */
 function celebrate(){ burstConfetti(200); const btn=document.querySelector('.b-btn'); if(btn){ btn.style.animation='bounceIn .8s var(--curve)'; setTimeout(()=>btn.style.animation='',800);} }
 function burstConfetti(count=150){
   const canvas = document.getElementById('confettiCanvas');
@@ -1129,61 +1430,17 @@ function showAlert(title, html){
 }
 function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
 
-/* ===== Destination modal ===== */
-const locationDetails = {
-  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrival & Union Square exploration'},{day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},{day:'Day 3',activity:'Alcatraz tour & Free walking tour'},{day:'Day 4',activity:'Final SF sights before Yosemite'}],
-    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
-    tips:'Dress in layers — SF weather can change dramatically throughout the day!'
-  },
-  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
-    activities:[{day:'Day 1',activity:'Drive from SF, settle in'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Hiking trails & stargazing'}],
-    highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'],
-    tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!'
-  },
-  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}],
-    highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'],
-    tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!'
-  },
-  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrival & Times Square'},{day:'Day 2',activity:'Central Park & Broadway show'},{day:'Day 3',activity:'Final sights before departure'}],
-    highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'],
-    tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!'
-  }
-};
-function showLocationDetails(key){
-  const d = locationDetails[key]; if(!d) return;
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
-    <p style="font-weight:700;margin-bottom:20px;color:var(--secondary)">${d.dates}</p>
-    <div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:18px;border-radius:16px;margin-bottom:20px">
-      <h3 style="margin-bottom:8px;color:var(--primary)">🏨 Accommodation</h3>
-      <p style="font-weight:600">${d.stay.name}</p>
-    </div>
-    <div style="margin-bottom:20px">
-      <h3 style="margin-bottom:12px;color:var(--primary)">📅 Daily Itinerary</h3>
-      ${d.activities.map(a=>`
-        <div style="padding:12px;background:#fafbff;border-radius:10px;margin-bottom:8px;border-left:4px solid var(--primary)">
-          <strong style="color:var(--secondary)">${a.day}:</strong> ${a.activity}
-        </div>`).join('')}
-    </div>
-    <div style="margin-bottom:20px">
-      <h3 style="margin-bottom:12px;color:var(--primary)">✨ Must-See Highlights</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
-        ${d.highlights.map(h=>`<span style="padding:8px 12px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;text-align:center;font-weight:600;font-size:14px">${h}</span>`).join('')}
-      </div>
-    </div>
-    <div style="background:linear-gradient(135deg,rgba(255,149,0,.1),rgba(255,255,255,.05));border:1px solid rgba(255,149,0,.3);padding:16px;border-radius:12px">
-      <strong style="color:var(--warning)">💡 Pro Tip:</strong> ${d.tips}
-    </div>
-  `;
-  document.getElementById('locationModal').style.display = 'block';
+/* ===== Scroll animations ===== */
+function observeScrollAnimations() {
+  const els = document.querySelectorAll('.animate-on-scroll');
+  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } }); }, {threshold:0.12});
+  els.forEach(el=>obs.observe(el));
 }
 
-/* ===== Global modal closers ===== */
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); closeAlert(); } });
+/* ===== Global modal/nav UX ===== */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeModal(); closeAlert(); }
+});
 window.addEventListener('click', (e) => {
   const locationModal = document.getElementById('locationModal');
   const alertModal = document.getElementById('alertModal');
@@ -1199,19 +1456,19 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* ===== Scroll animations ===== */
-function observeScrollAnimations() {
-  const els = document.querySelectorAll('.animate-on-scroll');
-  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } }); }, {threshold:0.1});
-  els.forEach(el=>obs.observe(el));
-}
-
 /* ===== Init ===== */
 document.addEventListener('DOMContentLoaded', () => {
-  updateCountdown(); setInterval(updateCountdown, 1000);
-  updateTimelineStatus();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 
+  updateTimelineStatus();
   buildNextUp();
+
+  // Initialize Currency Tracker
+  fetchExchangeRate();
+  setInterval(fetchExchangeRate, 60000 * 15); // Update every 15 minutes
+  document.getElementById('currencyInput').addEventListener('input', convertCurrency);
+  document.getElementById('currencyDir').addEventListener('change', convertCurrency);
 
   loadWeather();
   setInterval(loadWeather, 120000); // every 2 minutes
