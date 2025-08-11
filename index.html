@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Final (Updated)</title>
+<title>USA 2025 Adventure — Final (Updated + iOS Weather)</title>
 <style>
 /* ========== Base / Reset ========== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -88,7 +88,7 @@ nav{
 /* ========== Layout Container ========== */
 .container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
 
-/* ========== Route 66 Timeline (clean grid) ========== */
+/* ========== Route 66 Timeline ========== */
 .route66{
   margin:22px 0;
   border:1px solid var(--border);
@@ -122,25 +122,19 @@ nav{
   z-index:3;animation:r66move 38s linear infinite;
 }
 @keyframes r66move{0%{left:0%}100%{left:100%}}
-@media (max-width:768px){ 
-  .route66{
-    padding:12px clamp(8px,3vw,16px) 14px;
-    min-height:auto;
-  }
-  .route66__track{min-height:120px}
-  .route66__stops{gap:clamp(4px,1vw,8px)}
-  .route66__stop{grid-template-rows:auto 16px auto auto;padding-inline:2px}
-  .route66__date{font-size:clamp(9px,2.2vw,10px)}
-  .route66__icon{font-size:clamp(16px,4vw,20px)}
-  .route66__label{font-size:clamp(10px,2.8vw,12px);margin-top:6px}
+@media (max-width:768px){
+  .route66{padding:12px clamp(8px,3vw,16px) 14px}
+  .route66__track{min-height:130px}
+  .route66__stops{gap:clamp(6px,2vw,10px)}
+  .route66__stop{grid-template-rows:auto 18px auto auto;padding-inline:2px}
+  .route66__date{font-size:10px;letter-spacing:.06em}
+  .route66__icon{font-size:20px;margin-top:8px}
+  .route66__label{font-size:12px;margin-top:10px} /* lower label for readability */
 }
 
 /* ========== NEXT UP SLIDER ========== */
 .nu-section{margin:22px 0}
-.nu-card{
-  border:1px solid var(--border); border-radius:20px; overflow:hidden;
-  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9)); box-shadow:0 14px 34px rgba(16,24,40,.1)
-}
+.nu-card{border:1px solid var(--border); border-radius:20px; overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9)); box-shadow:0 14px 34px rgba(16,24,40,.1)}
 .nu-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px}
 .nu-title{font-weight:900; letter-spacing:.3px}
 .nu-dots{display:flex; gap:8px}
@@ -155,38 +149,51 @@ nav{
 .nu-progress{height:3px; background:rgba(16,24,40,.08)}
 .nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
 
-/* ========== Live Weather (clean) ========== */
+/* ========== Live Weather (CLEAN, iOS-ish) ========== */
 .weather-section{margin:40px 0}
 .section-title{font-size:28px;font-weight:900;margin-bottom:14px;text-align:left}
 .weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width: 960px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
 @media (max-width: 560px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
 .weather-card{
-  position:relative;overflow:hidden;isolation:isolate;cursor:pointer;
+  position:relative;overflow:hidden;isolation:isolate;cursor:pointer;min-height:230px;
   border-radius:22px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));
   box-shadow:0 8px 28px rgba(16,24,40,.08);
   padding:18px;transition:transform .25s var(--curve), box-shadow .25s var(--curve);
   backdrop-filter:saturate(140%) blur(10px);
 }
+.weather-card::before{content:"";position:absolute;inset:-30%;background:radial-gradient(600px 220px at 10% 0%, rgba(0,122,255,.10), transparent 60%),radial-gradient(600px 220px at 90% 100%, rgba(88,86,214,.10), transparent 60%);z-index:-1}
 .weather-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
 .weather-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.weather-location{font-weight:800;color:var(--primary);font-size:16px}
+.weather-location{font-weight:800;color:var(--primary);font-size:16px;display:flex;gap:6px;align-items:center}
 .weather-badge{font-size:11px;padding:6px 8px;border-radius:999px;background:#eef3ff;border:1px solid rgba(0,0,0,.06)}
-.weather-main{display:flex;align-items:center;gap:12px}
+.weather-main{display:flex;align-items:center;gap:12px;margin:4px 0 8px}
 .weather-temp{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--ink),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-@media (max-width: 420px){ .weather-temp{font-size:30px} }
 .weather-icon{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
 .weather-desc{font-size:13px;color:var(--muted)}
-.weather-rows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.wx-chip{background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:8px}
-.wx-chip .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.wx-chip .value{font-size:14px;font-weight:700}
+.wx-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.wx-kv .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.wx-kv .value{font-size:14px;font-weight:700}
 .wx-hours{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
 .wx-hour{min-width:64px;text-align:center;border:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.6);border-radius:10px;padding:6px}
 .wx-hour .t{font-weight:800}
 .weather-update{font-size:11px;color:var(--muted);margin-top:8px;opacity:0.8}
 .weather-card.loading{opacity:0.7}
 .weather-card.error{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,59,48,.05),rgba(255,255,255,.9))}
+@media (max-width:480px){
+  .weather-temp{font-size:28px}
+  .weather-icon{font-size:38px}
+  .weather-card{min-height:210px}
+}
+.wx-3day{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.wx-3day .d{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.wx-3day .d .t{font-weight:800}
+.wx-3day .d .hi{font-weight:800}
+.wx-3day .d .lo{opacity:.7}
+.advice{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.advice .chip{padding:6px 10px;border-radius:999px;background:#f3f5fb;border:1px solid var(--border);font-size:12px;font-weight:700}
+.advice .chip.warn{background:rgba(255,149,0,.14);border-color:rgba(255,149,0,.3)}
+.advice .chip.danger{background:rgba(255,59,48,.14);border-color:rgba(255,59,48,.3)}
 
 /* ========== Birthday Widget ========== */
 .birthday-wrap{display:flex;justify-content:center;margin:38px 0}
@@ -300,11 +307,6 @@ nav{
 .packing-stat{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.8));border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;backdrop-filter: blur(8px)}
 .packing-stat-value{font-size:20px;font-weight:800;color:var(--primary)}
 .packing-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-@media (max-width: 600px){.packing-grid { padding: 16px; grid-template-columns: 1fr; } .packing-item { font-size: 14px; }}
-
-.progress-bar{width:100%;height:8px;background:#eef1f6;border-radius:999px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--success),#4ade80);width:0%;transition:width 0.6s var(--curve)}
-.progress-label{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* ========== Modals & Animations ========== */
 @keyframes slideInUp{from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
@@ -323,7 +325,7 @@ nav{
       <div class="logo">USA 2025 ✈️</div>
       <button class="nav-toggle" aria-expanded="false" aria-label="Open menu" onclick="toggleMobileNav(this)">☰</button>
       <ul class="nav-links">
-        <li class="nav-link active" data-target="overview" onclick="scrollToSection('overview',event)">Overview</li>
+        <li class="nav-link active" data-target="overview" onclick="scrollToSection('route-timeline',event)">Overview</li>
         <li class="nav-link" data-target="live-weather" onclick="scrollToSection('live-weather',event)">Weather</li>
         <li class="nav-link" data-target="destinations" onclick="scrollToSection('destinations',event)">Destinations</li>
         <li class="nav-link" data-target="timeline" onclick="scrollToSection('timeline',event)">Moments</li>
@@ -345,54 +347,30 @@ nav{
   </header>
 
   <main class="container">
-    <!-- Route 66 timeline (replaces previous Road Map) -->
+    <!-- Route 66 timeline -->
     <section class="route66 animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
       <h2 class="section-title" id="route-title">Road Trip Map</h2>
       <div class="route66__track" aria-live="polite">
         <div class="route66__road"></div>
         <div class="route66__progress" aria-hidden="true"></div>
-
         <div class="route66__stops">
           <button class="route66__stop" onclick="showLocationDetails('sanfran')" aria-label="San Francisco details">
-            <div class="route66__date">Sep 19–23</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🌉</div>
-            <div class="route66__label">San Francisco</div>
+            <div class="route66__date">Sep 19–23</div><div class="route66__dot"></div><div class="route66__icon">🌉</div><div class="route66__label">San Francisco</div>
           </button>
-
           <button class="route66__stop" onclick="showLocationDetails('yosemite')" aria-label="Yosemite details">
-            <div class="route66__date">Sep 23–26</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🏔️</div>
-            <div class="route66__label">Yosemite</div>
+            <div class="route66__date">Sep 23–26</div><div class="route66__dot"></div><div class="route66__icon">🏔️</div><div class="route66__label">Yosemite</div>
           </button>
-
           <div class="route66__stop" aria-label="Death Valley (pass-through)">
-            <div class="route66__date">Sep 26–27</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🏜️</div>
-            <div class="route66__label">Death Valley</div>
+            <div class="route66__date">Sep 26–27</div><div class="route66__dot"></div><div class="route66__icon">🏜️</div><div class="route66__label">Death Valley</div>
           </div>
-
           <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
-            <div class="route66__date">Sep 27–29</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🏞️</div>
-            <div class="route66__label">Grand Canyon</div>
+            <div class="route66__date">Sep 27–29</div><div class="route66__dot"></div><div class="route66__icon">🏞️</div><div class="route66__label">Grand Canyon</div>
           </button>
-
           <button class="route66__stop" onclick="showLocationDetails('vegas')" aria-label="Las Vegas details">
-            <div class="route66__date">Sep 29–Oct 1</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🎉</div>
-            <div class="route66__label">Las Vegas</div>
+            <div class="route66__date">Sep 29–Oct 1</div><div class="route66__dot"></div><div class="route66__icon">🎉</div><div class="route66__label">Las Vegas</div>
           </button>
-
           <button class="route66__stop" onclick="showLocationDetails('nyc')" aria-label="New York City details">
-            <div class="route66__date">Oct 1–3</div>
-            <div class="route66__dot" aria-hidden="true"></div>
-            <div class="route66__icon" aria-hidden="true">🗽</div>
-            <div class="route66__label">New York City</div>
+            <div class="route66__date">Oct 1–3</div><div class="route66__dot"></div><div class="route66__icon">🗽</div><div class="route66__label">New York City</div>
           </button>
         </div>
       </div>
@@ -433,9 +411,7 @@ nav{
             <p class="b-eyebrow" style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Vegas • Sep 28</p>
             <h3 class="b-title" id="bday-title">🎉 30th Birthday: Let's Make It Legendary!</h3>
             <p class="b-sub">A toast, a rooftop, and a little chaos. Tap the button when the moment hits—instant celebration.</p>
-            <div class="b-cta">
-              <button class="b-btn" type="button" onclick="celebrate()">Celebrate! 🎂</button>
-            </div>
+            <div class="b-cta"><button class="b-btn" type="button" onclick="celebrate()">Celebrate! 🎂</button></div>
           </div>
           <div class="birthday-right"><div class="cake" aria-hidden="true">🎂</div></div>
         </div>
@@ -445,7 +421,6 @@ nav{
     <!-- Destinations -->
     <h2 id="destinations" class="locations-heading animate-on-scroll">Destinations</h2>
     <section class="locations-grid animate-on-scroll" aria-label="Destinations grid">
-      <!-- San Francisco -->
       <article class="location-card" onclick="showLocationDetails('sanfran')">
         <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2070&q=80')">
           <div class="location-overlay"><div class="location-name">San Francisco</div></div>
@@ -459,7 +434,6 @@ nav{
           </div>
         </div>
       </article>
-      <!-- Yosemite -->
       <article class="location-card" onclick="showLocationDetails('yosemite')">
         <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=2070&q=80')">
           <div class="location-overlay"><div class="location-name">Yosemite</div></div>
@@ -473,7 +447,6 @@ nav{
           </div>
         </div>
       </article>
-      <!-- Las Vegas -->
       <article class="location-card" onclick="showLocationDetails('vegas')">
         <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?auto=format&fit=crop&w=2070&q=80')">
           <div class="location-overlay"><div class="location-name">Las Vegas</div></div>
@@ -487,7 +460,6 @@ nav{
           </div>
         </div>
       </article>
-      <!-- NYC -->
       <article class="location-card" onclick="showLocationDetails('nyc')">
         <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=2070&q=80')">
           <div class="location-overlay"><div class="location-name">New York City</div></div>
@@ -523,7 +495,7 @@ nav{
       <article class="boarding-pass" aria-label="London to San Francisco">
         <div class="bp-left">
           <div class="bp-header"><div class="airline">✈️ TransAtlantic Airways</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">LON</span> <span class="arrow">→</span> <span class="iata">SFO</span></div>
+          <div class="route"><span class="iata">LON</span> → <span class="iata">SFO</span></div>
           <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>19 Sep</strong></div>
             <div class="bp-field"><span>Departs</span><strong>10:35</strong></div>
@@ -553,7 +525,7 @@ nav{
       <article class="boarding-pass" aria-label="Las Vegas to New York">
         <div class="bp-left">
           <div class="bp-header"><div class="airline">🛫 DesertJet</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">LAS</span> <span class="arrow">→</span> <span class="iata">NYC</span></div>
+          <div class="route"><span class="iata">LAS</span> → <span class="iata">NYC</span></div>
           <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>01 Oct</strong></div>
             <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
@@ -583,7 +555,7 @@ nav{
       <article class="boarding-pass" aria-label="New York to London">
         <div class="bp-left">
           <div class="bp-header"><div class="airline">🛬 Atlantic Home</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">NYC</span> <span class="arrow">→</span> <span class="iata">LON</span></div>
+          <div class="route"><span class="iata">NYC</span> → <span class="iata">LON</span></div>
           <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>03 Oct</strong></div>
             <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
@@ -647,7 +619,7 @@ nav{
     </div>
   </div>
 
-  <!-- Alert modal -->
+  <!-- Alert modal (also used for weather details) -->
   <div id="alertModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:500px">
       <button class="modal-close" onclick="closeAlert()" aria-label="Close">×</button>
@@ -656,7 +628,7 @@ nav{
   </div>
 
 <script>
-/* ===== Mobile nav ===== */
+/* ===== Mobile nav + smooth scroll ===== */
 function toggleMobileNav(btn){ const n=btn.closest('nav'); const open=n.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }
 function scrollToSection(id,e){ e?.preventDefault(); document.getElementById(id)?.scrollIntoView({behavior:'smooth'}) }
 
@@ -675,8 +647,7 @@ let packingItems = [
 
 let weatherDetails = false;
 let lastWeatherUpdate = null;
-window.__WX_CACHE = {};     // expose for Next Up
-window.__PACKING_PCT = 0;   // expose for Next Up
+let weatherStore = {}; // latest weather per location
 
 /* ===== Hero countdown ===== */
 function updateCountdown(){
@@ -713,9 +684,8 @@ function updateTimelineStatus(){
                           : `🛤️ You're on the road — make it count!`;
 }
 
-/* ===== Next Up slider (trimmed to 4 items) ===== */
+/* ===== Next Up slider ===== */
 const TRIP_START = new Date('2025-09-19T09:00:00-07:00');
-const TRIP_END   = new Date('2025-10-03T23:59:59-04:00');
 const nuItems = [
   { emoji:'🗺️', title:'Countdown', body:()=> {
       const d = Math.max(0, Math.ceil((TRIP_START - new Date())/86400000));
@@ -723,7 +693,7 @@ const nuItems = [
     } },
   { emoji:'🍕', title:'NYC pizza shortlist', body:'Joe’s • Prince Street • Scarr’s • Di Fara' },
   { emoji:'🍸', title:'Vegas bars to try', body:'Chandelier • Ghost Donkey • Legacy Club' },
-  { emoji:'🛍️', title:'Shopping zones', body:'SF Union Sq • Forum Shops (Vegas) • SoHo (NYC)' }
+  { emoji:'🛍️', title:'Shopping zones', body:'SF Union Sq • Forum Shops • SoHo' }
 ];
 let nuIndex=0, nuTimer=null, nuInterval=5200;
 function buildNextUp(){
@@ -749,7 +719,6 @@ function buildNextUp(){
 function goToSlide(i,instant=false){
   const track=document.getElementById('nuTrack'); const dots=document.getElementById('nuDots').children; const bar=document.getElementById('nuBar');
   const n=nuItems.length; nuIndex=(i+n)%n;
-  // refresh dynamic copy
   track.querySelectorAll('.nu-slide').forEach((sl,idx)=>{
     const item=nuItems[idx];
     if(typeof item.body==='function'){ sl.querySelector('p').textContent=item.body(); }
@@ -772,12 +741,30 @@ const tripLocations = [
   { id: "vegas", name: "Las Vegas", lat: 36.1699, lon: -115.1398, emoji: "🎰" },
   { id: "nyc", name: "New York", lat: 40.7128, lon: -74.0060, emoji: "🗽" }
 ];
-const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"};
-const weatherDescriptions = {0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",71:"Slight snow",73:"Moderate snow",75:"Heavy snow",77:"Snow grains",80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",95:"Thunderstorm",96:"T-storm w/ slight hail",99:"T-storm w/ heavy hail"};
+
+const weatherIcons = {
+  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",
+  61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",
+  80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"
+};
+const weatherDescriptions = {
+  0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",
+  45:"Fog",48:"Depositing rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",
+  61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",
+  71:"Slight snow fall",73:"Moderate snow fall",75:"Heavy snow fall",77:"Snow grains",
+  80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",
+  95:"Thunderstorm",96:"Thunderstorm with slight hail",99:"Thunderstorm with heavy hail"
+};
 
 async function fetchWeatherData(location) {
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset&timezone=auto&forecast_days=1`;
+    const url =
+      `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=${location.lat}&longitude=${location.lon}` +
+      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m` +
+      `&hourly=temperature_2m,weather_code,precipitation_probability,uv_index` +
+      `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,uv_index_max,weather_code` +
+      `&timezone=auto&forecast_days=3`;
     const res = await fetch(url);
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
@@ -796,7 +783,8 @@ function getNextHoursSlice(hourly){
     const t = hourly.time[start+i];
     const temp = hourly.temperature_2m?.[start+i];
     const code = hourly.weather_code?.[start+i];
-    return t?{time:t,temp,code}:null;
+    const prob = hourly.precipitation_probability?.[start+i];
+    return t?{time:t,temp,code,prob}:null;
   }).filter(Boolean);
 }
 function createWeatherCard(w){
@@ -816,33 +804,32 @@ function createWeatherCard(w){
   const hi = daily.temperature_2m_max?Math.round(daily.temperature_2m_max[0]):null;
   const lo = daily.temperature_2m_min?Math.round(daily.temperature_2m_min[0]):null;
   const rain = daily.precipitation_sum?daily.precipitation_sum[0]:0;
-  const sunrise = daily.sunrise? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
-  const sunset  = daily.sunset?  new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
+  const uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : null;
   const next = getNextHoursSlice(hourly);
-  // cache minimal for Next Up
-  window.__WX_CACHE[location.id] = { temp, desc };
 
   const details = weatherDetails
-    ? `<div class="weather-rows">
-         <div class="wx-chip"><div class="label">Feels</div><div class="value">${feels}°C</div></div>
-         <div class="wx-chip"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
-         <div class="wx-chip"><div class="label">High/Low</div><div class="value">${hi??'--'}°/${lo??'--'}°</div></div>
-         <div class="wx-chip"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
-         <div class="wx-chip"><div class="label">Sunrise</div><div class="value">${sunrise}</div></div>
-         <div class="wx-chip"><div class="label">Sunset</div><div class="value">${sunset}</div></div>
+    ? `<div class="wx-metrics">
+         <div class="wx-kv"><div class="label">Feels</div><div class="value">${feels}°C</div></div>
+         <div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
+         <div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax ?? '—'}</div></div>
+         <div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div>
+         <div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
        </div>`
-    : `<div class="weather-rows">
-         <div class="wx-chip"><div class="label">High/Low</div><div class="value">${hi??'--'}°/${lo??'--'}°</div></div>
-         <div class="wx-chip"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
+    : `<div class="wx-metrics">
+         <div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div>
+         <div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
        </div>`;
+
   const hours = `<div class="wx-hours">${
      next.map(h=>{
        const ic = weatherIcons[h.code]||'·';
        const t = new Date(h.time).toLocaleTimeString([], {hour:'2-digit'});
        const deg = Math.round(h.temp);
-       return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div></div>`;
+       const p  = (h.prob ?? 0) + '%';
+       return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;
      }).join('')
   }</div>`;
+
   return `<div class="weather-card" id="weather-${location.id}" onclick="showWeatherDetails('${location.id}')">
     <div class="weather-head"><div class="weather-location">${location.emoji} ${location.name}</div><span class="weather-badge">Today</span></div>
     <div class="weather-main"><div class="weather-icon">${icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-desc">${desc}</div></div></div>
@@ -858,6 +845,7 @@ async function loadWeather(){
       <div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Fetching...</div></div></div>
     </div>`).join('');
   const results = await Promise.all(tripLocations.map(fetchWeatherData));
+  results.forEach(r => { weatherStore[r.location.id] = r; });
   grid.innerHTML = results.map(createWeatherCard).join('');
   lastWeatherUpdate = new Date();
   const s = document.getElementById('wxStatus');
@@ -865,48 +853,139 @@ async function loadWeather(){
 }
 function refreshWeather(btn){ loadWeather(); if(btn){ btn.style.transform='rotate(360deg)'; setTimeout(()=>btn.style.transform='',600); } }
 function toggleWeatherDetails(btn){ weatherDetails=!weatherDetails; loadWeather(); if(btn){ btn.textContent = weatherDetails? '📊 Hide Details' : '📊 Show Details'; } }
+
+function buildWeatherAdvice(w){
+  const tips=[];
+  const c=w.current||{}, d=w.daily||{}, h=w.hourly||{};
+  const temp = Math.round(c.temperature_2m ?? 0);
+  const feels = Math.round(c.apparent_temperature ?? temp);
+  const wind = Math.round((c.wind_speed_10m||0)*2.237);
+  const gust = c.wind_gusts_10m ? Math.round(c.wind_gusts_10m*2.237) : null;
+  const hum  = c.relative_humidity_2m ?? null;
+
+  const hi   = d.temperature_2m_max ? Math.round(d.temperature_2m_max[0]) : null;
+  const lo   = d.temperature_2m_min ? Math.round(d.temperature_2m_min[0]) : null;
+  const swing = (hi!=null && lo!=null) ? hi-lo : null;
+  const uvMax = d.uv_index_max ? Math.round(d.uv_index_max[0]) : null;
+
+  let nextProb = null;
+  if(h.precipitation_probability && h.time){
+    const now = Date.now();
+    const idx = h.time.findIndex(t => new Date(t).getTime() >= now);
+    nextProb = h.precipitation_probability[idx] ?? null;
+  }
+
+  if(nextProb!=null && nextProb>=40) tips.push({t:'Showers likely — pack a light rain jacket',level:'warn'});
+  if(uvMax!=null && uvMax>=7)      tips.push({t:'High UV — sunscreen, hat, sunglasses',level:'warn'});
+  if(temp>=30 || feels>=32)        tips.push({t:'Hot today — hydrate frequently',level:'warn'});
+  if(temp<=5)                      tips.push({t:'Chilly — bring warm layers',level:'warn'});
+  if(swing!=null && swing>=12)     tips.push({t:'Big temperature swing — layer up', level:'warn'});
+  if(wind>=25 || (gust!=null && gust>=35)) tips.push({t:'Windy — secure hats; cooler wind chill', level:'warn'});
+  if(hum!=null && temp>=26 && hum>=60) tips.push({t:'Humid — it may feel muggier than temp', level:'warn'});
+
+  const city = w.location.id;
+  if(city==='sanfran') tips.unshift({t:'SF microclimates: bring a light jacket for fog',level:''});
+  if(city==='yosemite') tips.unshift({t:'Trail shoes + warm layer for evening stargazing',level:''});
+  if(city==='vegas') tips.unshift({t:'Sunscreen + sunglasses for daytime Strip walks',level:''});
+  if(city==='nyc') tips.unshift({t:'Comfy walking shoes; lots of steps!',level:''});
+
+  return tips;
+}
+function formatDay(iso){ return new Date(iso).toLocaleDateString([], {weekday:'short'}); }
+
 function showWeatherDetails(id){
-  const l = tripLocations.find(x=>x.id===id); if(!l) return;
-  showAlert(`${l.emoji} ${l.name} Weather`, `
-    <div style="text-align:left">
-      <p><strong>Packing tips for ${l.name}:</strong></p>
-      <ul style="margin:10px 0;padding-left:20px">
-        ${id==='sanfran'?'<li>Layers! Evening fog rolls in.</li><li>Light jacket.</li>':''}
-        ${id==='yosemite'?'<li>Sturdy boots.</li><li>Warm layers for stargazing.</li>':''}
-        ${id==='vegas'?'<li>Sunglasses & sunscreen.</li><li>Light, breathable clothing.</li>':''}
-        ${id==='nyc'?'<li>Comfortable walking shoes.</li><li>Light jacket for AC.</li>':''}
-      </ul>
-    </div>`);
+  const w = weatherStore[id];
+  const l = tripLocations.find(x=>x.id===id);
+  if(!w || !l){ showAlert('Weather','Details not available yet. Try refresh.'); return; }
+
+  const {current, daily, hourly} = w;
+  const next = getNextHoursSlice(hourly);
+  const uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : '—';
+  const sunrise = daily.sunrise ? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
+  const sunset  = daily.sunset  ? new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
+  const wind = Math.round((current.wind_speed_10m||0)*2.237);
+  const feels = Math.round(current.apparent_temperature ?? current.temperature_2m ?? 0);
+
+  const tips = buildWeatherAdvice(w);
+  const three = daily.time ? [0,1,2].map(i=>{
+    const code = daily.weather_code?.[i];
+    const ic = weatherIcons[code] || (daily.precipitation_sum?.[i] > 0 ? '🌧️' : '☀️');
+    const hi = daily.temperature_2m_max ? Math.round(daily.temperature_2m_max[i]) : '—';
+    const lo = daily.temperature_2m_min ? Math.round(daily.temperature_2m_min[i]) : '—';
+    return {d: formatDay(daily.time[i]), ic, hi, lo};
+  }) : [];
+
+  const html = `
+    <h2 id="modalTitle" style="font-size:24px;margin-bottom:6px;color:var(--primary)">${l.emoji} ${l.name}</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0">
+      <div class="wx-kv"><div class="label">Feels Like</div><div class="value">${feels}°C</div></div>
+      <div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
+      <div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax}</div></div>
+      <div class="wx-kv"><div class="label">Sunrise / Sunset</div><div class="value">${sunrise} / ${sunset}</div></div>
+    </div>
+
+    <h3 style="margin:12px 0 6px;color:var(--secondary)">Next Hours</h3>
+    <div class="wx-hours" style="margin-top:6px">${
+      next.map(h=>{
+        const ic = weatherIcons[h.code]||'·';
+        const t = new Date(h.time).toLocaleTimeString([], {hour:'2-digit'});
+        const deg = Math.round(h.temp);
+        const p  = (h.prob ?? 0) + '%';
+        return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;
+      }).join('')
+    }</div>
+
+    <h3 style="margin:16px 0 6px;color:var(--secondary)">3-Day Outlook</h3>
+    <div class="wx-3day">${
+      three.map(d=>`<div class="d"><div class="t">${d.d}</div><div style="font-size:22px;margin:2px 0">${d.ic}</div><div><span class="hi">${d.hi}°</span> / <span class="lo">${d.lo}°</span></div></div>`).join('')
+    }</div>
+
+    <h3 style="margin:16px 0 6px;color:var(--secondary)">Advice</h3>
+    <div class="advice">
+      ${tips.map(t=>`<span class="chip ${t.level}">${t.t}</span>`).join('')}
+    </div>
+  `;
+  showAlert(`${l.emoji} ${l.name} Weather`, html);
 }
 
-/* ===== Moments & Locations Modals (minimal) ===== */
+/* ===== Moments Guides ===== */
 const momentGuides = {
   stargazing:{ title:'Yosemite Stargazing',
     stops:[{name:'Glacier Point',why:'Panoramic sky & Half Dome silhouette',maps:'https://www.google.com/maps?q=Glacier+Point'},
-           {name:'Tunnel View',why:'Iconic valley frame',maps:'https://www.google.com/maps?q=Tunnel+View'}],
-    tips:['Arrive before full darkness','Use red light','Warm layers']},
+           {name:'Tunnel View',why:'Iconic valley frame, good foregrounds',maps:'https://www.google.com/maps?q=Tunnel+View'}],
+    tips:['Arrive before full darkness for setup','Use red light to preserve night vision','Temps drop fast — pack layers']},
   vegasNight:{ title:'Vegas Boys Night',
     stops:[{name:'Bellagio Fountains',why:'Kick-off with the classics',maps:'https://www.google.com/maps?q=Bellagio+Fountains'},
-           {name:'Chandelier Bar',why:'Cocktails under crystals',maps:'https://www.google.com/maps?q=The+Chandelier+Bar+Cosmopolitan'},
-           {name:'Fremont Street',why:'LED canopy + bands',maps:'https://www.google.com/maps?q=Fremont+Street+Experience'}],
-    tips:['Book rides Strip↔Downtown','Hydrate','Smart casual helps entry']},
-  nycFood:{ title:'NYC Street Food',
-    stops:[{name:'Joe’s Pizza',why:'The slice',maps:'https://www.google.com/maps?q=Joes+Pizza+NYC'},
-           {name:'Ess-a-Bagel',why:'Proper bagel',maps:'https://www.google.com/maps?q=Ess+a+Bagel'},
+           {name:'Chandelier Bar',why:'Cocktails beneath crystal glow',maps:'https://www.google.com/maps?q=The+Chandelier+Bar+Cosmopolitan'},
+           {name:'Fremont Street',why:'LED canopy + live bands',maps:'https://www.google.com/maps?q=Fremont+Street+Experience'}],
+    tips:['Book rides between Strip & Downtown','Hydrate — it sneaks up on you','Smart casual dress for easier entry']},
+  nycFood:{ title:'NYC Street Food Tour',
+    stops:[{name:'Joe’s Pizza',why:'Foldable slice perfection',maps:'https://www.google.com/maps?q=Joes+Pizza+NYC'},
+           {name:'Ess-a-Bagel',why:'Proper New York bagel',maps:'https://www.google.com/maps?q=Ess+a+Bagel'},
            {name:'The Halal Guys',why:'Late-night classic',maps:'https://www.google.com/maps?q=The+Halal+Guys'}],
-    tips:['Cash helps','Go easy on the hot sauce','Walk, don’t Uber']},
+    tips:['Carry cash for small vendors','Order “regular” unless you love heat','Walk, don’t Uber — you’ll see more']},
   ggSunrise:{ title:'Golden Gate at Sunrise',
-    stops:[{name:'Battery Spencer',why:'Front-row bridge',maps:'https://www.google.com/maps?q=Battery+Spencer'},
+    stops:[{name:'Battery Spencer',why:'Front-row bridge viewpoint',maps:'https://www.google.com/maps?q=Battery+Spencer'},
            {name:'Marshall’s Beach',why:'Beach-level compositions',maps:'https://www.google.com/maps?q=Marshalls+Beach'}],
-    tips:['Arrive 30–40 mins before','Windproof layer','Coffee in Sausalito']},
-  grandCanyon:{ title:'Grand Canyon Day',
-    stops:[{name:'West Rim (Skywalk)',why:'Closest from Vegas',maps:'https://www.google.com/maps?q=Grand+Canyon+West'},
-           {name:'South Rim',why:'Classic overlooks',maps:'https://www.google.com/maps?q=Grand+Canyon+South+Rim'}],
-    tips:['Heli=fast, road=cheap','Snacks & water','Sunscreen']},
-  sphere:{ title:'MSG Sphere', stops:[{name:'Sphere',why:'Arrive early',maps:'https://www.google.com/maps?q=MSG+Sphere+Las+Vegas'}], tips:['Middle seats','Earplugs if sensitive']},
-  broadway:{ title:'Broadway Night', stops:[{name:'TKTS',why:'Same-day tickets',maps:'https://www.google.com/maps?q=Times+Square+TKTS'}], tips:['Layers (temps vary)','No big bags','Plan dinner nearby']},
-  hoover:{ title:'Hoover Dam', stops:[{name:'Visitor Center',why:'Guided tour',maps:'https://www.google.com/maps?q=Hoover+Dam+Visitor+Center'}], tips:['Morning is cooler','Hat & water','Stop in Boulder City']},
-  bdayToast:{ title:'Rooftop Birthday', stops:[{name:'Legacy Club',why:'Panoramic sunset',maps:'https://www.google.com/maps?q=Legacy+Club+Las+Vegas'},{name:'Skyfall Lounge',why:'South Strip views',maps:'https://www.google.com/maps?q=Skyfall+Lounge'},{name:'Foundation Room',why:'Balcony over the Strip',maps:'https://www.google.com/maps?q=Foundation+Room'}], tips:['Golden hour fills fast','Smart footwear']}
+    tips:['Arrive 30–40 mins before sunrise','Bring a windproof layer','Coffee in Sausalito afterwards']},
+  grandCanyon:{ title:'Grand Canyon Day Trip',
+    stops:[{name:'West Rim (Skywalk)',why:'Closest from Vegas, quick wow',maps:'https://www.google.com/maps?q=Grand+Canyon+West'},
+           {name:'South Rim',why:'Classic overlooks (Mather, Yavapai)',maps:'https://www.google.com/maps?q=Grand+Canyon+South+Rim'}],
+    tips:['Heli = time saver, road = cheaper','Pack snacks & water','Desert sun is strong — sunscreen!']},
+  sphere:{ title:'MSG Sphere Immersion',
+    stops:[{name:'Sphere',why:'Arrive 45 mins early for lobby exhibits',maps:'https://www.google.com/maps?q=MSG+Sphere+Las+Vegas'}],
+    tips:['Middle sections = best dome coverage','Earplugs if sensitive to volume']},
+  broadway:{ title:'Broadway Night',
+    stops:[{name:'TKTS or Box Office',why:'Same-day options or pre-book',maps:'https://www.google.com/maps?q=Times+Square+TKTS'}],
+    tips:['Dress in layers (theatres vary)','No big bags','Plan dinner close to the theatre']},
+  hoover:{ title:'Hoover Dam Tour',
+    stops:[{name:'Visitor Center',why:'Guided tour & exhibits',maps:'https://www.google.com/maps?q=Hoover+Dam+Visitor+Center'}],
+    tips:['Morning = cooler & quieter','Bring hat & water','Combine with Boulder City coffee stop']},
+  bdayToast:{ title:'Rooftop Birthday Toast',
+    stops:[{name:'Legacy Club',why:'Panoramic desert sunset',maps:'https://www.google.com/maps?q=Legacy+Club+Las+Vegas'},
+           {name:'Skyfall Lounge',why:'South Strip views',maps:'https://www.google.com/maps?q=Skyfall+Lounge'},
+           {name:'Foundation Room',why:'Balcony over the Strip',maps:'https://www.google.com/maps?q=Foundation+Room'}],
+    tips:['Golden hour bookings fill fast','Smart footwear (lots of standing)']}
 };
 function showMomentDetails(key){
   const g = momentGuides[key]; if(!g) return;
@@ -930,51 +1009,7 @@ function showMomentDetails(key){
   content.innerHTML = html;
   document.getElementById('locationModal').style.display = 'block';
 }
-
-/* Locations modal (for Route 66 clicks) */
-const locationDetails = {
-  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrival & Union Square'},{day:'Day 2',activity:"Golden Gate & Wharf"},{day:'Day 3',activity:'Alcatraz + Free walking tour'},{day:'Day 4',activity:'Final SF sights'}],
-    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
-    tips:'Dress in layers - SF weather can change quickly!'
-  },
-  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
-    activities:[{day:'Day 1',activity:'Drive from SF'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Hiking & stargazing'}],
-    highlights:['Glacier Point','Half Dome','Mist Trail','Milky Way photography'],
-    tips:'Warm clothes at night — temps drop!'
-  },
-  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday!'},{day:'Day 4',activity:'Show & final night'}],
-    highlights:['Grand Canyon heli','MSG Sphere','Cirque du Soleil','Rooftop party'],
-    tips:'Hydrate & comfy shoes — long walks!'
-  },
-  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Times Square'},{day:'Day 2',activity:'Central Park & Broadway'},{day:'Day 3',activity:'Final sights'}],
-    highlights:['Broadway','Central Park','Brooklyn Bridge','Food tour'],
-    tips:'Book shows in advance; comfy shoes!'
-  }
-};
-function showLocationDetails(key){
-  const d = locationDetails[key]; if(!d) return;
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
-    <p style="font-weight:700;margin-bottom:16px;color:var(--muted)">${d.dates}</p>
-    <p><strong>Stay:</strong> ${d.stay.name}</p>
-    <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px">
-      ${d.activities.map(a=>`<div style="background:#fff;border:1px solid var(--border);padding:10px;border-radius:10px"><strong>${a.day}:</strong> ${a.activity}</div>`).join('')}
-    </div>
-    <p style="margin-top:12px"><strong>Highlights:</strong> ${d.highlights.join(', ')}</p>
-    <p><strong>Tips:</strong> ${d.tips}</p>`;
-  document.getElementById('locationModal').style.display='block';
-}
 function closeModal(){ document.getElementById('locationModal').style.display='none'; }
-function showAlert(title, html){
-  const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
-  content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
-  modal.style.display='block';
-}
-function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
 
 /* ===== Packing ===== */
 function renderPackingItems(){
@@ -1007,7 +1042,6 @@ function updatePackingStats(){
   const bar = document.getElementById('packingProgress');
   const label = document.getElementById('packingProgressLabel');
   if(bar) bar.style.width = `${pct}%`;
-  window.__PACKING_PCT = pct; // expose to Next Up
   if(label){
     if(pct===0) label.textContent='🧳 Ready to start packing!';
     else if(pct<50) label.textContent=`🧳 ${pct}% packed - Keep going!`;
@@ -1033,7 +1067,7 @@ function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.
 function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-/* ===== UI helpers ===== */
+/* ===== UI helpers: confetti + alerts ===== */
 function celebrate(){ burstConfetti(200); const btn=document.querySelector('.b-btn'); if(btn){ btn.style.animation='bounceIn .8s var(--curve)'; setTimeout(()=>btn.style.animation='',800);} }
 function burstConfetti(count=150){
   const canvas = document.getElementById('confettiCanvas');
@@ -1053,19 +1087,102 @@ function burstConfetti(count=150){
     if(bits.length) requestAnimationFrame(anim);
   })();
 }
+function showAlert(title, html){
+  const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
+  content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
+  modal.style.display='block';
+}
+function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
+
+/* ===== Destination modal ===== */
+const locationDetails = {
+  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Arrival & Union Square exploration'},{day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},{day:'Day 3',activity:'Alcatraz tour & Free walking tour'},{day:'Day 4',activity:'Final SF sights before Yosemite'}],
+    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
+    tips:'Dress in layers — SF weather can change dramatically throughout the day!'
+  },
+  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
+    activities:[{day:'Day 1',activity:'Drive from SF, settle in'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Hiking trails & stargazing'}],
+    highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'],
+    tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!'
+  },
+  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}],
+    highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'],
+    tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!'
+  },
+  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Arrival & Times Square'},{day:'Day 2',activity:'Central Park & Broadway show'},{day:'Day 3',activity:'Final sights before departure'}],
+    highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'],
+    tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!'
+  }
+};
+function showLocationDetails(key){
+  const d = locationDetails[key]; if(!d) return;
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
+    <p style="font-weight:700;margin-bottom:20px;color:var(--secondary)">${d.dates}</p>
+    <div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:18px;border-radius:16px;margin-bottom:20px">
+      <h3 style="margin-bottom:8px;color:var(--primary)">🏨 Accommodation</h3>
+      <p style="font-weight:600">${d.stay.name}</p>
+    </div>
+    <div style="margin-bottom:20px">
+      <h3 style="margin-bottom:12px;color:var(--primary)">📅 Daily Itinerary</h3>
+      ${d.activities.map(a=>`
+        <div style="padding:12px;background:#fafbff;border-radius:10px;margin-bottom:8px;border-left:4px solid var(--primary)">
+          <strong style="color:var(--secondary)">${a.day}:</strong> ${a.activity}
+        </div>`).join('')}
+    </div>
+    <div style="margin-bottom:20px">
+      <h3 style="margin-bottom:12px;color:var(--primary)">✨ Must-See Highlights</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+        ${d.highlights.map(h=>`<span style="padding:8px 12px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;text-align:center;font-weight:600;font-size:14px">${h}</span>`).join('')}
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,149,0,.1),rgba(255,255,255,.05));border:1px solid rgba(255,149,0,.3);padding:16px;border-radius:12px">
+      <strong style="color:var(--warning)">💡 Pro Tip:</strong> ${d.tips}
+    </div>
+  `;
+  document.getElementById('locationModal').style.display = 'block';
+}
+
+/* ===== Global modal closers ===== */
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); closeAlert(); } });
+window.addEventListener('click', (e) => {
+  const locationModal = document.getElementById('locationModal');
+  const alertModal = document.getElementById('alertModal');
+  if (e.target === locationModal) closeModal();
+  if (e.target === alertModal) closeAlert();
+});
+document.addEventListener('click', (e) => {
+  if (window.innerWidth > 768) return;
+  const nav = document.querySelector('nav');
+  if (nav.classList.contains('open') && !nav.contains(e.target)) {
+    nav.classList.remove('open');
+    document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* ===== Scroll animations ===== */
+function observeScrollAnimations() {
+  const els = document.querySelectorAll('.animate-on-scroll');
+  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } }); }, {threshold:0.1});
+  els.forEach(el=>obs.observe(el));
+}
 
 /* ===== Init ===== */
-document.addEventListener('DOMContentLoaded', ()=>{
-  updateCountdown(); setInterval(updateCountdown,1000);
+document.addEventListener('DOMContentLoaded', () => {
+  updateCountdown(); setInterval(updateCountdown, 1000);
   updateTimelineStatus();
-  buildNextUp();
-  loadWeather(); setInterval(loadWeather, 120000); // every 2 minutes
-  renderPackingItems();
 
-  // animate-on-scroll
-  const animateElements = document.querySelectorAll('.animate-on-scroll');
-  const observer = new IntersectionObserver((entries)=>entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible')}),{threshold:0.1});
-  animateElements.forEach(el=>observer.observe(el));
+  buildNextUp();
+
+  loadWeather();
+  setInterval(loadWeather, 120000); // every 2 minutes
+
+  renderPackingItems();
+  observeScrollAnimations();
 });
 </script>
 </body>
