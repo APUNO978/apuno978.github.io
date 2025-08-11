@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Final (Updated + iOS Weather)</title>
+<title>USA 2025 Adventure — Final (iOS Weather + Mobile Tweaks)</title>
 <style>
 /* ========== Base / Reset ========== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -60,8 +60,15 @@ nav{
   animation:pulse 4s ease-in-out infinite;pointer-events:none;
 }
 @keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
-.hero-title{font-size:56px;line-height:1.05;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#2b2d42,#4a4e69);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
-.hero-subtitle{font-size:18px;color:var(--muted);position:relative;z-index:1}
+.hero-title{
+  font-size:clamp(28px,6vw,56px);line-height:1.05;letter-spacing:-1.2px;margin-bottom:12px;
+  background:linear-gradient(135deg,#2b2d42,#4a4e69);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hero-subtitle{
+  font-size:clamp(12px,3.6vw,18px);color:var(--muted);position:relative;z-index:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 
 /* Countdown */
 .countdown{display:flex;justify-content:center;gap:16px;margin-top:24px;flex-wrap:nowrap;overflow-x:auto}
@@ -85,10 +92,18 @@ nav{
 .countdown-item.tick .countdown-value{transform:scale(1.1)}
 .countdown-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
 
+/* Smaller countdown on small iPhones */
+@media (max-width:480px){
+  .countdown{gap:8px}
+  .countdown-item{min-width:64px;padding:8px 10px}
+  .countdown-value{font-size:22px}
+  .countdown-label{font-size:10px}
+}
+
 /* ========== Layout Container ========== */
 .container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
 
-/* ========== Route 66 Timeline ========== */
+/* ========== Road Trip Map (polished mobile spacing) ========== */
 .route66{
   margin:22px 0;
   border:1px solid var(--border);
@@ -129,10 +144,10 @@ nav{
   .route66__stop{grid-template-rows:auto 18px auto auto;padding-inline:2px}
   .route66__date{font-size:10px;letter-spacing:.06em}
   .route66__icon{font-size:20px;margin-top:8px}
-  .route66__label{font-size:12px;margin-top:10px} /* lower label for readability */
+  .route66__label{font-size:12px;margin-top:10px}
 }
 
-/* ========== NEXT UP SLIDER ========== */
+/* ========== Next Up slider ========== */
 .nu-section{margin:22px 0}
 .nu-card{border:1px solid var(--border); border-radius:20px; overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9)); box-shadow:0 14px 34px rgba(16,24,40,.1)}
 .nu-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px}
@@ -149,12 +164,19 @@ nav{
 .nu-progress{height:3px; background:rgba(16,24,40,.08)}
 .nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
 
-/* ========== Live Weather (CLEAN, iOS-ish) ========== */
+/* ========== Live Weather (iOS-ish) ========== */
 .weather-section{margin:40px 0}
-.section-title{font-size:28px;font-weight:900;margin-bottom:14px;text-align:left}
+.section-title{
+  font-size:clamp(22px,4.8vw,28px);font-weight:900;margin-bottom:14px;text-align:left;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width: 960px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width: 560px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
+/* Mobile: make it a slider */
+@media (max-width: 640px){
+  .weather-grid{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .weather-card{min-width:85%;scroll-snap-align:center}
+}
 .weather-card{
   position:relative;overflow:hidden;isolation:isolate;cursor:pointer;min-height:230px;
   border-radius:22px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));
@@ -210,7 +232,10 @@ nav{
 @media (max-width: 720px){ .birthday-inner{grid-template-columns:1fr;gap:10px} .cake{font-size:96px} .b-title{font-size:26px} .birthday{border-radius:20px} }
 
 /* ========== Destinations ========== */
-.locations-heading{font-size:32px;text-align:center;font-weight:900;margin:36px 0 20px}
+.locations-heading{
+  font-size:clamp(26px,6vw,32px);text-align:center;font-weight:900;margin:36px 0 20px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .locations-grid{display:grid;gap:18px}
 @media (min-width: 1024px){ .locations-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .location-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s var(--curve)}
@@ -226,13 +251,20 @@ nav{
 .activity-chip:hover{transform:scale(1.05)}
 @media (max-width: 600px){ .location-image{height:260px} .location-name{font-size:26px} }
 
-/* ========== Epic Moments ========== */
-.epic-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 18px}
+/* ========== Epic Moments (compact widget slider) ========== */
+.epic-heading{
+  font-size:clamp(22px,5.2vw,32px);text-align:center;font-weight:900;margin:36px 0 14px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .moments-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width: 900px){ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width: 640px){
-  .moments-grid{grid-auto-flow:column;grid-auto-columns:80%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
-  .moment-card{scroll-snap-align:center}
+/* Mobile: compact widget slider */
+@media (max-width: 700px){
+  .moments-grid{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;padding:4px 2px 10px}
+  .moment-card{min-width:82%;min-height:160px;scroll-snap-align:center;padding:14px}
+  .moment-icon{font-size:28px}
+  .moment-card h3{font-size:18px}
+  .moment-card p{font-size:13px}
 }
 .moment-card{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.86));backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);transition:transform .2s var(--curve);min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
 .moment-card:hover{transform:translateY(-4px)}
@@ -246,8 +278,11 @@ nav{
 .moment-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,122,255,.25);transition:transform .15s var(--curve)}
 .moment-btn:hover{transform:translateY(-1px)}
 
-/* ========== Flights (Apple-ish) ========== */
-.flights-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 16px}
+/* ========== Flights ========== */
+.flights-heading{
+  font-size:clamp(22px,5vw,32px);text-align:center;font-weight:900;margin:44px 0 16px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .flights{display:grid;gap:16px}
 .boarding-pass{display:grid;grid-template-columns:1.6fr .9fr;gap:0;position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));border:1px solid var(--border);box-shadow:0 12px 28px rgba(16,24,40,.08)}
 .boarding-pass::before,.boarding-pass::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#f6f7fb;border:1px solid var(--border);z-index:2}
@@ -276,7 +311,7 @@ nav{
   background-blend-mode:normal;filter:contrast(120%)}
 @media (max-width: 760px){ .boarding-pass{grid-template-columns:1fr} .bp-right{border-left:0;border-top:1px dashed rgba(0,0,0,.15)} }
 
-/* ========== Packing (mobile-lovely) ========== */
+/* ========== Packing ========== */
 .packing-section { margin: 40px 0; }
 .packing-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
 .packing-controls .btns{display:flex;gap:10px}
@@ -294,7 +329,7 @@ nav{
 .packing-column.packed h3{color:var(--success)}
 .packing-list { list-style: none; min-height: 100px; }
 .packing-item {background: linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.86));border: 1px solid var(--border);padding: 14px;border-radius: 12px;margin-bottom: 10px;cursor: grab;transition: all 0.2s var(--curve);display: flex;align-items: center;gap: 10px;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.06)}
-.packing-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,.1);border-color:rgba(0,122,255,.35)}
+.packing-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1);border-color:rgba(0,0,0,.08)}
 .packing-item.dragging { opacity: 0.9; transform: scale(1.04) rotate(1deg); z-index:1000; box-shadow:0 12px 28px rgba(0,0,0,.18)}
 .packing-item.packed{background:linear-gradient(135deg,rgba(52,199,89,.14),rgba(52,199,89,.06));border-color:rgba(52,199,89,.35);color:var(--success)}
 .packing-icon{font-size:20px;min-width:24px}
@@ -347,7 +382,7 @@ nav{
   </header>
 
   <main class="container">
-    <!-- Route 66 timeline -->
+    <!-- Road Trip Map -->
     <section class="route66 animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
       <h2 class="section-title" id="route-title">Road Trip Map</h2>
       <div class="route66__track" aria-live="polite">
@@ -477,15 +512,15 @@ nav{
     <!-- Epic Moments -->
     <h2 id="timeline" class="epic-heading animate-on-scroll">Epic Moments Planned 🔥</h2>
     <section class="moments-grid animate-on-scroll" aria-label="Epic moments">
-      <article class="moment-card"><div class="top"><span class="moment-icon">🏔️</span><h3>Yosemite Stargazing</h3></div><p>Late-night Milky Way hunt from Glacier Point or Tunnel View. Best after 10pm.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('stargazing')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🎰</span><h3>Vegas Boys Night</h3></div><p>Neon crawl: Bellagio → Chandelier Bar → Fremont Street.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('vegasNight')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🗽</span><h3>NYC Street Food Tour</h3></div><p>Slices, bagels, halal. Walkable loop across Midtown & Lower Manhattan.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('nycFood')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🌉</span><h3>Golden Gate at Sunrise</h3></div><p>Beat the crowd at Battery Spencer, then brunch in Sausalito.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('ggSunrise')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🛩️</span><h3>Grand Canyon Day Trip</h3></div><p>Heli over West Rim or road trip to South Rim lookouts.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('grandCanyon')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🌐</span><h3>MSG Sphere Immersion</h3></div><p>Book centre seats for full-dome visuals. Pre-show at Venetian.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('sphere')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🎭</span><h3>Broadway Night</h3></div><p>Matinee + dinner in Hell’s Kitchen or late show + Times Sq walk.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('broadway')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🏞️</span><h3>Hoover Dam Tour</h3></div><p>Morning tour to beat the heat; stop at Boulder City Coffee.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('hoover')">View Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🥂</span><h3>Rooftop Birthday Toast</h3></div><p>Sunset views: Legacy Club, Skyfall Lounge, Foundation Room.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('bdayToast')">View Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🏔️</span><h3>Yosemite Stargazing</h3></div><p>Milky Way hunt from Glacier Point or Tunnel View.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('stargazing')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🎰</span><h3>Vegas Boys Night</h3></div><p>Neon crawl: Bellagio → Chandelier Bar → Fremont.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('vegasNight')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🗽</span><h3>NYC Street Food</h3></div><p>Slices, bagels, halal — easy walking loop.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('nycFood')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🌉</span><h3>Golden Gate Sunrise</h3></div><p>Battery Spencer first light, wind layer ready.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('ggSunrise')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🛩️</span><h3>Grand Canyon Trip</h3></div><p>Heli West Rim or road to South Rim.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('grandCanyon')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🌐</span><h3>MSG Sphere</h3></div><p>Arrive early, centre seats for full dome.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('sphere')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🎭</span><h3>Broadway Night</h3></div><p>Matinee + dinner or late show + stroll.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('broadway')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🏞️</span><h3>Hoover Dam</h3></div><p>Morning tour, Boulder City coffee stop.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('hoover')">Guide</button></div></article>
+      <article class="moment-card"><div class="top"><span class="moment-icon">🥂</span><h3>Rooftop Toast</h3></div><p>Legacy Club • Skyfall • Foundation Room.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('bdayToast')">Guide</button></div></article>
     </section>
 
     <!-- Flights -->
@@ -674,7 +709,7 @@ function updateCountdown(){
   }
 }
 
-/* ===== Route 66 status ===== */
+/* ===== Road Trip timeline status ===== */
 function updateTimelineStatus(){
   const el = document.getElementById('timelineStatus');
   if(!el) return;
@@ -1067,7 +1102,7 @@ function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.
 function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-/* ===== UI helpers: confetti + alerts ===== */
+/* ===== UI helpers ===== */
 function celebrate(){ burstConfetti(200); const btn=document.querySelector('.b-btn'); if(btn){ btn.style.animation='bounceIn .8s var(--curve)'; setTimeout(()=>btn.style.animation='',800);} }
 function burstConfetti(count=150){
   const canvas = document.getElementById('confettiCanvas');
