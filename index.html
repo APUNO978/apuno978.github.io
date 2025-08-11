@@ -882,7 +882,7 @@ function startAuto(){ stopAuto(); nuTimer=setInterval(nextSlide,nuInterval); con
 function stopAuto(){ clearInterval(nuTimer); nuTimer=null; const bar=document.getElementById('nuBar'); bar.style.transition='none'; bar.style.width='0%' }
 
 /* ===== Live Currency Exchange Tracker ===== */
-let exchangeRate = 1.27; // Default rate
+let exchangeRate = 1.35; // Default rate
 let trendChart = null; 
 
 async function fetchExchangeRate() {
@@ -913,7 +913,7 @@ async function fetchExchangeRate() {
     rateEl.textContent = "Rate N/A";
     usdRateEl.textContent = "Could not update rate";
     // Use default history if API fails
-    updateTrendChart([1.26, 1.27, 1.25, 1.28, 1.27, 1.26, 1.27]);
+    updateTrendChart([1.33, 1.34, 1.35, 1.34, 1.35, 1.34, 1.35]);
   }
 
   rateEl.textContent = `£1 = $${exchangeRate.toFixed(3)}`;
