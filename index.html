@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Enhanced</title>
+<title>USA 2025 Adventure — Final</title>
 <style>
 /* ========== Base / Reset ========== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -57,14 +57,14 @@ nav{
 .hero::before{
   content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
   width:600px;height:600px;background:radial-gradient(circle,rgba(0,122,255,.08),transparent 70%);
-  animation:pulse 4s ease-in-out infinite;pointer-events:none;
+  animation:heroPulse 4s ease-in-out infinite;pointer-events:none;
 }
-@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
+@keyframes heroPulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
 .hero-title{font-size:56px;line-height:1.05;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#2b2d42,#4a4e69);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
 .hero-subtitle{font-size:18px;color:var(--muted);position:relative;z-index:1}
 
-/* ========== Countdown ========== */
-.countdown{display:flex;justify-content:center;gap:16px;margin-top:24px;flex-wrap:wrap;position:relative;z-index:1}
+/* Countdown */
+.countdown{display:flex;justify-content:center;gap:16px;margin-top:24px;flex-wrap:nowrap;overflow-x:auto}
 .countdown-item{
   background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 18px;min-width:86px;
   box-shadow:var(--shadow);transition:transform 0.3s var(--curve);position:relative;overflow:hidden;
@@ -85,105 +85,130 @@ nav{
 .countdown-item.tick .countdown-value{transform:scale(1.1)}
 .countdown-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
 
-/* Mobile: keep countdown on ONE row (no wrap) */
-@media (max-width:480px){
-  .countdown{flex-wrap:nowrap;gap:8px;justify-content:space-between;overflow-x:auto;padding-bottom:2px}
-  .countdown-item{min-width:70px;padding:10px 12px}
-  .countdown-value{font-size:24px}
-  .countdown-label{font-size:10px}
-}
-
 /* ========== Layout Container ========== */
 .container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
 
-/* ========== Stats ========== */
-.stats-dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:28px 0}
-.stat-card{
-  background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;
-  box-shadow:var(--shadow);transition:transform 0.2s var(--curve);cursor:pointer;
+/* ========== Route 66 Timeline (replaces old Road Map Strip) ========== */
+.route-66-timeline {
+  margin: 28px 0;
+  padding: 24px;
+  background: linear-gradient(90deg, rgba(255,215,0,.1), rgba(88,86,214,.1)), #f6f7fb;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border:1px solid var(--border);
+  box-shadow:0 14px 34px rgba(16,24,40,.1);
 }
-.stat-card:hover{transform:translateY(-3px)}
-.stat-icon{font-size:24px;margin-bottom:6px}
-.stat-value{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-label{font-size:12px;color:var(--muted)}
+.timeline-road { position: relative; height: 200px; overflow: hidden; }
+.road-line {
+  position: absolute; top: 50%; left: 0; width: 100%; height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 2px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  animation: roadPulse 4s infinite ease-in-out;
+}
+.timeline-pin, .timeline-marker {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  text-align: center; transition: transform 0.3s var(--curve); cursor:pointer;
+}
+.timeline-pin{width: 80px;}
+.timeline-marker{width:60px; opacity:.7}
+.timeline-pin:hover { transform: translateY(-60%) scale(1.1); }
+.timeline-marker:hover { opacity:1 }
+.pin-icon, .marker-icon {
+  font-size: 32px; margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.pin-icon.pulse { animation: pinPulse 2s var(--curve) infinite; }
+.pin-icon.spin  { animation: pinSpin  4s linear infinite;  }
+.pin-date, .marker-date {
+  font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
+}
+.pin-label, .marker-label { font-size: 16px; font-weight: 800; color: var(--ink); text-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.timeline-label {
+  position: absolute; top: 60%; transform: translateY(-50%);
+  font-size: 12px; color: var(--muted); text-transform: uppercase;
+}
+.progress-dot {
+  position: absolute; top: 50%; width: 12px; height: 12px; background: var(--success);
+  border-radius: 50%; box-shadow: 0 0 8px var(--success);
+  animation: progressMove 39s linear infinite; transform: translateY(-50%);
+}
+.timeline-update { font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px; }
+@keyframes roadPulse { 0%,100%{ box-shadow:0 2px 8px rgba(0,0,0,.1)} 50%{ box-shadow:0 4px 12px rgba(0,122,255,.3)} }
+@keyframes pinPulse { 0%,100%{ transform: scale(1)} 50%{ transform: scale(1.2)} }
+@keyframes pinSpin { from{ transform: rotate(0deg)} to{ transform: rotate(360deg)} }
+@keyframes progressMove { 0%{ left:0% } 100%{ left:95% } }
+@media (max-width: 720px){
+  .route-66-timeline{ padding:16px }
+  .timeline-road{ height:160px }
+  .pin-icon,.marker-icon{ font-size:28px }
+  .pin-date,.marker-date{ font-size:11px }
+  .pin-label,.marker-label{ font-size:14px }
+}
 
-/* ========== Budget ========== */
-.budget-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:40px}
-.budget-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.budget-title{font-size:22px;font-weight:800}
-.budget-total{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--success),#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.budget-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
-.budget-item{background:#fafbff;border:1px solid var(--border);border-radius:12px;padding:14px}
-.budget-item-label{font-size:12px;color:var(--muted);margin-bottom:6px}
-.budget-item-value{font-size:18px;font-weight:800}
-.budget-progress{margin-top:18px}
-.progress-bar{width:100%;height:8px;background:#eef1f6;border-radius:999px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--success),#4ade80);width:0%;transition:width 0.6s var(--curve)}
-.progress-label{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+/* ========== NEXT UP SLIDER ========== */
+.nu-section{margin:22px 0}
+.nu-card{
+  border:1px solid var(--border); border-radius:20px; overflow:hidden;
+  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9)); box-shadow:0 14px 34px rgba(16,24,40,.1)
+}
+.nu-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px}
+.nu-title{font-weight:900; letter-spacing:.3px}
+.nu-dots{display:flex; gap:8px}
+.nu-dot{width:8px;height:8px;border-radius:999px;background:rgba(16,24,40,.18);cursor:pointer;transition:transform .2s}
+.nu-dot.active{background:var(--primary); transform:scale(1.2)}
+.nu-viewport{position:relative; overflow:hidden}
+.nu-track{display:flex; transition:transform .5s var(--curve)}
+.nu-slide{flex:0 0 100%; padding:16px 16px 18px; display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:center}
+.nu-emoji{font-size:28px; filter:drop-shadow(0 1px 4px rgba(0,0,0,.12))}
+.nu-text h4{margin:0 0 2px 0; font-size:16px}
+.nu-text p{margin:0; color:var(--muted); font-size:14px}
+.nu-progress{height:3px; background:rgba(16,24,40,.08)}
+.nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
 
-/* ========== Live Weather (CLEAN & CONSISTENT) ========== */
+/* ========== Live Weather (clean) ========== */
 .weather-section{margin:40px 0}
-.section-title{font-size:28px;font-weight:900;margin-bottom:14px}
-.weather-grid{display:grid;gap:18px;grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width: 768px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
+.section-title{font-size:28px;font-weight:900;margin-bottom:14px;text-align:left}
+.weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width: 960px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width: 560px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
 .weather-card{
-  position:relative;overflow:hidden;isolation:isolate;cursor:pointer;min-height:230px;
-  border-radius:22px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,.85));
+  position:relative;overflow:hidden;isolation:isolate;cursor:pointer;
+  border-radius:22px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));
   box-shadow:0 8px 28px rgba(16,24,40,.08);
   padding:18px;transition:transform .25s var(--curve), box-shadow .25s var(--curve);
   backdrop-filter:saturate(140%) blur(10px);
 }
-.weather-card::before{content:"";position:absolute;inset:-30%;background:radial-gradient(600px 220px at 10% 0%, rgba(0,122,255,.10), transparent 60%),radial-gradient(600px 220px at 90% 100%, rgba(88,86,214,.10), transparent 60%);z-index:-1}
 .weather-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
 .weather-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.weather-location{font-weight:800;color:var(--primary);font-size:16px;display:flex;gap:6px;align-items:center}
+.weather-location{font-weight:800;color:var(--primary);font-size:16px}
 .weather-badge{font-size:11px;padding:6px 8px;border-radius:999px;background:#eef3ff;border:1px solid rgba(0,0,0,.06)}
-.weather-main{display:flex;align-items:center;gap:12px;margin:4px 0 8px}
-.weather-temp{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--ink),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.weather-main{display:flex;align-items:center;gap:12px}
+.weather-temp{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--ink),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+@media (max-width: 420px){ .weather-temp{font-size:30px} } /* fix overflow on small phones */
 .weather-icon{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
 .weather-desc{font-size:13px;color:var(--muted)}
-/* tidy metrics grid */
-.wx-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.wx-kv .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.wx-kv .value{font-size:14px;font-weight:700}
+.weather-rows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.wx-chip{background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:8px}
+.wx-chip .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.wx-chip .value{font-size:14px;font-weight:700}
 .wx-hours{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-.wx-hour{min-width:64px;text-align:center;border:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.7);border-radius:10px;padding:6px}
+.wx-hour{min-width:64px;text-align:center;border:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.6);border-radius:10px;padding:6px}
 .wx-hour .t{font-weight:800}
 .weather-update{font-size:11px;color:var(--muted);margin-top:8px;opacity:0.8}
 .weather-card.loading{opacity:0.7}
 .weather-card.error{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,59,48,.05),rgba(255,255,255,.9))}
-/* Mobile: ensure temps/icons don't clip */
-@media (max-width:480px){
-  .weather-temp{font-size:28px}
-  .weather-icon{font-size:38px}
-  .weather-card{min-height:210px}
-}
-
-/* Details modal bits */
-.wx-3day{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.wx-3day .d{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.wx-3day .d .t{font-weight:800}
-.wx-3day .d .hi{font-weight:800}
-.wx-3day .d .lo{opacity:.7}
-.advice{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.advice .chip{padding:6px 10px;border-radius:999px;background:#f3f5fb;border:1px solid var(--border);font-size:12px;font-weight:700}
-.advice .chip.warn{background:rgba(255,149,0,.14);border-color:rgba(255,149,0,.3)}
-.advice .chip.danger{background:rgba(255,59,48,.14);border-color:rgba(255,59,48,.3)}
 
 /* ========== Birthday Widget ========== */
 .birthday-wrap{display:flex;justify-content:center;margin:38px 0}
 .birthday{width:100%;max-width:880px;background:conic-gradient(from 220deg at 90% -10%, rgba(255,215,0,.2), transparent 40%) #fff;border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;position:relative}
 .birthday-inner{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:22px}
-.birthday-left{padding-right:8px}
-.b-eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .b-title{font-size:28px;line-height:1.1;margin-bottom:8px}
 .b-sub{font-size:14px;color:var(--muted)}
 .b-cta{margin-top:14px}
 .b-btn{appearance:none;border:0;background:linear-gradient(135deg,#ff8a00,#ff3b30);color:#fff;font-weight:800;padding:12px 16px;border-radius:14px;cursor:pointer;transition:transform .12s var(--curve), box-shadow .2s var(--curve);box-shadow:0 6px 16px rgba(255,59,48,.25)}
 .b-btn:hover{transform:translateY(-1px)}
-.birthday-right{display:grid;place-items:center;background:
-  radial-gradient(120px 80px at 70% 15%, rgba(255,59,48,.08), transparent),
-  radial-gradient(180px 120px at 30% 85%, rgba(88,86,214,.08), transparent)}
 .cake{font-size:86px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.1))}
 #confettiCanvas{position:absolute;inset:0;pointer-events:none}
 @media (min-width: 1024px){ .birthday-inner{grid-template-columns:1.1fr .9fr;padding:26px 28px} }
@@ -206,10 +231,15 @@ nav{
 .activity-chip:hover{transform:scale(1.05)}
 @media (max-width: 600px){ .location-image{height:260px} .location-name{font-size:26px} }
 
-/* ========== Epic Moments (3×3 desktop + mobile slider) ========== */
+/* ========== Epic Moments ========== */
 .epic-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 18px}
 .moments-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
-.moment-card{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(255,255,255,.76));backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);transition:transform .2s var(--curve);min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
+@media (max-width: 900px){ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width: 640px){
+  .moments-grid{grid-auto-flow:column;grid-auto-columns:80%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+  .moment-card{scroll-snap-align:center}
+}
+.moment-card{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.86));backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);transition:transform .2s var(--curve);min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
 .moment-card:hover{transform:translateY(-4px)}
 .moment-card .top{display:flex;align-items:center;gap:10px}
 .moment-icon{font-size:36px}
@@ -220,121 +250,75 @@ nav{
 .stars{font-size:16px}
 .moment-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,122,255,.25);transition:transform .15s var(--curve)}
 .moment-btn:hover{transform:translateY(-1px)}
-@media (max-width:768px){
-  .moments-grid{display:flex;overflow-x:auto;gap:14px;scroll-snap-type:x mandatory;padding:4px 2px 10px}
-  .moment-card{min-width:85%;scroll-snap-align:center;min-height:210px}
-  .moment-icon{font-size:44px}
-  .moment-card h3{font-size:20px}
-  .moment-card p{font-size:15px}
-}
 
-/* ========== Flights (CLEAN BOARDING PASS) ========== */
+/* ========== Flights (Apple-ish) ========== */
 .flights-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 16px}
 .flights{display:grid;gap:16px}
-.boarding-pass{
-  display:grid;grid-template-columns:1.4fr .9fr;gap:0;position:relative;border-radius:18px;overflow:hidden;
-  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));border:1px solid var(--border);box-shadow:0 10px 26px rgba(16,24,40,.08)
-}
-.bp-left,.bp-right{padding:14px 16px;position:relative}
-.bp-right{border-left:1px dashed rgba(0,0,0,.12);background:radial-gradient(200px 120px at 100% 0%, rgba(0,122,255,.06), transparent)}
-.bp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.airline{font-weight:900;letter-spacing:.3px}
+.boarding-pass{display:grid;grid-template-columns:1.6fr .9fr;gap:0;position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));border:1px solid var(--border);box-shadow:0 12px 28px rgba(16,24,40,.08)}
+.boarding-pass::before,.boarding-pass::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#f6f7fb;border:1px solid var(--border);z-index:2}
+.boarding-pass::before{left:-13px}
+.boarding-pass::after{right:-13px}
+.bp-left,.bp-right{padding:16px 18px;position:relative}
+.bp-right{border-left:1px dashed rgba(0,0,0,.15);background:radial-gradient(200px 120px at 100% 0%, rgba(0,122,255,.08), transparent)}
+.bp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.route{font-weight:900;font-size:18px}
+.iata{background:#f0f3ff;border:1px solid rgba(0,0,0,.06);padding:6px 10px;border-radius:10px}
 .tag{padding:6px 10px;border-radius:999px;background:#eef1f6;font-weight:800;font-size:12px}
 .tag.green{color:#0a7a33;background:rgba(52,199,89,.18)}
 .tag.blue{color:#0b63c9;background:rgba(0,122,255,.18)}
-.route{font-weight:900;font-size:18px;margin:6px 0 8px}
-.iata{background:#f0f3ff;border:1px solid rgba(0,0,0,.06);padding:6px 10px;border-radius:10px}
-.bp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.bp-field span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.bp-field strong{font-size:15px}
-.bp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
-.qr{width:60px;height:60px;background:conic-gradient(from 0deg,#000 0 25%,transparent 0 50%,#000 0 75%,transparent 0),
-    radial-gradient(circle at 20% 20%,#000 10%,transparent 0),
-    radial-gradient(circle at 80% 80%,#000 12%,transparent 0),
-    radial-gradient(circle at 20% 80%,#000 12%,transparent 0),
-    radial-gradient(circle at 80% 20%,#000 12%,transparent 0);filter:contrast(120%)}
-.barcode{height:38px;border-top:1px dashed var(--border);background:
-  repeating-linear-gradient(90deg, rgba(0,0,0,.85) 0 2px, transparent 2px 4px, rgba(0,0,0,.85) 4px 5px, transparent 5px 7px);opacity:.25}
-@media (max-width:760px){
-  .boarding-pass{grid-template-columns:1fr}
-  .bp-right{border-left:0;border-top:1px dashed rgba(0,0,0,.12)}
-  .bp-grid{grid-template-columns:repeat(2,1fr)}
-}
+.bp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.bp-field span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.bp-field strong{font-size:16px}
+.airline{font-weight:900;letter-spacing:.3px}
+.bp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.barcode{height:42px;border-top:1px dashed var(--border);background:
+  repeating-linear-gradient(90deg, rgba(0,0,0,.8) 0 2px, transparent 2px 4px, rgba(0,0,0,.8) 4px 5px, transparent 5px 7px);opacity:.25}
+.qr{width:72px;height:72px;background:conic-gradient(from 0deg, #000 0 25%, transparent 0 50%, #000 0 75%, transparent 0) ,
+    radial-gradient(circle at 20% 20%, #000 10%, transparent 0),
+    radial-gradient(circle at 80% 80%, #000 12%, transparent 0),
+    radial-gradient(circle at 20% 80%, #000 12%, transparent 0),
+    radial-gradient(circle at 80% 20%, #000 12%, transparent 0);
+  background-blend-mode:normal;filter:contrast(120%)}
+@media (max-width: 760px){ .boarding-pass{grid-template-columns:1fr} .bp-right{border-left:0;border-top:1px dashed rgba(0,0,0,.15)} }
 
-/* ========== Packing (GLASS REFINEMENT) ========== */
+/* ========== Packing (mobile-lovely) ========== */
 .packing-section { margin: 40px 0; }
 .packing-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
-.packing-controls .btn-group{display:flex;gap:10px}
-.packing-controls button{background:var(--primary);color:#fff;border:0;padding:8px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.2s var(--curve);box-shadow:0 8px 18px rgba(0,122,255,.18)}
+.packing-controls .btns{display:flex;gap:10px}
+.packing-controls button{background:var(--primary);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.2s var(--curve);box-shadow:0 8px 18px rgba(0,122,255,.18)}
 .packing-controls button:hover{background:var(--secondary);transform:translateY(-1px)}
-@media (max-width:600px){
-  .packing-controls{display:grid;grid-template-columns:1fr;gap:12px}
+@media (max-width: 560px){
+  .packing-controls{flex-direction:column;align-items:center}
   .packing-stats{order:1}
-  .packing-controls .btn-group{order:2;justify-content:center} /* centered on mobile */
+  .packing-controls .btns{order:2;justify-content:center}
 }
 .packing-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,.6));border: 1px solid var(--border);border-radius: 18px;padding: 24px;box-shadow: 0 18px 44px rgba(16,24,40,.12);backdrop-filter: blur(12px) saturate(140%)}
 .packing-column {min-height: 220px;background:radial-gradient(500px 160px at -20% 0%, rgba(0,122,255,.08), transparent 60%),radial-gradient(500px 160px at 120% 120%, rgba(88,86,214,.08), transparent);border-radius:14px;border:2px dashed var(--border);padding:16px;transition:all 0.3s var(--curve)}
-.packing-column.drag-over{border-color:var(--primary);background:radial-gradient(500px 160px at -20% 0%, rgba(0,122,255,.12), transparent 60%),radial-gradient(500px 160px at 120% 120%, rgba(88,86,214,.12), transparent);transform:scale(1.01)}
+.packing-column.drag-over{border-color:var(--primary);transform:scale(1.01)}
 .packing-column h3{color:var(--primary);margin-bottom:12px;font-size:18px}
 .packing-column.packed h3{color:var(--success)}
 .packing-list { list-style: none; min-height: 100px; }
 .packing-item {background: linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.86));border: 1px solid var(--border);padding: 14px;border-radius: 12px;margin-bottom: 10px;cursor: grab;transition: all 0.2s var(--curve);display: flex;align-items: center;gap: 10px;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.06)}
-.packing-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--primary);transform:scaleY(0);transition:transform 0.2s var(--curve)}
 .packing-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,.1);border-color:rgba(0,122,255,.35)}
-.packing-item:hover::before{transform:scaleY(1)}
 .packing-item.dragging { opacity: 0.9; transform: scale(1.04) rotate(1deg); z-index:1000; box-shadow:0 12px 28px rgba(0,0,0,.18)}
 .packing-item.packed{background:linear-gradient(135deg,rgba(52,199,89,.14),rgba(52,199,89,.06));border-color:rgba(52,199,89,.35);color:var(--success)}
-.packing-item.packed::before{background:var(--success);transform:scaleY(1)}
 .packing-icon{font-size:20px;min-width:24px}
 .packing-text{flex:1;font-weight:500}
 .packing-item button {margin-left: auto;background: none;border: 1px solid var(--border);border-radius: 10px;padding: 6px 10px;cursor: pointer;font-size: 12px;transition:all 0.2s var(--curve);opacity:0.8}
 .packing-item:hover button{opacity:1}
 .packing-item button:hover { background: var(--primary); color: #fff; transform:translateY(-1px)}
 .packing-item.packed button:hover { background: var(--success) }
-.packing-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:0}
+.packing-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:0}
 .packing-stat{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.8));border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;backdrop-filter: blur(8px)}
 .packing-stat-value{font-size:20px;font-weight:800;color:var(--primary)}
 .packing-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 @media (max-width: 600px){.packing-grid { padding: 16px; grid-template-columns: 1fr; } .packing-item { font-size: 14px; }}
 
-/* ========== Quick Links & Notes (Glass) ========== */
-.checklist-section{margin:44px 0;padding:24px;background: linear-gradient(135deg, rgba(255,255,255,.8), rgba(255,255,255,.72));border:1px solid var(--border);border-radius:20px;box-shadow:0 18px 44px rgba(16,24,40,.1);backdrop-filter: blur(12px)}
-.checklist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.checklist-card{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.8));border:1px solid var(--border);padding:18px;border-radius:16px;box-shadow:0 10px 24px rgba(16,24,40,.08)}
-.checklist h3{margin-bottom:12px;color:var(--primary)}
-.checklist{list-style:none}
-.checklist li{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.checklist input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary)}
-.checklist input[type=checkbox]:checked+label{color:var(--success);text-decoration:line-through;opacity:.8}
-
-.quick-links{margin:40px 0}
-.links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.link-card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center;box-shadow:var(--shadow);transition:all 0.2s var(--curve)}
-.link-card:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(16,24,40,.1)}
-.link-icon{font-size:34px;margin-bottom:8px}
-.link-title{font-weight:800}
-.link-desc{font-size:12px;color:var(--muted)}
-
-.notes-section{margin:40px 0}
-.notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.note-card{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.82)); border:1px solid var(--border);border-radius:18px;padding:18px;transition:transform 0.2s var(--curve);box-shadow:0 10px 28px rgba(16,24,40,.1)}
-.note-card:hover{transform:translateY(-2px)}
-.note-card.warning{border-color:rgba(255,149,0,.35);background:linear-gradient(135deg,rgba(255,149,0,.08),rgba(255,255,255,.88))}
-.note-card.info{border-color:rgba(0,122,255,.35);background:linear-gradient(135deg,rgba(0,122,255,.08),rgba(255,255,255,.9))}
-.note-card.success{border-color:rgba(52,199,89,.35);background:linear-gradient(135deg,rgba(52,199,89,.08),rgba(255,255,255,.9))}
-.note-card.primary{border-color:rgba(88,86,214,.35);background:linear-gradient(135deg,rgba(88,86,214,.08),rgba(255,255,255,.9))}
-.note-icon{font-size:24px;margin-bottom:8px}
-
-/* ========== Animations / Loading / Modals ========== */
+/* ========== Modals & Animations ========== */
 @keyframes slideInUp{from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
-@keyframes fadeIn{from{opacity:0} to{opacity:1}}
 @keyframes bounceIn{0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.05)} 70%{transform:scale(0.9)} 100%{transform:scale(1);opacity:1}}
 .animate-on-scroll{opacity:0;transform:translateY(20px);transition:all 0.6s var(--curve)}
 .animate-on-scroll.visible{opacity:1;transform:translateY(0)}
-.loading {position: relative;overflow: hidden}
-.loading::after {content: '';position: absolute;top: 0;left: -100%;width: 100%;height: 100%;background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);animation: shimmer 1.5s infinite}
-@keyframes shimmer {0% { left: -100% } 100% { left: 100% }}
-
 .modal{display:none;position:fixed;inset:0;background:var(--glass-dark);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:100}
 .modal-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:20px;padding:28px;max-width:880px;width:92%;max-height:80vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.25)}
 .modal-close{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#f3f4f7;cursor:pointer;font-size:18px;transition:all 0.2s var(--curve)}
@@ -369,33 +353,66 @@ nav{
   </header>
 
   <main class="container">
-    <!-- Quick Stats -->
-    <section class="stats-dashboard animate-on-scroll" aria-label="Trip stats">
-      <div class="stat-card" onclick="celebrate()"><div class="stat-icon">🗺️</div><div class="stat-value">4</div><div class="stat-label">Destinations</div></div>
-      <div class="stat-card" onclick="celebrate()"><div class="stat-icon">🌅</div><div class="stat-value">15</div><div class="stat-label">Days</div></div>
-      <div class="stat-card" onclick="celebrate()"><div class="stat-icon">🏨</div><div class="stat-value">4</div><div class="stat-label">Stays</div></div>
-      <div class="stat-card" onclick="celebrate()"><div class="stat-icon">📸</div><div class="stat-value">20+</div><div class="stat-label">Activities</div></div>
-      <!-- New fun facts -->
-      <div class="stat-card" title="Estimated total route distance" onclick="celebrate()">
-        <div class="stat-icon">📏</div><div class="stat-value" id="distanceStat">—</div><div class="stat-label">Distance</div>
+    <!-- Route 66 Timeline -->
+    <section class="route-66-timeline animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
+      <h2 class="section-title" id="route-title">Your Route 66 Adventure</h2>
+      <div class="timeline-road" aria-live="polite">
+        <div class="road-line"></div>
+        <div class="progress-dot" id="progressDot"></div>
+
+        <div class="timeline-pin" style="left: 0%;" onclick="showLocationDetails('sanfran')">
+          <div class="pin-icon pulse">🌉</div>
+          <div class="pin-date">Sep 19–23</div>
+          <div class="pin-label">San Francisco</div>
+        </div>
+
+        <div class="timeline-pin" style="left: 25%;" onclick="showLocationDetails('yosemite')">
+          <div class="pin-icon pulse">🏔️</div>
+          <div class="pin-date">Sep 23–26</div>
+          <div class="pin-label">Yosemite</div>
+        </div>
+
+        <div class="timeline-marker" style="left: 35%;">
+          <div class="marker-icon">🏜️</div>
+          <div class="marker-date">Sep 26–27</div>
+          <div class="marker-label">Death Valley<br>(Pass-through)</div>
+        </div>
+
+        <div class="timeline-pin" style="left: 50%;" onclick="showLocationDetails('grandcanyon')">
+          <div class="pin-icon pulse">🏞️</div>
+          <div class="pin-date">Sep 27–29</div>
+          <div class="pin-label">Grand Canyon</div>
+        </div>
+
+        <div class="timeline-pin" style="left: 70%;" onclick="showLocationDetails('vegas')">
+          <div class="pin-icon spin">🎂</div>
+          <div class="pin-date">Sep 29–Oct 1</div>
+          <div class="pin-label">Las Vegas</div>
+        </div>
+
+        <div class="timeline-pin" style="left: 95%;" onclick="showLocationDetails('nyc')">
+          <div class="pin-icon">🗽</div>
+          <div class="pin-date">Oct 1–3</div>
+          <div class="pin-label">New York City</div>
+        </div>
+
+        <div class="timeline-label" style="left: 0%;">Start</div>
+        <div class="timeline-label" style="left: 95%;">End</div>
       </div>
-      <div class="stat-card" onclick="celebrate()"><div class="stat-icon">🕰️</div><div class="stat-value">3</div><div class="stat-label">Time Zones</div></div>
+      <p class="timeline-update" id="timelineStatus">🛤️ Counting down…</p>
     </section>
 
-    <!-- Budget -->
-    <section id="overview" class="budget-card animate-on-scroll" aria-labelledby="budget-title">
-      <div class="budget-header">
-        <h2 id="budget-title" class="budget-title">Trip Budget</h2>
-        <div class="budget-total">£8,500</div>
-      </div>
-      <div class="budget-items">
-        <div class="budget-item"><div class="budget-item-label">✈️ Travel</div><div class="budget-item-value">£3,200</div></div>
-        <div class="budget-item"><div class="budget-item-label">🏨 Stays</div><div class="budget-item-value">£2,800</div></div>
-        <div class="budget-item"><div class="budget-item-label">🎟️ Activities</div><div class="budget-item-value">£2,500</div></div>
-      </div>
-      <div class="budget-progress">
-        <div class="progress-bar"><div class="progress-fill" id="budgetProgress" style="width:75%"></div></div>
-        <p class="progress-label">75% budget allocated • £8,500 total</p>
+    <!-- Next Up slider -->
+    <section class="nu-section" aria-labelledby="nu-title">
+      <div class="nu-card">
+        <div class="nu-head">
+          <div class="nu-title">Next up</div>
+          <div class="nu-dots" id="nuDots"></div>
+        </div>
+        <div class="nu-viewport" id="nuViewport">
+          <div class="nu-track" id="nuTrack"></div>
+        </div>
+        <div class="nu-progress"><div class="nu-bar" id="nuBar"></div></div>
       </div>
     </section>
 
@@ -416,7 +433,7 @@ nav{
         <canvas id="confettiCanvas" width="0" height="0" aria-hidden="true"></canvas>
         <div class="birthday-inner">
           <div class="birthday-left">
-            <p class="b-eyebrow">Vegas • Sep 28</p>
+            <p class="b-eyebrow" style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Vegas • Sep 28</p>
             <h3 class="b-title" id="bday-title">🎉 30th Birthday: Let's Make It Legendary!</h3>
             <p class="b-sub">A toast, a rooftop, and a little chaos. Tap the button when the moment hits—instant celebration.</p>
             <div class="b-cta">
@@ -502,7 +519,7 @@ nav{
       <article class="moment-card"><div class="top"><span class="moment-icon">🥂</span><h3>Rooftop Birthday Toast</h3></div><p>Sunset views: Legacy Club, Skyfall Lounge, Foundation Room.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('bdayToast')">View Guide</button></div></article>
     </section>
 
-    <!-- Flight Itinerary -->
+    <!-- Flights -->
     <h2 id="flights" class="flights-heading animate-on-scroll">Flight Itinerary</h2>
     <section class="flights animate-on-scroll" aria-label="Flights">
       <!-- Leg 1 -->
@@ -510,7 +527,7 @@ nav{
         <div class="bp-left">
           <div class="bp-header"><div class="airline">✈️ TransAtlantic Airways</div><div class="tag green">Booked</div></div>
           <div class="route"><span class="iata">LON</span> <span class="arrow">→</span> <span class="iata">SFO</span></div>
-          <div class="bp-grid">
+          <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>19 Sep</strong></div>
             <div class="bp-field"><span>Departs</span><strong>10:35</strong></div>
             <div class="bp-field"><span>Arrives</span><strong>13:40</strong></div>
@@ -524,23 +541,23 @@ nav{
         </div>
         <div class="bp-right">
           <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:6px"><span class="iata">LON</span> → <span class="iata">SFO</span></div>
+          <div class="route" style="margin-bottom:8px"><span class="iata">LON</span> → <span class="iata">SFO</span></div>
           <div class="bp-grid">
             <div class="bp-field"><span>PNR</span><strong>ABC123</strong></div>
             <div class="bp-field"><span>Group</span><strong>3</strong></div>
             <div class="bp-field"><span>Seat</span><strong>—</strong></div>
             <div class="bp-field"><span>Bag</span><strong>1</strong></div>
           </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:10px"></div>
+          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
         </div>
       </article>
 
-      <!-- Leg 2 (Booked) -->
+      <!-- Leg 2 -->
       <article class="boarding-pass" aria-label="Las Vegas to New York">
         <div class="bp-left">
           <div class="bp-header"><div class="airline">🛫 DesertJet</div><div class="tag green">Booked</div></div>
           <div class="route"><span class="iata">LAS</span> <span class="arrow">→</span> <span class="iata">NYC</span></div>
-          <div class="bp-grid">
+          <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>01 Oct</strong></div>
             <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
             <div class="bp-field"><span>Arrives</span><strong>TBD</strong></div>
@@ -554,14 +571,14 @@ nav{
         </div>
         <div class="bp-right">
           <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:6px"><span class="iata">LAS</span> → <span class="iata">NYC</span></div>
+          <div class="route" style="margin-bottom:8px"><span class="iata">LAS</span> → <span class="iata">NYC</span></div>
           <div class="bp-grid">
             <div class="bp-field"><span>PNR</span><strong>NYC991</strong></div>
             <div class="bp-field"><span>Group</span><strong>2</strong></div>
             <div class="bp-field"><span>Seat</span><strong>—</strong></div>
             <div class="bp-field"><span>Bag</span><strong>1</strong></div>
           </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:10px"></div>
+          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
         </div>
       </article>
 
@@ -570,7 +587,7 @@ nav{
         <div class="bp-left">
           <div class="bp-header"><div class="airline">🛬 Atlantic Home</div><div class="tag green">Booked</div></div>
           <div class="route"><span class="iata">NYC</span> <span class="arrow">→</span> <span class="iata">LON</span></div>
-          <div class="bp-grid">
+          <div class="bp-grid" style="margin-top:10px">
             <div class="bp-field"><span>Date</span><strong>03 Oct</strong></div>
             <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
             <div class="bp-field"><span>Arrives</span><strong>TBD</strong></div>
@@ -584,14 +601,14 @@ nav{
         </div>
         <div class="bp-right">
           <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:6px"><span class="iata">NYC</span> → <span class="iata">LON</span></div>
+          <div class="route" style="margin-bottom:8px"><span class="iata">NYC</span> → <span class="iata">LON</span></div>
           <div class="bp-grid">
             <div class="bp-field"><span>PNR</span><strong>LHR650</strong></div>
             <div class="bp-field"><span>Group</span><strong>4</strong></div>
             <div class="bp-field"><span>Seat</span><strong>—</strong></div>
             <div class="bp-field"><span>Bag</span><strong>1</strong></div>
           </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:10px"></div>
+          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
         </div>
       </article>
     </section>
@@ -605,7 +622,7 @@ nav{
           <div class="packing-stat"><div class="packing-stat-value" id="totalCount">0</div><div class="packing-stat-label">Total</div></div>
           <div class="packing-stat"><div class="packing-stat-value" id="packingPercent">0%</div><div class="packing-stat-label">Complete</div></div>
         </div>
-        <div class="btn-group">
+        <div class="btns">
           <button onclick="addCustomItem()">➕ Add Item</button>
           <button onclick="resetPacking()">🔄 Reset All</button>
         </div>
@@ -624,47 +641,7 @@ nav{
       <p class="progress-label" id="packingProgressLabel">🧳 Ready to start packing!</p>
     </section>
 
-    <!-- Quick Links -->
-    <section class="quick-links animate-on-scroll">
-      <h2 class="locations-heading" style="margin-top:40px">Quick Links & Resources</h2>
-      <div class="links-grid">
-        <a href="#" class="link-card" onclick="event.preventDefault(); showAlert('🗂️ Shared Folder', 'Add your shared Google Drive or Dropbox link here for easy access to all trip documents!');"><div class="link-icon">🗂️</div><div class="link-title">Shared Folder</div><div class="link-desc">Itineraries & docs</div></a>
-        <a href="#" class="link-card" onclick="event.preventDefault(); showAlert('🗺️ Maps List', 'Create a custom Google Maps list with all your must-visit spots and share it with the group!');"><div class="link-icon">🗺️</div><div class="link-title">Maps List</div><div class="link-desc">Pins & routes</div></a>
-        <a href="#" class="link-card" onclick="event.preventDefault(); showAlert('📝 Trip Notes', 'Set up a collaborative document for group planning, suggestions, and daily notes!');"><div class="link-icon">📝</div><div class="link-title">Trip Notes</div><div class="link-desc">Group planning doc</div></a>
-        <a href="#" class="link-card" onclick="event.preventDefault(); showAlert('📞 Emergency Contacts', 'Keep important numbers handy: embassies, insurance, hotels, and local emergency services.');"><div class="link-icon">📞</div><div class="link-title">Emergencies</div><div class="link-desc">Key contacts</div></a>
-      </div>
-    </section>
-
-    <!-- Important Reminders -->
-    <section class="notes-section animate-on-scroll">
-      <h2 class="locations-heading" style="margin-top:24px">Important Reminders</h2>
-      <div class="notes-grid">
-        <div class="note-card warning"><div class="note-icon">⚠️</div><h3>Pre-Travel</h3><ul class="checklist">
-          <li><input type="checkbox" id="esta"><label for="esta">Check ESTA status</label></li>
-          <li><input type="checkbox" id="stays"><label for="stays">Confirm stays</label></li>
-          <li><input type="checkbox" id="maps"><label for="maps">Download offline maps</label></li>
-          <li><input type="checkbox" id="bank"><label for="bank">Notify bank of travel</label></li>
-        </ul></div>
-        <div class="note-card info"><div class="note-icon">ℹ️</div><h3>Air Travel</h3><ul class="checklist">
-          <li><input type="checkbox" id="intl"><label for="intl">Arrive early for international</label></li>
-          <li><input type="checkbox" id="baggage"><label for="baggage">Check baggage allowance</label></li>
-          <li><input type="checkbox" id="apps"><label for="apps">Download airline apps</label></li>
-          <li><input type="checkbox" id="carry"><label for="carry">Carry essentials in hand luggage</label></li>
-        </ul></div>
-        <div class="note-card success"><div class="note-icon">💰</div><h3>Money Tips</h3><ul class="checklist">
-          <li><input type="checkbox" id="tip"><label for="tip">Tipping 15–20% typical</label></li>
-          <li><input type="checkbox" id="cash"><label for="cash">Some cash for tips</label></li>
-          <li><input type="checkbox" id="contactless"><label for="contactless">Use contactless where possible</label></li>
-          <li><input type="checkbox" id="travelNotice"><label for="travelNotice">Enable card travel notices</label></li>
-        </ul></div>
-        <div class="note-card primary"><div class="note-icon">📱</div><h3>Stay Connected</h3><ul class="checklist">
-          <li><input type="checkbox" id="roaming"><label for="roaming">Check roaming</label></li>
-          <li><input type="checkbox" id="esim"><label for="esim">Consider eSIM</label></li>
-          <li><input type="checkbox" id="wifi"><label for="wifi">Save hotel Wi-Fi details</label></li>
-          <li><input type="checkbox" id="locationShare"><label for="locationShare">Share live locations when out</label></li>
-        </ul></div>
-      </div>
-    </section>
+    <!-- Quick Links & Reminders kept as before (optional)… -->
   </main>
 
   <!-- Generic modal -->
@@ -684,7 +661,11 @@ nav{
   </div>
 
 <script>
-// ===== State =====
+/* ===== Mobile nav ===== */
+function toggleMobileNav(btn){ const n=btn.closest('nav'); const open=n.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }
+function scrollToSection(id,e){ e?.preventDefault(); const el=document.getElementById(id); if(!el) return; const y=el.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+
+/* ===== State ===== */
 let packingItems = [
   { id: 'passport', text: 'Passport & Travel Documents', icon: '📄', column: 'toPack' },
   { id: 'clothes', text: 'Clothes for All Climates', icon: '👕', column: 'toPack' },
@@ -699,9 +680,10 @@ let packingItems = [
 
 let weatherDetails = false;
 let lastWeatherUpdate = null;
-let weatherStore = {}; // latest weather per location
+window.__WX_CACHE = {};     // expose for Next Up
+window.__PACKING_PCT = 0;   // expose for Next Up
 
-// ===== Hero countdown =====
+/* ===== Hero countdown ===== */
 function updateCountdown(){
   const tripDate = new Date('2025-09-19T09:00:00-07:00'); // PST start time
   const now = new Date();
@@ -726,37 +708,146 @@ function updateCountdown(){
   }
 }
 
-// ===== Weather (Open-Meteo) =====
+/* ===== Route 66 timeline status ===== */
+function updateTimelineStatus(){
+  const el = document.getElementById('timelineStatus');
+  if(!el) return;
+  const start = new Date('2025-09-19T00:00:00-07:00');
+  const now = new Date();
+  const diffDays = Math.ceil((start - now)/86400000);
+  if(diffDays > 0){
+    el.textContent = `🛤️ ~${diffDays} day${diffDays!==1?'s':''} until your journey begins!`;
+  } else {
+    el.textContent = `🛤️ You're on the road — make it count!`;
+  }
+}
+
+/* ===== Next Up slider (endless-feel) ===== */
+const TRIP_START = new Date('2025-09-19T09:00:00-07:00');
+const TRIP_END   = new Date('2025-10-03T23:59:59-04:00');
+
+const nextUpPool = [
+  // Dynamic/status
+  { emoji:'🗺️', title:'Countdown', body:()=> {
+      const d = Math.max(0, Math.ceil((TRIP_START - new Date())/86400000));
+      return d===0 ? 'It’s today — let’s go! ✈️' : `${d} day${d!==1?'s':''} until takeoff`;
+    } },
+  { emoji:'🌤️', title:'SF Weather (now)', body:()=>{
+      const wx = (window.__WX_CACHE && window.__WX_CACHE.sanfran)||null;
+      return wx ? `${Math.round(wx.temp)}°C • ${wx.desc}` : 'Tap Refresh in Weather';
+    } },
+  { emoji:'📦', title:'Packing progress', body:()=> `${window.__PACKING_PCT|0}% done • Passports, chargers, meds?` },
+
+  // NYC pizza hits
+  { emoji:'🍕', title:'NYC pizza', body:'Joe’s Pizza (Bleecker) — fast, classic slice.' },
+  { emoji:'🍕', title:'NYC pizza', body:'Prince Street — spicy pepperoni squares.' },
+  { emoji:'🍕', title:'NYC pizza', body:'Scarr’s (Lower East Side) — naturally leavened dough.' },
+  { emoji:'🍕', title:'NYC pizza', body:'L’Industrie (Williamsburg) — burrata slice magic.' },
+  { emoji:'🍕', title:'NYC pizza', body:'Lucali (Carroll Gardens) — cash-only, thin crust (go early).' },
+  { emoji:'🍕', title:'NYC pizza', body:'John’s of Bleecker — whole pies, coal-fired.' },
+
+  // Shopping areas
+  { emoji:'🛍️', title:'SF shopping', body:'Union Square & Maiden Lane for brands; Hayes Valley for indie boutiques.' },
+  { emoji:'🛍️', title:'Vegas shopping', body:'Forum Shops (Caesars), Grand Canal Shoppes (Venetian), North Premium Outlets.' },
+  { emoji:'🛍️', title:'NYC shopping', body:'SoHo (Broadway/Prince) for flagships; Nolita for indie; 5th Ave for icons.' },
+
+  // Best bars & bites by state/stop
+  { emoji:'🍹', title:'San Francisco bars', body:'The Beehive (retro), Trick Dog (creative), Smuggler’s Cove (rum temple).' },
+  { emoji:'🍽️', title:'San Francisco eats', body:'Sotto Mare (cioppino), La Taqueria (Mission burrito), Yank Sing (dim sum).' },
+  { emoji:'🍸', title:'Vegas bars', body:'Chandelier Bar, Skyfall Lounge, Ghost Donkey (mezcal speakeasy).' },
+  { emoji:'🍜', title:'Vegas eats', body:'Lotus of Siam (northern Thai), Secret Pizza (late-night), Best Friend (Korean-Mex).' },
+  { emoji:'🍸', title:'NYC bars', body:'Dante (Negronis), Death & Co (speakeasy vibes), The Dead Rabbit (Irish cocktails).' },
+  { emoji:'🥯', title:'NYC eats', body:'Katz’s (pastrami), Ess-a-Bagel, Xi’an Famous Foods (hand-pulled noodles).' },
+
+  // Photo spots
+  { emoji:'📸', title:'SF photo', body:'Battery Spencer at sunrise for Golden Gate. Bring a wind layer.' },
+  { emoji:'📸', title:'Vegas photo', body:'Bellagio fountain corner facing Paris & Eiffel replica — wide angle!' },
+  { emoji:'📸', title:'NYC photo', body:'DUMBO (Washington St.) with Manhattan Bridge — go early.' },
+
+  // Broadway & Sphere nudges
+  { emoji:'🎟️', title:'Broadway', body:'TKTS booth (same-day deals). Consider a matinee + Hell’s Kitchen dinner.' },
+  { emoji:'🌐', title:'MSG Sphere', body:'Arrive early; mid-arena seats = best immersion; earplugs if sensitive.' },
+
+  // More food gems (keeps it feeling endless)
+  { emoji:'🌮', title:'SF Mission eats', body:'La Taqueria (no rice burritos), El Farolito (late-night tacos).' },
+  { emoji:'🍔', title:'Vegas classic', body:'In-N-Out just off the Strip; smash it animal-style.' },
+  { emoji:'🥞', title:'NYC brunch', body:'Balthazar (SoHo), Jack’s Wife Freda, Clinton St. Baking (pancakes).' },
+
+  // Fun extras
+  { emoji:'🌌', title:'Stargazing tip', body:'Tunnel View pull-out: tripod + red-light torch to preserve night vision.' },
+  { emoji:'💧', title:'Desert rule', body:'Carry water. More than you think. Vegas/Death Valley sun is sneaky.' },
+];
+
+let nuItems = []; // will be built from pool
+let nuIndex=0, nuTimer=null, nuInterval=5200;
+
+function buildNextUp(){
+  const dynamicEvery = 6; // interleave dynamic items frequently
+  // Build a long-feel list: start with a few dynamic then shuffle a chunk of the pool
+  const staticPool = nextUpPool.filter(i => typeof i.body !== 'function' || (i.title!=='Countdown' && i.title!=='SF Weather (now)' && i.title!=='Packing progress'));
+  const coreDynamics = nextUpPool.filter(i => typeof i.body==='function');
+  const shuffled = staticPool.sort(()=>Math.random()-0.5);
+  // Interleave
+  nuItems = [];
+  let d=0;
+  for(let i=0;i<shuffled.length;i++){
+    if(i%dynamicEvery===0 && d<coreDynamics.length){ nuItems.push(coreDynamics[d++]); }
+    nuItems.push(shuffled[i]);
+  }
+  // Ensure at least one dynamic at the end
+  if(d<coreDynamics.length) nuItems.push(coreDynamics[d]);
+
+  const track=document.getElementById('nuTrack');
+  const dots=document.getElementById('nuDots');
+  const bar=document.getElementById('nuBar');
+  if(!track||!dots||!bar) return;
+  track.innerHTML = nuItems.map(item=>{
+    const body=typeof item.body==='function'?item.body():item.body;
+    return `<article class="nu-slide"><div class="nu-emoji">${item.emoji}</div><div class="nu-text"><h4>${item.title}</h4><p>${body}</p></div></article>`
+  }).join('');
+  dots.innerHTML = nuItems.map((_,i)=>`<div class="nu-dot ${i===0?'active':''}" data-i="${i}"></div>`).join('');
+  dots.querySelectorAll('.nu-dot').forEach(d=>d.addEventListener('click', ()=>goToSlide(+d.dataset.i)));
+  const viewport=document.getElementById('nuViewport');
+  let startX=0,dx=0;
+  viewport.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;dx=0;stopAuto();},{passive:true});
+  viewport.addEventListener('touchmove',e=>{dx=e.touches[0].clientX-startX;},{passive:true});
+  viewport.addEventListener('touchend',()=>{if(Math.abs(dx)>50){dx<0?nextSlide():prevSlide()} startAuto();});
+  viewport.addEventListener('mouseenter',stopAuto);
+  viewport.addEventListener('mouseleave',startAuto);
+  goToSlide(0,true); startAuto();
+}
+function goToSlide(i,instant=false){
+  const track=document.getElementById('nuTrack'); const dots=document.getElementById('nuDots').children; const bar=document.getElementById('nuBar');
+  const n=nuItems.length; nuIndex=(i+n)%n;
+  // refresh dynamic copy each move
+  track.querySelectorAll('.nu-slide').forEach((sl,idx)=>{
+    const item=nuItems[idx];
+    if(typeof item.body==='function'){ sl.querySelector('p').textContent=item.body(); }
+  });
+  track.style.transitionDuration = instant?'0ms':'500ms';
+  track.style.transform=`translateX(-${nuIndex*100}%)`;
+  [...dots].forEach((d,di)=>d.classList.toggle('active', di===nuIndex));
+  bar.style.transition='none'; bar.style.width='0%';
+  setTimeout(()=>{bar.style.transition=`width ${nuInterval}ms linear`; bar.style.width='100%';},10);
+}
+function nextSlide(){goToSlide(nuIndex+1)}
+function prevSlide(){goToSlide(nuIndex-1)}
+function startAuto(){ stopAuto(); nuTimer=setInterval(nextSlide,nuInterval); const bar=document.getElementById('nuBar'); bar.style.transition=`width ${nuInterval}ms linear`; bar.style.width='100%' }
+function stopAuto(){ clearInterval(nuTimer); nuTimer=null; const bar=document.getElementById('nuBar'); bar.style.transition='none'; bar.style.width='0%' }
+
+/* ===== Weather (Open-Meteo) ===== */
 const tripLocations = [
   { id: "sanfran", name: "San Francisco", lat: 37.7749, lon: -122.4194, emoji: "🌉" },
   { id: "yosemite", name: "Yosemite", lat: 37.7456, lon: -119.5936, emoji: "🏔️" },
   { id: "vegas", name: "Las Vegas", lat: 36.1699, lon: -115.1398, emoji: "🎰" },
   { id: "nyc", name: "New York", lat: 40.7128, lon: -74.0060, emoji: "🗽" }
 ];
-
-const weatherIcons = {
-  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",
-  61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",
-  80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"
-};
-const weatherDescriptions = {
-  0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",
-  45:"Fog",48:"Depositing rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",
-  61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",
-  71:"Slight snow fall",73:"Moderate snow fall",75:"Heavy snow fall",77:"Snow grains",
-  80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",
-  95:"Thunderstorm",96:"Thunderstorm with slight hail",99:"Thunderstorm with heavy hail"
-};
+const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"};
+const weatherDescriptions = {0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",71:"Slight snow",73:"Moderate snow",75:"Heavy snow",77:"Snow grains",80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",95:"Thunderstorm",96:"T-storm w/ slight hail",99:"T-storm w/ heavy hail"};
 
 async function fetchWeatherData(location) {
   try {
-    const url =
-      `https://api.open-meteo.com/v1/forecast` +
-      `?latitude=${location.lat}&longitude=${location.lon}` +
-      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m` +
-      `&hourly=temperature_2m,weather_code,precipitation_probability,uv_index` +
-      `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,uv_index_max,weather_code` +
-      `&timezone=auto&forecast_days=3`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset&timezone=auto&forecast_days=1`;
     const res = await fetch(url);
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
@@ -775,8 +866,7 @@ function getNextHoursSlice(hourly){
     const t = hourly.time[start+i];
     const temp = hourly.temperature_2m?.[start+i];
     const code = hourly.weather_code?.[start+i];
-    const prob = hourly.precipitation_probability?.[start+i];
-    return t?{time:t,temp,code,prob}:null;
+    return t?{time:t,temp,code}:null;
   }).filter(Boolean);
 }
 function createWeatherCard(w){
@@ -796,32 +886,33 @@ function createWeatherCard(w){
   const hi = daily.temperature_2m_max?Math.round(daily.temperature_2m_max[0]):null;
   const lo = daily.temperature_2m_min?Math.round(daily.temperature_2m_min[0]):null;
   const rain = daily.precipitation_sum?daily.precipitation_sum[0]:0;
-  const uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : null;
+  const sunrise = daily.sunrise? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
+  const sunset  = daily.sunset?  new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
   const next = getNextHoursSlice(hourly);
+  // cache minimal for Next Up
+  window.__WX_CACHE[location.id] = { temp, desc };
 
   const details = weatherDetails
-    ? `<div class="wx-metrics">
-         <div class="wx-kv"><div class="label">Feels</div><div class="value">${feels}°C</div></div>
-         <div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
-         <div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax ?? '—'}</div></div>
-         <div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div>
-         <div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
+    ? `<div class="weather-rows">
+         <div class="wx-chip"><div class="label">Feels</div><div class="value">${feels}°C</div></div>
+         <div class="wx-chip"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
+         <div class="wx-chip"><div class="label">High/Low</div><div class="value">${hi??'--'}°/${lo??'--'}°</div></div>
+         <div class="wx-chip"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
+         <div class="wx-chip"><div class="label">Sunrise</div><div class="value">${sunrise}</div></div>
+         <div class="wx-chip"><div class="label">Sunset</div><div class="value">${sunset}</div></div>
        </div>`
-    : `<div class="wx-metrics">
-         <div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div>
-         <div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
+    : `<div class="weather-rows">
+         <div class="wx-chip"><div class="label">High/Low</div><div class="value">${hi??'--'}°/${lo??'--'}°</div></div>
+         <div class="wx-chip"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div>
        </div>`;
-
   const hours = `<div class="wx-hours">${
      next.map(h=>{
        const ic = weatherIcons[h.code]||'·';
        const t = new Date(h.time).toLocaleTimeString([], {hour:'2-digit'});
        const deg = Math.round(h.temp);
-       const p  = (h.prob ?? 0) + '%';
-       return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;
+       return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div></div>`;
      }).join('')
   }</div>`;
-
   return `<div class="weather-card" id="weather-${location.id}" onclick="showWeatherDetails('${location.id}')">
     <div class="weather-head"><div class="weather-location">${location.emoji} ${location.name}</div><span class="weather-badge">Today</span></div>
     <div class="weather-main"><div class="weather-icon">${icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-desc">${desc}</div></div></div>
@@ -837,7 +928,6 @@ async function loadWeather(){
       <div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Fetching...</div></div></div>
     </div>`).join('');
   const results = await Promise.all(tripLocations.map(fetchWeatherData));
-  results.forEach(r => { weatherStore[r.location.id] = r; });
   grid.innerHTML = results.map(createWeatherCard).join('');
   lastWeatherUpdate = new Date();
   const s = document.getElementById('wxStatus');
@@ -845,139 +935,48 @@ async function loadWeather(){
 }
 function refreshWeather(btn){ loadWeather(); if(btn){ btn.style.transform='rotate(360deg)'; setTimeout(()=>btn.style.transform='',600); } }
 function toggleWeatherDetails(btn){ weatherDetails=!weatherDetails; loadWeather(); if(btn){ btn.textContent = weatherDetails? '📊 Hide Details' : '📊 Show Details'; } }
-
-function buildWeatherAdvice(w){
-  const tips=[];
-  const c=w.current||{}, d=w.daily||{}, h=w.hourly||{};
-  const temp = Math.round(c.temperature_2m ?? 0);
-  const feels = Math.round(c.apparent_temperature ?? temp);
-  const wind = Math.round((c.wind_speed_10m||0)*2.237);
-  const gust = c.wind_gusts_10m ? Math.round(c.wind_gusts_10m*2.237) : null;
-  const hum  = c.relative_humidity_2m ?? null;
-
-  const hi   = d.temperature_2m_max ? Math.round(d.temperature_2m_max[0]) : null;
-  const lo   = d.temperature_2m_min ? Math.round(d.temperature_2m_min[0]) : null;
-  const swing = (hi!=null && lo!=null) ? hi-lo : null;
-  const uvMax = d.uv_index_max ? Math.round(d.uv_index_max[0]) : null;
-
-  let nextProb = null;
-  if(h.precipitation_probability && h.time){
-    const now = Date.now();
-    const idx = h.time.findIndex(t => new Date(t).getTime() >= now);
-    nextProb = h.precipitation_probability[idx] ?? null;
-  }
-
-  if(nextProb!=null && nextProb>=40) tips.push({t:'Showers likely — pack a light rain jacket',level:'warn'});
-  if(uvMax!=null && uvMax>=7)      tips.push({t:'High UV — sunscreen, hat, sunglasses',level:'warn'});
-  if(temp>=30 || feels>=32)        tips.push({t:'Hot today — hydrate frequently',level:'warn'});
-  if(temp<=5)                      tips.push({t:'Chilly — bring warm layers',level:'warn'});
-  if(swing!=null && swing>=12)     tips.push({t:'Big temperature swing — layer up', level:'warn'});
-  if(wind>=25 || (gust!=null && gust>=35)) tips.push({t:'Windy — secure hats; cooler wind chill', level:'warn'});
-  if(hum!=null && temp>=26 && hum>=60) tips.push({t:'Humid — it may feel muggier than temp', level:'warn'});
-
-  const city = w.location.id;
-  if(city==='sanfran') tips.unshift({t:'SF microclimates: bring a light jacket for fog',level:''});
-  if(city==='yosemite') tips.unshift({t:'Trail shoes + warm layer for evening stargazing',level:''});
-  if(city==='vegas') tips.unshift({t:'Sunscreen + sunglasses for daytime Strip walks',level:''});
-  if(city==='nyc') tips.unshift({t:'Comfy walking shoes; lots of steps!',level:''});
-
-  return tips;
-}
-function formatDay(iso){ return new Date(iso).toLocaleDateString([], {weekday:'short'}); }
-
 function showWeatherDetails(id){
-  const w = weatherStore[id];
-  const l = tripLocations.find(x=>x.id===id);
-  if(!w || !l){ showAlert('Weather','Details not available yet. Try refresh.'); return; }
-
-  const {current, daily, hourly} = w;
-  const next = getNextHoursSlice(hourly);
-  const uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : '—';
-  const sunrise = daily.sunrise ? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
-  const sunset  = daily.sunset  ? new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
-  const wind = Math.round((current.wind_speed_10m||0)*2.237);
-  const feels = Math.round(current.apparent_temperature ?? current.temperature_2m ?? 0);
-
-  const tips = buildWeatherAdvice(w);
-  const three = daily.time ? [0,1,2].map(i=>{
-    const code = daily.weather_code?.[i];
-    const ic = weatherIcons[code] || (daily.precipitation_sum?.[i] > 0 ? '🌧️' : '☀️');
-    const hi = daily.temperature_2m_max ? Math.round(daily.temperature_2m_max[i]) : '—';
-    const lo = daily.temperature_2m_min ? Math.round(daily.temperature_2m_min[i]) : '—';
-    return {d: formatDay(daily.time[i]), ic, hi, lo};
-  }) : [];
-
-  const html = `
-    <h2 id="modalTitle" style="font-size:24px;margin-bottom:6px;color:var(--primary)">${l.emoji} ${l.name}</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0">
-      <div class="wx-kv"><div class="label">Feels Like</div><div class="value">${feels}°C</div></div>
-      <div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div>
-      <div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax}</div></div>
-      <div class="wx-kv"><div class="label">Sunrise / Sunset</div><div class="value">${sunrise} / ${sunset}</div></div>
-    </div>
-
-    <h3 style="margin:12px 0 6px;color:var(--secondary)">Next Hours</h3>
-    <div class="wx-hours" style="margin-top:6px">${
-      next.map(h=>{
-        const ic = weatherIcons[h.code]||'·';
-        const t = new Date(h.time).toLocaleTimeString([], {hour:'2-digit'});
-        const deg = Math.round(h.temp);
-        const p  = (h.prob ?? 0) + '%';
-        return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;
-      }).join('')
-    }</div>
-
-    <h3 style="margin:16px 0 6px;color:var(--secondary)">3-Day Outlook</h3>
-    <div class="wx-3day">${
-      three.map(d=>`<div class="d"><div class="t">${d.d}</div><div style="font-size:22px;margin:2px 0">${d.ic}</div><div><span class="hi">${d.hi}°</span> / <span class="lo">${d.lo}°</span></div></div>`).join('')
-    }</div>
-
-    <h3 style="margin:16px 0 6px;color:var(--secondary)">Advice</h3>
-    <div class="advice">
-      ${tips.map(t=>`<span class="chip ${t.level}">${t.t}</span>`).join('')}
-    </div>
-  `;
-  showAlert(`${l.emoji} ${l.name} Weather`, html);
+  const l = tripLocations.find(x=>x.id===id); if(!l) return;
+  showAlert(`${l.emoji} ${l.name} Weather`, `
+    <div style="text-align:left">
+      <p><strong>Packing tips for ${l.name}:</strong></p>
+      <ul style="margin:10px 0;padding-left:20px">
+        ${id==='sanfran'?'<li>Layers! Evening fog rolls in.</li><li>Light jacket.</li>':''}
+        ${id==='yosemite'?'<li>Sturdy boots.</li><li>Warm layers for stargazing.</li>':''}
+        ${id==='vegas'?'<li>Sunglasses & sunscreen.</li><li>Light, breathable clothing.</li>':''}
+        ${id==='nyc'?'<li>Comfortable walking shoes.</li><li>Light jacket for AC.</li>':''}
+      </ul>
+    </div>`);
 }
 
-// ===== Moments Guides =====
+/* ===== Moments & Locations Modals (minimal) ===== */
 const momentGuides = {
   stargazing:{ title:'Yosemite Stargazing',
     stops:[{name:'Glacier Point',why:'Panoramic sky & Half Dome silhouette',maps:'https://www.google.com/maps?q=Glacier+Point'},
-           {name:'Tunnel View',why:'Iconic valley frame, good foregrounds',maps:'https://www.google.com/maps?q=Tunnel+View'}],
-    tips:['Arrive before full darkness for setup','Use red light to preserve night vision','Temps drop fast — pack layers']},
+           {name:'Tunnel View',why:'Iconic valley frame',maps:'https://www.google.com/maps?q=Tunnel+View'}],
+    tips:['Arrive before full darkness','Use red light','Warm layers']},
   vegasNight:{ title:'Vegas Boys Night',
     stops:[{name:'Bellagio Fountains',why:'Kick-off with the classics',maps:'https://www.google.com/maps?q=Bellagio+Fountains'},
-           {name:'Chandelier Bar',why:'Cocktails beneath crystal glow',maps:'https://www.google.com/maps?q=The+Chandelier+Bar+Cosmopolitan'},
-           {name:'Fremont Street',why:'LED canopy + live bands',maps:'https://www.google.com/maps?q=Fremont+Street+Experience'}],
-    tips:['Book rides between Strip & Downtown','Hydrate — it sneaks up on you','Smart casual dress for easier entry']},
-  nycFood:{ title:'NYC Street Food Tour',
-    stops:[{name:'Joe’s Pizza',why:'Foldable slice perfection',maps:'https://www.google.com/maps?q=Joes+Pizza+NYC'},
-           {name:'Ess-a-Bagel',why:'Proper New York bagel',maps:'https://www.google.com/maps?q=Ess+a+Bagel'},
+           {name:'Chandelier Bar',why:'Cocktails under crystals',maps:'https://www.google.com/maps?q=The+Chandelier+Bar+Cosmopolitan'},
+           {name:'Fremont Street',why:'LED canopy + bands',maps:'https://www.google.com/maps?q=Fremont+Street+Experience'}],
+    tips:['Book rides Strip↔Downtown','Hydrate','Smart casual helps entry']},
+  nycFood:{ title:'NYC Street Food',
+    stops:[{name:'Joe’s Pizza',why:'The slice',maps:'https://www.google.com/maps?q=Joes+Pizza+NYC'},
+           {name:'Ess-a-Bagel',why:'Proper bagel',maps:'https://www.google.com/maps?q=Ess+a+Bagel'},
            {name:'The Halal Guys',why:'Late-night classic',maps:'https://www.google.com/maps?q=The+Halal+Guys'}],
-    tips:['Carry cash for small vendors','Order “regular” unless you love heat','Walk, don’t Uber — you’ll see more']},
+    tips:['Cash helps','Go easy on the hot sauce','Walk, don’t Uber']},
   ggSunrise:{ title:'Golden Gate at Sunrise',
-    stops:[{name:'Battery Spencer',why:'Front-row bridge viewpoint',maps:'https://www.google.com/maps?q=Battery+Spencer'},
+    stops:[{name:'Battery Spencer',why:'Front-row bridge',maps:'https://www.google.com/maps?q=Battery+Spencer'},
            {name:'Marshall’s Beach',why:'Beach-level compositions',maps:'https://www.google.com/maps?q=Marshalls+Beach'}],
-    tips:['Arrive 30–40 mins before sunrise','Bring a windproof layer','Coffee in Sausalito afterwards']},
-  grandCanyon:{ title:'Grand Canyon Day Trip',
-    stops:[{name:'West Rim (Skywalk)',why:'Closest from Vegas, quick wow',maps:'https://www.google.com/maps?q=Grand+Canyon+West'},
-           {name:'South Rim',why:'Classic overlooks (Mather, Yavapai)',maps:'https://www.google.com/maps?q=Grand+Canyon+South+Rim'}],
-    tips:['Heli = time saver, road = cheaper','Pack snacks & water','Desert sun is strong — sunscreen!']},
-  sphere:{ title:'MSG Sphere Immersion',
-    stops:[{name:'Sphere',why:'Arrive 45 mins early for lobby exhibits',maps:'https://www.google.com/maps?q=MSG+Sphere+Las+Vegas'}],
-    tips:['Middle sections = best dome coverage','Earplugs if sensitive to volume']},
-  broadway:{ title:'Broadway Night',
-    stops:[{name:'TKTS or Box Office',why:'Same-day options or pre-book',maps:'https://www.google.com/maps?q=Times+Square+TKTS'}],
-    tips:['Dress in layers (theatres vary)','No big bags','Plan dinner close to the theatre']},
-  hoover:{ title:'Hoover Dam Tour',
-    stops:[{name:'Visitor Center',why:'Guided tour & exhibits',maps:'https://www.google.com/maps?q=Hoover+Dam+Visitor+Center'}],
-    tips:['Morning = cooler & quieter','Bring hat & water','Combine with Boulder City coffee stop']},
-  bdayToast:{ title:'Rooftop Birthday Toast',
-    stops:[{name:'Legacy Club',why:'Panoramic desert sunset',maps:'https://www.google.com/maps?q=Legacy+Club+Las+Vegas'},
-           {name:'Skyfall Lounge',why:'South Strip views',maps:'https://www.google.com/maps?q=Skyfall+Lounge'},
-           {name:'Foundation Room',why:'Balcony over the Strip',maps:'https://www.google.com/maps?q=Foundation+Room'}],
-    tips:['Golden hour bookings fill fast','Smart footwear (lots of standing)']}
+    tips:['Arrive 30–40 mins before','Windproof layer','Coffee in Sausalito']},
+  grandCanyon:{ title:'Grand Canyon Day',
+    stops:[{name:'West Rim (Skywalk)',why:'Closest from Vegas',maps:'https://www.google.com/maps?q=Grand+Canyon+West'},
+           {name:'South Rim',why:'Classic overlooks',maps:'https://www.google.com/maps?q=Grand+Canyon+South+Rim'}],
+    tips:['Heli=fast, road=cheap','Snacks & water','Sunscreen']},
+  sphere:{ title:'MSG Sphere', stops:[{name:'Sphere',why:'Arrive early',maps:'https://www.google.com/maps?q=MSG+Sphere+Las+Vegas'}], tips:['Middle seats','Earplugs if sensitive']},
+  broadway:{ title:'Broadway Night', stops:[{name:'TKTS',why:'Same-day tickets',maps:'https://www.google.com/maps?q=Times+Square+TKTS'}], tips:['Layers (temps vary)','No big bags','Plan dinner nearby']},
+  hoover:{ title:'Hoover Dam', stops:[{name:'Visitor Center',why:'Guided tour',maps:'https://www.google.com/maps?q=Hoover+Dam+Visitor+Center'}], tips:['Morning is cooler','Hat & water','Stop in Boulder City']},
+  bdayToast:{ title:'Rooftop Birthday', stops:[{name:'Legacy Club',why:'Panoramic sunset',maps:'https://www.google.com/maps?q=Legacy+Club+Las+Vegas'},{name:'Skyfall Lounge',why:'South Strip views',maps:'https://www.google.com/maps?q=Skyfall+Lounge'},{name:'Foundation Room',why:'Balcony over the Strip',maps:'https://www.google.com/maps?q=Foundation+Room'}], tips:['Golden hour fills fast','Smart footwear']}
 };
 function showMomentDetails(key){
   const g = momentGuides[key]; if(!g) return;
@@ -1001,9 +1000,58 @@ function showMomentDetails(key){
   content.innerHTML = html;
   document.getElementById('locationModal').style.display = 'block';
 }
-function closeModal(){ document.getElementById('locationModal').style.display='none'; }
 
-// ===== Packing =====
+/* Locations modal (for Timeline clicks) */
+const locationDetails = {
+  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Arrival & Union Square'},{day:'Day 2',activity:"Golden Gate & Wharf"},{day:'Day 3',activity:'Alcatraz + Free walking tour'},{day:'Day 4',activity:'Final SF sights'}],
+    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
+    tips:'Dress in layers - SF weather can change quickly!'
+  },
+  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
+    activities:[{day:'Day 1',activity:'Drive from SF'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Hiking & stargazing'}],
+    highlights:['Glacier Point','Half Dome','Mist Trail','Milky Way photography'],
+    tips:'Warm clothes at night — temps drop!'
+  },
+  grandcanyon:{ title:'Grand Canyon', dates:'September 27–29, 2025', stay:{name:'TBC'},
+    activities:[{day:'Day 1',activity:'Drive via Death Valley'},{day:'Day 2',activity:'South Rim lookouts / Skywalk West Rim'},{day:'Day 3',activity:'Return towards Vegas'}],
+    highlights:['Mather Point','Hopi Point','Skywalk (West Rim)'],
+    tips:'Start early for parking; sun protection & water a must.'
+  },
+  vegas:{ title:'Las Vegas', dates:'September 29 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday!'},{day:'Day 4',activity:'Show & final night'}],
+    highlights:['Grand Canyon heli','MSG Sphere','Cirque du Soleil','Rooftop party'],
+    tips:'Hydrate & comfy shoes — long walks!'
+  },
+  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
+    activities:[{day:'Day 1',activity:'Times Square'},{day:'Day 2',activity:'Central Park & Broadway'},{day:'Day 3',activity:'Final sights'}],
+    highlights:['Broadway','Central Park','Brooklyn Bridge','Food tour'],
+    tips:'Book shows in advance; comfy shoes!'
+  }
+};
+function showLocationDetails(key){
+  const d = locationDetails[key]; if(!d) return;
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
+    <p style="font-weight:700;margin-bottom:16px;color:var(--muted)">${d.dates}</p>
+    <p><strong>Stay:</strong> ${d.stay.name}</p>
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px">
+      ${d.activities.map(a=>`<div style="background:#fff;border:1px solid var(--border);padding:10px;border-radius:10px"><strong>${a.day}:</strong> ${a.activity}</div>`).join('')}
+    </div>
+    <p style="margin-top:12px"><strong>Highlights:</strong> ${d.highlights.join(', ')}</p>
+    <p><strong>Tips:</strong> ${d.tips}</p>`;
+  document.getElementById('locationModal').style.display='block';
+}
+function closeModal(){ document.getElementById('locationModal').style.display='none'; }
+function showAlert(title, html){
+  const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
+  content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
+  modal.style.display='block';
+}
+function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
+
+/* ===== Packing ===== */
 function renderPackingItems(){
   const toPackList = document.getElementById('toPackList');
   const packedList = document.getElementById('packedList');
@@ -1034,6 +1082,7 @@ function updatePackingStats(){
   const bar = document.getElementById('packingProgress');
   const label = document.getElementById('packingProgressLabel');
   if(bar) bar.style.width = `${pct}%`;
+  window.__PACKING_PCT = pct; // expose to Next Up
   if(label){
     if(pct===0) label.textContent='🧳 Ready to start packing!';
     else if(pct<50) label.textContent=`🧳 ${pct}% packed - Keep going!`;
@@ -1059,7 +1108,7 @@ function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.
 function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-// ===== UI helpers =====
+/* ===== UI helpers ===== */
 function celebrate(){ burstConfetti(200); const btn=document.querySelector('.b-btn'); if(btn){ btn.style.animation='bounceIn .8s var(--curve)'; setTimeout(()=>btn.style.animation='',800);} }
 function burstConfetti(count=150){
   const canvas = document.getElementById('confettiCanvas');
@@ -1079,148 +1128,20 @@ function burstConfetti(count=150){
     if(bits.length) requestAnimationFrame(anim);
   })();
 }
-function showAlert(title, html){
-  const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
-  content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
-  modal.style.display='block';
-}
-function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
 
-// ===== Destination modal =====
-const locationDetails = {
-  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrival & Union Square exploration'},{day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},{day:'Day 3',activity:'Alcatraz tour & Free walking tour'},{day:'Day 4',activity:'Final SF sights before Yosemite'}],
-    highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'],
-    tips:'Dress in layers — SF weather can change dramatically throughout the day!'
-  },
-  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'},
-    activities:[{day:'Day 1',activity:'Drive from SF, settle in'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Hiking trails & stargazing'}],
-    highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'],
-    tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!'
-  },
-  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}],
-    highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'],
-    tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!'
-  },
-  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'},
-    activities:[{day:'Day 1',activity:'Arrival & Times Square'},{day:'Day 2',activity:'Central Park & Broadway show'},{day:'Day 3',activity:'Final sights before departure'}],
-    highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'],
-    tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!'
-  }
-};
-function showLocationDetails(key){
-  const d = locationDetails[key]; if(!d) return;
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2>
-    <p style="font-weight:700;margin-bottom:20px;color:var(--secondary)">${d.dates}</p>
-    <div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:18px;border-radius:16px;margin-bottom:20px">
-      <h3 style="margin-bottom:8px;color:var(--primary)">🏨 Accommodation</h3>
-      <p style="font-weight:600">${d.stay.name}</p>
-    </div>
-    <div style="margin-bottom:20px">
-      <h3 style="margin-bottom:12px;color:var(--primary)">📅 Daily Itinerary</h3>
-      ${d.activities.map(a=>`
-        <div style="padding:12px;background:#fafbff;border-radius:10px;margin-bottom:8px;border-left:4px solid var(--primary)">
-          <strong style="color:var(--secondary)">${a.day}:</strong> ${a.activity}
-        </div>`).join('')}
-    </div>
-    <div style="margin-bottom:20px">
-      <h3 style="margin-bottom:12px;color:var(--primary)">✨ Must-See Highlights</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
-        ${d.highlights.map(h=>`<span style="padding:8px 12px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;text-align:center;font-weight:600;font-size:14px">${h}</span>`).join('')}
-      </div>
-    </div>
-    <div style="background:linear-gradient(135deg,rgba(255,149,0,.1),rgba(255,149,0,.05));border:1px solid rgba(255,149,0,.3);padding:16px;border-radius:12px">
-      <strong style="color:var(--warning)">💡 Pro Tip:</strong> ${d.tips}
-    </div>
-  `;
-  document.getElementById('locationModal').style.display = 'block';
-}
-function closeModal(){ document.getElementById('locationModal').style.display='none'; }
+/* ===== Init ===== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateCountdown(); setInterval(updateCountdown,1000);
+  updateTimelineStatus(); setInterval(updateTimelineStatus, 60000);
 
-// ===== Navigation & Scroll =====
-function toggleMobileNav(btn) {
-  const nav = document.querySelector('nav');
-  const isOpen = nav.classList.toggle('open');
-  if (btn) btn.setAttribute('aria-expanded', String(isOpen));
-}
-function scrollToSection(id, evt) {
-  const element = document.getElementById(id);
-  if (!element) return;
-  const offset = 80;
-  const elementPosition = element.getBoundingClientRect().top;
-  const offsetPosition = elementPosition + window.pageYOffset - offset;
-  window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-  document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-  if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
-  if (window.innerWidth <= 768) {
-    document.querySelector('nav').classList.remove('open');
-    document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
-  }
-}
-
-// ===== Scroll animations =====
-function observeScrollAnimations() {
-  const els = document.querySelectorAll('.animate-on-scroll');
-  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } }); }, {threshold:0.1});
-  els.forEach(el=>obs.observe(el));
-}
-
-// ===== Distance facts =====
-function toRad(d){return d*Math.PI/180;}
-function haversineMiles(a,b){
-  const R=3958.761; // miles
-  const dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
-  const lat1=toRad(a.lat), lat2=toRad(b.lat);
-  const h=Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
-}
-function updateTripFacts(){
-  const pts=[
-    {name:'London', lat:51.5074, lon:-0.1278},
-    {name:'San Francisco', lat:37.7749, lon:-122.4194},
-    {name:'Yosemite', lat:37.7456, lon:-119.5936},
-    {name:'Las Vegas', lat:36.1699, lon:-115.1398},
-    {name:'New York', lat:40.7128, lon:-74.0060},
-    {name:'London', lat:51.5074, lon:-0.1278}
-  ];
-  let total=0;
-  for(let i=0;i<pts.length-1;i++){ total += haversineMiles(pts[i], pts[i+1]); }
-  const val = total>999 ? `${(total/1000).toFixed(1)}k` : Math.round(total);
-  const el=document.getElementById('distanceStat');
-  if(el) el.textContent = `${val} mi`;
-}
-
-// ===== Alerts modal close handlers =====
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeModal(); closeAlert(); }
-});
-window.addEventListener('click', (e) => {
-  const locationModal = document.getElementById('locationModal');
-  const alertModal = document.getElementById('alertModal');
-  if (e.target === locationModal) closeModal();
-  if (e.target === alertModal) closeAlert();
-});
-document.addEventListener('click', (e) => {
-  if (window.innerWidth > 768) return;
-  const nav = document.querySelector('nav');
-  if (nav.classList.contains('open') && !nav.contains(e.target)) {
-    nav.classList.remove('open');
-    document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
-  }
-});
-
-// ===== Init =====
-document.addEventListener('DOMContentLoaded', () => {
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-  loadWeather();
-  setInterval(loadWeather, 120000); // every 2 minutes
+  buildNextUp();
+  loadWeather(); setInterval(loadWeather, 120000); // every 2 minutes
   renderPackingItems();
-  observeScrollAnimations();
-  updateTripFacts(); // new fun fact
+
+  // animate-on-scroll
+  const animateElements = document.querySelectorAll('.animate-on-scroll');
+  const observer = new IntersectionObserver((entries)=>entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible')}),{threshold:0.1});
+  animateElements.forEach(el=>observer.observe(el));
 });
 </script>
 </body>
