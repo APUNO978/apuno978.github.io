@@ -103,27 +103,43 @@ nav{
 /* ========== Layout Container ========== */
 .container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
 
-/* ========== Road Trip Map (Final Layout) ========== */
+/* ========== Road Trip Map (Final Polished Layout) ========== */
 .route66{
   margin:22px 0;
   border:1px solid var(--border);
   border-radius:20px;
   background:linear-gradient(90deg, rgba(255,215,0,.08), rgba(88,86,214,.08)), #f6f7fb;
   box-shadow:0 12px 28px rgba(16,24,40,.08);
-  padding:14px clamp(16px,4vw,36px) 18px;
+  padding:14px 0 18px; /* Remove side padding from main container on all screen sizes */
   position:relative;
 }
-.route66 .section-title{margin-bottom:12px}
-.route66__track{ position: relative; min-height: 120px; }
+.route66 .section-title{margin-bottom:12px; padding: 0 24px;} /* Add padding to title */
+.route66__track{
+    position: relative;
+    min-height: 120px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.route66__track::-webkit-scrollbar{ display: none; }
+
+.route66__content-scroller {
+    position: relative;
+    width: 150%; /* Make the inner content wider for scrolling */
+    min-height: 100px;
+    padding: 0 24px; /* Add padding here for start/end spacing */
+}
+
 .route66__road{
-  position:absolute;left:0;right:0;bottom:5px; /* Position line at the very bottom */
+  position:absolute;left:24px;right:24px;bottom:5px;
   height:3px;border-radius:2px;
   background:linear-gradient(90deg, var(--primary), var(--secondary));
   box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:1;
 }
 .route66__stops{
   display:grid;grid-template-columns:repeat(6,1fr);
-  gap:clamp(6px,1.8vw,16px);position:relative;z-index:2;
+  gap:clamp(6px,1.8vw,16px);
+  position:relative;z-index:2;
   height: 100%;
 }
 .route66__stop{
@@ -131,31 +147,36 @@ nav{
   flex-direction: column;
   align-items:center;
   text-align:center;
-  justify-content: flex-end; /* Align content to the bottom */
+  justify-content: flex-end;
   background:none; border:0; padding:0; cursor: pointer;
 }
 .route66__date{ font-size:clamp(10px,1.4vw,12px);color:var(--muted);text-transform:uppercase;letter-spacing:.08em; margin-bottom: 6px;}
-.route66__icon{ color:var(--primary);font-size:clamp(20px,3vw,28px);line-height:1; margin-bottom: 4px; }
-.route66__label{ font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15; margin-bottom: 8px; }
+.route66__icon{ font-size:clamp(20px,3vw,28px);line-height:1; margin-bottom: 4px; }
+.route66__label{ font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15; margin-bottom: 8px; color: var(--primary); }
 .route66__dot{ width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--primary); }
 
 .route66__progress{
-  position:absolute;bottom:0px; /* Position progress on the road */
+  position:absolute;bottom:0px;
+  left: 0; /* Animation will control this */
   width:12px;height:12px;border-radius:50%;
   background:var(--success);box-shadow:0 0 0 4px rgba(52,199,89,.16);
-  z-index:3;animation:r66move 38s linear infinite;
+  z-index:3;
+  animation: r66move 38s linear infinite;
 }
-@keyframes r66move{0%{left:0%}100%{left:100%}}
+
+@keyframes r66move{
+    0% { left: 24px; }
+    100% { left: calc(100% - 24px - 6px); }
+}
 
 @media (max-width:768px){
-  .route66{padding:12px 0 14px}
-  .route66__track{ overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; min-height: 120px;}
-  .route66__track::-webkit-scrollbar{ display: none; }
-  .route66__road{ width: 150%; left: 16px; right: 16px; }
-  .route66__stops{ display: flex; justify-content: space-between; width: 150%; padding: 0 16px; gap: 10px; }
-  .route66__stop{ flex: 0 0 100px; }
-  .route66__date, .route66__label { font-size: 11px; }
+  .route66__content-scroller { width: 200%; } /* Increase scroll width for mobile */
+  .route66__label { font-size: 11px; }
   .route66__icon { font-size: 20px; }
+  @keyframes r66move {
+      0% { left: 24px; }
+      100% { left: calc(100% - 24px - 6px); } /* Same logic works if applied to the scroller */
+  }
 }
 
 /* ========== Next Up slider ========== */
@@ -270,10 +291,6 @@ nav{
 
 /* ========== Live Weather (iOS-ish) ========== */
 .weather-section{margin:40px 0}
-.section-title{
-  font-size:clamp(22px,4.8vw,28px);font-weight:900;margin-bottom:14px;text-align:left;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
 .weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width: 960px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
 @media (max-width: 640px){
@@ -320,56 +337,246 @@ nav{
 .advice .chip.warn{background:rgba(255,149,0,.14);border-color:rgba(255,149,0,.3)}
 .advice .chip.danger{background:rgba(255,59,48,.14);border-color:rgba(255,59,48,.3)}
 
-/* ========== Birthday Widget (Waving Flag BG) ========== */
-.birthday-wrap{display:flex;justify-content:center;margin:38px 0}
-.birthday{
-  width:100%;
-  max-width:880px;
-  background-color: #fff;
-  border:1px solid var(--border);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  position:relative;
+
+/* ========== NEW VEGAS BIRTHDAY SECTION ========== */
+.vegas-birthday-section {
+    position: relative;
+    margin: 38px 0;
+    padding: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #0A0A0F;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+
+    /* Scoped CSS Variables */
+    --vegas-gold: #FFD700;
+    --vegas-pink: #FF1493;
+    --vegas-purple: #9D00FF;
+    --vegas-cyan: #00F5FF;
+    --vegas-red: #FF0040;
+    --vegas-green: #00FF41;
+    --vegas-orange: #FF6B35;
+    --vegas-black: #0A0A0F;
+    --vegas-dark: #151521;
+    --vegas-mid: #1F1F2E;
+    --vegas-card: rgba(20, 20, 35, 0.9);
+    --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-thick: rgba(255, 255, 255, 0.08);
+    --gold-glass: rgba(255, 215, 0, 0.1);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
 }
-.birthday-bg-flag {
+
+/* Vegas Background with animated lights */
+.vegas-birthday-section .vegas-backdrop {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    opacity: 0.1;
-    mix-blend-mode: multiply;
-    animation: slow-pan 20s linear infinite alternate;
+    inset: 0;
+    z-index: 1;
+    background: 
+        radial-gradient(ellipse at 20% 0%, var(--vegas-purple) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 100%, var(--vegas-pink) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, var(--vegas-dark) 0%, transparent 100%),
+        var(--vegas-black);
+    animation: vegasGlow 10s ease-in-out infinite alternate;
 }
-@keyframes slow-pan {
-    from { transform: scale(1.3) translateX(-10%); }
-    to { transform: scale(1.3) translateX(10%); }
+
+@keyframes vegasGlow {
+    0% { opacity: 0.8; }
+    100% { opacity: 1; filter: brightness(1.1); }
 }
-.birthday-bg-flag svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+
+/* Animated Neon Grid */
+.vegas-birthday-section .neon-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--vegas-pink) 1px, transparent 1px),
+        linear-gradient(90deg, var(--vegas-cyan) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.03;
+    animation: gridScroll 20s linear infinite;
+    z-index: 2;
 }
-.birthday-inner{
-  display:grid;grid-template-columns:1fr;
-  gap:16px;padding:28px;align-items:center;
-  position: relative; z-index: 1; /* Keep content on top */
-  text-align: center;
+
+@keyframes gridScroll {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
 }
-.b-title{
-  font-size:28px;
-  line-height:1.1;
-  margin-bottom:8px;
-  text-shadow: 0 1px 3px rgba(255,255,255,.5);
+
+/* Main Container */
+.vegas-birthday-section .birthday-experience {
+    position: relative;
+    z-index: 10;
+    padding: calc(var(--safe-top) + 40px) 20px calc(var(--safe-bottom) + 40px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.b-sub{font-size:14px;color:var(--muted)}
-.b-cta{margin-top:14px}
-.b-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:800;padding:12px 16px;border-radius:14px;cursor:pointer;transition:transform .12s var(--curve), box-shadow .2s var(--curve);box-shadow:0 6px 16px rgba(0,122,255,.25)}
-.b-btn:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(0,122,255,.3)}
-#confettiCanvas{position:absolute;inset:0;pointer-events:none; z-index: 2;}
-@media (min-width: 720px){
-  .birthday-inner{grid-template-columns:1fr; text-align: left;}
+
+/* Neon Sign Title */
+.vegas-birthday-section .neon-sign {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeInUp 1s var(--spring) backwards;
+    animation-delay: 0.2s;
 }
+
+.vegas-birthday-section .neon-text-small {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--vegas-gold);
+    text-shadow: var(--neon-glow);
+    margin-bottom: 8px;
+    animation: flicker 3s infinite alternate;
+}
+
+.vegas-birthday-section .neon-text-large {
+    font-size: clamp(48px, 10vw, 72px);
+    font-weight: 900;
+    line-height: 0.9;
+    background: linear-gradient(
+        45deg,
+        var(--vegas-gold) 0%,
+        var(--vegas-pink) 30%,
+        var(--vegas-purple) 60%,
+        var(--vegas-cyan) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px var(--vegas-pink)) 
+            drop-shadow(0 0 40px var(--vegas-purple));
+    animation: neonPulse 2s ease-in-out infinite, gradientMove 3s linear infinite;
+    margin-bottom: 8px;
+}
+
+.vegas-birthday-section .neon-text-vegas {
+    font-size: clamp(28px, 7vw, 42px);
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--vegas-gold);
+    text-shadow: 
+        0 0 10px var(--vegas-gold),
+        0 0 20px var(--vegas-gold),
+        0 0 30px var(--vegas-orange);
+    animation: vegasFlash 1.5s ease-in-out infinite alternate;
+}
+
+/* Keyframes for Animations */
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+@keyframes neonPulse { 0%, 100% { filter: drop-shadow(0 0 20px var(--vegas-pink)) drop-shadow(0 0 40px var(--vegas-purple)); } 50% { filter: drop-shadow(0 0 30px var(--vegas-pink)) drop-shadow(0 0 60px var(--vegas-purple)); } }
+@keyframes vegasFlash { 0% { text-shadow: 0 0 10px var(--vegas-gold), 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-orange); } 100% { text-shadow: 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-gold), 0 0 40px var(--vegas-orange); } }
+@keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Location Badge */
+.vegas-birthday-section .location-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--vegas-gold); border-radius: 30px;
+    padding: 12px 20px; margin-bottom: 24px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
+    animation: fadeInUp 1s var(--spring) backwards; animation-delay: 0.3s;
+}
+.vegas-birthday-section .location-icon { font-size: 20px; animation: bounce 2s infinite; }
+.vegas-birthday-section .location-text { font-size: 14px; font-weight: 600; color: var(--vegas-gold); text-transform: uppercase; letter-spacing: 1px; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+/* Casino Card Container */
+.vegas-birthday-section .casino-card {
+    background: var(--vegas-card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 24px;
+    padding: 32px 24px; max-width: 420px; width: 100%;
+    position: relative; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.1), inset 0 0 30px rgba(255, 215, 0, 0.05);
+    animation: fadeInUp 1s var(--spring) backwards; animation-delay: 0.4s;
+}
+
+/* Playing Card Decorations */
+.vegas-birthday-section .card-suits { position: absolute; inset: 0; overflow: hidden; opacity: 0.05; pointer-events: none; }
+.vegas-birthday-section .suit { position: absolute; font-size: 60px; color: var(--vegas-gold); animation: floatSuit 15s linear infinite; }
+.vegas-birthday-section .suit:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.vegas-birthday-section .suit:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
+.vegas-birthday-section .suit:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 6s; }
+.vegas-birthday-section .suit:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 9s; }
+@keyframes floatSuit { 0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.05; } 50% { transform: rotate(180deg) scale(1.2); opacity: 0.1; } }
+
+/* Countdown Section */
+.vegas-birthday-section .countdown-title { text-align: center; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 600; }
+.vegas-birthday-section .countdown-display { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
+.vegas-birthday-section .countdown-unit { background: linear-gradient(135deg, var(--glass), var(--glass-thick)); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 16px; padding: 16px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s var(--curve); }
+.vegas-birthday-section .countdown-unit::before { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent); transform: translateX(-100%); transition: transform 0.6s; }
+.vegas-birthday-section .countdown-unit:active { transform: scale(0.95); border-color: var(--vegas-gold); }
+.vegas-birthday-section .countdown-unit:active::before { transform: translateX(100%); }
+.vegas-birthday-section .countdown-number { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); display: block; line-height: 1; }
+.vegas-birthday-section .countdown-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+
+/* Jackpot CTA Button */
+.vegas-birthday-section .jackpot-button { width: 100%; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); color: var(--vegas-black); border: none; border-radius: 20px; padding: 18px; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: all 0.3s var(--curve); animation: jackpotPulse 2s ease-in-out infinite; }
+@keyframes jackpotPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); } 50% { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); } }
+.vegas-birthday-section .jackpot-button::before { content: '777 '; position: absolute; top: 50%; left: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRoll 3s linear infinite; }
+.vegas-birthday-section .jackpot-button::after { content: ' 777'; position: absolute; top: 50%; right: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRollReverse 3s linear infinite; }
+@keyframes slotRoll { to { left: calc(100% + 100px); } }
+@keyframes slotRollReverse { to { right: calc(100% + 100px); } }
+.vegas-birthday-section .jackpot-button:active { transform: scale(0.96); }
+.vegas-birthday-section .button-emoji { display: inline-block; margin: 0 8px; animation: spin 2s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* 30th Birthday Special */
+.vegas-birthday-section .birthday-highlight { background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 20, 147, 0.1)); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 20px; padding: 20px; margin: 24px 0; text-align: center; position: relative; overflow: hidden; }
+.vegas-birthday-section .birthday-highlight::before { content: '30'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; font-weight: 900; opacity: 0.05; color: var(--vegas-gold); }
+.vegas-birthday-section .milestone-text { font-size: 16px; color: var(--vegas-gold); font-weight: 600; margin-bottom: 8px; position: relative; z-index: 1; }
+.vegas-birthday-section .milestone-subtext { font-size: 14px; color: var(--text-secondary); position: relative; z-index: 1; }
+
+/* Dice Animation */
+.vegas-birthday-section .dice-container { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
+.vegas-birthday-section .dice { width: 50px; height: 50px; background: linear-gradient(135deg, var(--vegas-black), var(--vegas-mid)); border: 2px solid var(--vegas-gold); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2); animation: diceRoll 4s ease-in-out infinite; }
+@keyframes diceRoll { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); } 75% { transform: rotate(270deg); } }
+.vegas-birthday-section .dice:nth-child(2) { animation-delay: 0.2s; }
+
+/* Confetti Canvas */
+#vegasConfettiCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+
+/* Toast Notification (positioned globally) */
+.vegas-toast {
+    position: fixed; top: 20px; left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--vegas-card, rgba(20, 20, 35, 0.9));
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--vegas-gold, #FFD700);
+    border-radius: 20px; padding: 16px 24px;
+    display: flex; align-items: center; gap: 12px;
+    z-index: 10000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
+    animation: toastSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    color: var(--text-primary, #FFFFFF);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+}
+@keyframes toastSlide { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+/* Desktop Adjustments */
+@media (min-width: 768px) {
+    .vegas-birthday-section .countdown-display { grid-template-columns: repeat(4, 1fr); }
+}
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .vegas-birthday-section *, .vegas-birthday-section *::before, .vegas-birthday-section *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 
 /* ========== Destinations ========== */
 .locations-heading{
@@ -387,8 +594,9 @@ nav{
 .location-dates{font-weight:700;color:var(--primary);margin-bottom:8px}
 .location-hotel{font-size:14px;color:var(--muted)}
 .location-activities{margin-top:10px}
-.activity-chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3b5bdb;font-size:12px;margin:3px;transition:transform 0.2s var(--curve)}
-.activity-chip:hover{transform:scale(1.05)}
+/* .activity-chip is defined in the main CSS, this keeps it consistent */
+.location-card .activity-chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3b5bdb;font-size:12px;margin:3px;transition:transform 0.2s var(--curve)}
+.location-card .activity-chip:hover{transform:scale(1.05)}
 @media (max-width: 600px){ .location-image{height:260px} .location-name{font-size:26px} }
 
 /* ========== Epic Moments ========== */
@@ -524,30 +732,32 @@ nav{
     <section class="route66 animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
       <h2 class="section-title" id="route-title">Road Trip Map</h2>
       <div class="route66__track" aria-live="polite">
-        <div class="route66__road"></div>
-        <div class="route66__progress" aria-hidden="true"></div>
-        <div class="route66__stops">
-          <button class="route66__stop" onclick="showLocationDetails('sanfran')" aria-label="San Francisco details">
-            <div class="route66__date">Sep 19–23</div><div class="route66__icon">🌉</div><div class="route66__label">San Francisco</div><div class="route66__dot"></div>
-          </button>
-          <button class="route66__stop" onclick="showLocationDetails('yosemite')" aria-label="Yosemite details">
-            <div class="route66__date">Sep 23–26</div><div class="route66__icon">🏔️</div><div class="route66__label">Yosemite</div><div class="route66__dot"></div>
-          </button>
-          <div class="route66__stop" aria-label="Death Valley (pass-through)">
-            <div class="route66__date">Sep 26–27</div><div class="route66__icon">🏜️</div><div class="route66__label">Death Valley</div><div class="route66__dot"></div>
-          </div>
-          <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
-            <div class="route66__date">Sep 27–29</div><div class="route66__icon">🏞️</div><div class="route66__label">Grand Canyon</div><div class="route66__dot"></div>
-          </button>
-          <button class="route66__stop" onclick="showLocationDetails('vegas')" aria-label="Las Vegas details">
-            <div class="route66__date">Sep 29–Oct 1</div><div class="route66__icon">🎉</div><div class="route66__label">Las Vegas</div><div class="route66__dot"></div>
-          </button>
-          <button class="route66__stop" onclick="showLocationDetails('nyc')" aria-label="New York City details">
-            <div class="route66__date">Oct 1–3</div><div class="route66__icon">🗽</div><div class="route66__label">New York City</div><div class="route66__dot"></div>
-          </button>
+        <div class="route66__content-scroller">
+            <div class="route66__road"></div>
+            <div class="route66__progress" aria-hidden="true"></div>
+            <div class="route66__stops">
+              <button class="route66__stop" onclick="showLocationDetails('sanfran')" aria-label="San Francisco details">
+                <div class="route66__date">Sep 19–23</div><div class="route66__icon">🌉</div><div class="route66__label">San Francisco</div><div class="route66__dot"></div>
+              </button>
+              <button class="route66__stop" onclick="showLocationDetails('yosemite')" aria-label="Yosemite details">
+                <div class="route66__date">Sep 23–26</div><div class="route66__icon">🏔️</div><div class="route66__label">Yosemite</div><div class="route66__dot"></div>
+              </button>
+              <div class="route66__stop" aria-label="Death Valley (pass-through)">
+                <div class="route66__date">Sep 26–27</div><div class="route66__icon">🏜️</div><div class="route66__label">Death Valley</div><div class="route66__dot"></div>
+              </div>
+              <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
+                <div class="route66__date">Sep 27–29</div><div class="route66__icon">🏞️</div><div class="route66__label">Grand Canyon</div><div class="route66__dot"></div>
+              </button>
+              <button class="route66__stop" onclick="showLocationDetails('vegas')" aria-label="Las Vegas details">
+                <div class="route66__date">Sep 29–Oct 1</div><div class="route66__icon">🎉</div><div class="route66__label">Las Vegas</div><div class="route66__dot"></div>
+              </button>
+              <button class="route66__stop" onclick="showLocationDetails('nyc')" aria-label="New York City details">
+                <div class="route66__date">Oct 1–3</div><div class="route66__icon">🗽</div><div class="route66__label">New York City</div><div class="route66__dot"></div>
+              </button>
+            </div>
         </div>
       </div>
-      <p class="timeline-update" id="timelineStatus">🛤️ Counting down…</p>
+      <p class="timeline-update" id="timelineStatus" style="padding: 0 24px;">🛤️ Counting down…</p>
     </section>
 
     <!-- Next Up slider -->
@@ -600,52 +810,62 @@ nav{
       <p class="weather-update" id="wxStatus">🌤️ Live weather updates every 2 minutes</p>
     </section>
 
-    <!-- Birthday Widget -->
-    <section class="birthday-wrap animate-on-scroll">
-      <div class="birthday" id="birthdayCard" aria-labelledby="bday-title">
-        <div class="birthday-bg-flag" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 120" preserveAspectRatio="xMidYMid slice">
-                <defs>
-                    <clipPath id="wave-clip-for-birthday">
-                      <path d="M0,5 C47.5,15 95,-5 142.5,5 S190,15 190,15 V115 C142.5,105 95,125 47.5,115 S0,105 0,105Z"/>
-                    </clipPath>
-                    <path id="star-for-birthday" d="M0,-3.5 L0.8, -1.1 3.3, -1.1 1.3, 0.4 2.2, 2.8 0,1.3 -2.2, 2.8 -1.3, 0.4 -3.3, -1.1 -0.8, -1.1Z" fill="#fff"/>
-                    <linearGradient id="flag-shade-for-birthday" x1="0" y1="0" x2="0" y2="100%">
-                        <stop offset="0" stop-color="#000" stop-opacity="0.2"/>
-                        <stop offset="0.5" stop-color="#fff" stop-opacity="0.1"/>
-                        <stop offset="1" stop-color="#000" stop-opacity="0.25"/>
-                    </linearGradient>
-                </defs>
-                <g clip-path="url(#wave-clip-for-birthday)">
-                    <rect width="190" height="120" fill="#B22234"/>
-                    <g fill="#FFFFFF">
-                        <rect y="7.69" width="190" height="7.69"/><rect y="23.07" width="190" height="7.69"/><rect y="38.45" width="190" height="7.69"/><rect y="53.83" width="190" height="7.69"/><rect y="69.21" width="190" height="7.69"/><rect y="84.59" width="190" height="7.69"/><rect y="99.97" width="190" height="7.69"/>
-                    </g>
-                    <rect width="95" height="53.84" fill="#3C3B6E"/>
-                    <g transform="scale(1.3)">
-                        <g id="stars-6-for-birthday">
-                            <use href="#star-for-birthday" x="6.33" y="5.38" /><use href="#star-for-birthday" x="18.99" y="5.38" /><use href="#star-for-birthday" x="31.65" y="5.38" /><use href="#star-for-birthday" x="44.31" y="5.38" /><use href="#star-for-birthday" x="56.97" y="5.38" /><use href="#star-for-birthday" x="69.63" y="5.38" />
-                        </g>
-                        <g id="stars-5-for-birthday" transform="translate(6.33, 0)">
-                           <use href="#star-for-birthday" x="6.33" y="10.76" /><use href="#star-for-birthday" x="18.99" y="10.76" /><use href="#star-for-birthday" x="31.65" y="10.76" /><use href="#star-for-birthday" x="44.31" y="10.76" /><use href="#star-for-birthday" x="56.97" y="10.76" />
-                        </g>
-                        <use href="#stars-6-for-birthday" y="10.768"/><use href="#stars-5-for-birthday" y="10.768"/><use href="#stars-6-for-birthday" y="21.536"/><use href="#stars-5-for-birthday" y="21.536"/><use href="#stars-6-for-birthday" y="32.304"/><use href="#stars-5-for-birthday" y="32.304"/><use href="#stars-6-for-birthday" y="43.072"/>
-                    </g>
-                    <rect width="190" height="120" fill="url(#flag-shade-for-birthday)" style="mix-blend-mode: overlay;"/>
-                </g>
-            </svg>
-        </div>
-        <canvas id="confettiCanvas" width="0" height="0" aria-hidden="true"></canvas>
-        <div class="birthday-inner">
-            <div class="birthday-content">
-                <p class="b-eyebrow" style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Vegas • Sep 28</p>
-                <h3 class="b-title" id="bday-title">🎉 30th Birthday: Let's Make It Legendary!</h3>
-                <p class="b-sub">A toast, a rooftop, and a little chaos. Tap the button when the moment hits—instant celebration.</p>
-                <div class="b-cta"><button class="b-btn" type="button" onclick="celebrate()">Celebrate! 🇺🇸</button></div>
+    <!-- NEW Vegas Birthday Section -->
+    <section class="vegas-birthday-section animate-on-scroll">
+        <div class="vegas-backdrop"></div>
+        <div class="neon-grid"></div>
+        <div class="birthday-experience">
+            <!-- Neon Sign Header -->
+            <div class="neon-sign">
+                <div class="neon-text-small">Welcome to</div>
+                <div class="neon-text-large">DIRTY 30</div>
+                <div class="neon-text-vegas">LAS VEGAS</div>
+            </div>
+            
+            <!-- Location Badge -->
+            <div class="location-badge">
+                <span class="location-icon">🎰</span>
+                <span class="location-text">The Strip • Sept 28</span>
+            </div>
+            
+            <!-- Main Casino Card -->
+            <div class="casino-card">
+                <div class="card-suits">
+                    <span class="suit">♠</span><span class="suit">♥</span><span class="suit">♦</span><span class="suit">♣</span>
+                </div>
+                
+                <!-- Countdown -->
+                <div class="countdown-title">Time Until Jackpot</div>
+                <div class="countdown-display">
+                    <div class="countdown-unit"><span class="countdown-number" id="bday-days">--</span><span class="countdown-label">Days</span></div>
+                    <div class="countdown-unit"><span class="countdown-number" id="bday-hours">--</span><span class="countdown-label">Hours</span></div>
+                    <div class="countdown-unit"><span class="countdown-number" id="bday-minutes">--</span><span class="countdown-label">Minutes</span></div>
+                    <div class="countdown-unit"><span class="countdown-number" id="bday-seconds">--</span><span class="countdown-label">Seconds</span></div>
+                </div>
+                
+                <!-- Dice Animation -->
+                <div class="dice-container">
+                    <div class="dice">🎲</div>
+                    <div class="dice">🎲</div>
+                </div>
+                
+                <!-- 30th Birthday Highlight -->
+                <div class="birthday-highlight">
+                    <div class="milestone-text">THE BIG 3-0 IN VEGAS</div>
+                    <div class="milestone-subtext">Where legends are made</div>
+                </div>
+                
+                <!-- Jackpot Button -->
+                <button class="jackpot-button" id="jackpotBtn" onclick="hitVegasJackpot()">
+                    <span class="button-emoji">🎰</span>
+                    HIT THE JACKPOT
+                    <span class="button-emoji">🎰</span>
+                </button>
             </div>
         </div>
-      </div>
+        <canvas id="vegasConfettiCanvas"></canvas>
     </section>
+
 
     <!-- Destinations -->
     <h2 id="destinations" class="locations-heading animate-on-scroll">Destinations</h2>
@@ -851,9 +1071,6 @@ nav{
     </div>
   </div>
 
-  <!-- Toasts -->
-  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 /* ===== Mobile nav + smooth scroll ===== */
@@ -897,7 +1114,6 @@ function updateCountdown(){
     const c = document.querySelector('.countdown');
     if(c && !c.querySelector('.trip-started')){
       c.innerHTML = '<div class="trip-started" style="background:linear-gradient(135deg,var(--success),#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:24px;font-weight:900;padding:20px">🎉 Your Adventure Has Begun! 🎉</div>';
-      celebrate();
     }
   }
 }
@@ -1136,7 +1352,7 @@ function createWeatherCard(w){
 async function loadWeather(){
   const grid = document.getElementById('liveWeatherGrid');
   if(!grid) return;
-  grid.innerHTML = tripLocations.map(l=>`<div class="weather-card loading"><div class="weather-head"><div class="weather-location">${l.emoji} ${l.name}</div><span class="weather-badge">Loading</span></div><div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Fetching...</div></div></div></div>`).join('');
+  grid.innerHTML = tripLocations.map(l=>`<div class="weather-card loading"><div class="weather-head"><div class="weather-location">${l.emoji} ${l.name}</div><span class="weather-badge">Loading</span></div><div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Fetching...</div></div></div>`).join('');
   const results = await Promise.all(tripLocations.map(fetchWeatherData));
   results.forEach(r => { weatherStore[r.location.id] = r; });
   grid.innerHTML = results.map(createWeatherCard).join('');
@@ -1199,7 +1415,7 @@ function showMomentDetails(key){
 const locationDetails = {
   sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrival & Union Square exploration'},{day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},{day:'Day 3',activity:'Alcatraz tour & Free walking tour'},{day:'Day 4',activity:'Final SF sights before Yosemite'}], highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'], tips:'Dress in layers — SF weather can change dramatically throughout the day!' },
   yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'}, activities:[{day:'Day 1',activity:'Drive from SF, settle in'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Mist Trail, Sentinel Dome & stargazing'}], highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'], tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!' },
-  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}], highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'], tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!' },
+  vegas:{ title:'Las Vegas', dates:'September 26 – Oct 1, 2025', stay:{name:'Strip Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}], highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'], tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!' },
   nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrival & Times Square'},{day:'Day 2',activity:'Central Park & Broadway show'},{day:'Day 3',activity:'Final sights before departure'}], highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'], tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!' }
 };
 function showLocationDetails(key){
@@ -1231,7 +1447,9 @@ function updatePackingStats(){
     if(pct===0) label.textContent='🧳 Ready to start packing!';
     else if(pct<50) label.textContent=`🧳 ${pct}% packed - Keep going!`;
     else if(pct<100) label.textContent=`🧳 ${pct}% packed - Almost there!`;
-    else { label.textContent='🎉 All packed and ready for adventure!'; celebrate(); }
+    else { 
+      label.textContent='🎉 All packed and ready for adventure!'; 
+    }
   }
 }
 function moveItem(id,to){ const it = packingItems.find(i=>i.id===id); if(!it) return; it.column=to; renderPackingItems();
@@ -1252,24 +1470,109 @@ function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.
 function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-/* ===== UI helpers & alerts ===== */
-function celebrate(){ burstConfetti(200); const btn=document.querySelector('.b-btn'); if(btn){ btn.style.animation='bounceIn .8s var(--curve)'; setTimeout(()=>btn.style.animation='',800);} }
-function burstConfetti(count=150){
-  const canvas = document.getElementById('confettiCanvas'); const container = document.getElementById('birthdayCard') || document.body; if(!canvas) return;
-  const rect = container.getBoundingClientRect(); canvas.width=rect.width; canvas.height=rect.height;
-  const ctx = canvas.getContext('2d');
-  const colors = ['#B22234', '#FFFFFF', '#3C3B6E', '#FFC72C']; 
-  const bits = Array.from({length:count},()=>({x:Math.random()*canvas.width,y:-20,vx:(Math.random()-0.5)*6,vy:Math.random()*3+2,size:Math.random()*6+2,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*Math.PI*2,vr:(Math.random()-0.5)*0.3,g:0.1}));
-  (function anim(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let i=bits.length-1;i>=0;i--){
-      const p=bits[i]; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.color; ctx.globalAlpha = p.y < canvas.height * 0.9 ? 1 : 1 - ((p.y - canvas.height*0.9)/(canvas.height*0.1)); ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore();
-      if(p.y>canvas.height+20) bits.splice(i,1);
-    }
-    if(bits.length) requestAnimationFrame(anim);
-  })();
+/* ===== NEW: Vegas Birthday JS ===== */
+function updateVegasCountdown() {
+  const birthday = new Date('2025-09-28T18:00:00-07:00');
+  const now = new Date();
+  const diff = birthday - now;
+  
+  if (diff > 0) {
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    animateVegasNumber('bday-days', days);
+    animateVegasNumber('bday-hours', hours);
+    animateVegasNumber('bday-minutes', minutes);
+    animateVegasNumber('bday-seconds', seconds);
+  } else {
+    document.getElementById('jackpotBtn').innerHTML = '🎂 IT\'S YOUR 30TH! 🎂';
+  }
 }
+
+function animateVegasNumber(id, value) {
+  const element = document.getElementById(id);
+  if (!element) return;
+  const formatted = String(value).padStart(2, '0');
+  
+  if (element.textContent !== formatted) {
+    element.textContent = formatted;
+    const unit = element.parentElement;
+    unit.style.animation = 'none';
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            unit.style.animation = 'vegasUnitPulse 0.3s ease-in-out';
+        }, 0);
+    });
+  }
+}
+
+function hitVegasJackpot() {
+  const canvas = document.getElementById('vegasConfettiCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
+  
+  const particles = [];
+  const colors = ['#FFD700', '#FF1493', '#00F5FF', '#9D00FF', '#00FF41', '#FF6B35'];
+  const emojis = ['💰', '🎰', '🎲', '💎', '🍾', '🎉', '👑', '💵'];
+  
+  for (let i = 0; i < 200; i++) {
+    const isEmoji = Math.random() > 0.7;
+    particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+      vx: (Math.random() - 0.5) * 8, vy: Math.random() * 2 + 3,
+      size: isEmoji ? 24 : Math.random() * 12 + 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      emoji: isEmoji ? emojis[Math.floor(Math.random() * emojis.length)] : null,
+      rotation: Math.random() * Math.PI * 2, rotationSpeed: (Math.random() - 0.5) * 0.3,
+      opacity: 1, gravity: 0.08
+    });
+  }
+  
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      p.vy += p.gravity; p.x += p.vx; p.y += p.vy; p.rotation += p.rotationSpeed;
+      if (p.y > canvas.height * 0.8) p.opacity -= 0.02;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity;
+      if (p.emoji) {
+        ctx.font = `${p.size}px Arial`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(p.emoji, 0, 0);
+      } else {
+        ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill();
+      }
+      ctx.restore();
+      if (p.opacity <= 0) particles.splice(i, 1);
+    });
+    if (particles.length > 0) requestAnimationFrame(animateConfetti);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  
+  animateConfetti();
+  showVegasToast('🎰', 'Jackpot! Let\'s celebrate in Vegas!');
+}
+
+function showVegasToast(emoji, message) {
+  const existingToast = document.querySelector('.vegas-toast');
+  if (existingToast) existingToast.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = 'vegas-toast';
+  toast.innerHTML = `<span style="font-size:24px">${emoji}</span><span>${message}</span>`;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'toastSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) reverse forwards';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
+
+/* ===== UI helpers & alerts ===== */
 function showAlert(title, html){
   const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
   content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
@@ -1305,9 +1608,15 @@ document.addEventListener('click', (e) => {
 
 /* ===== Init ===== */
 document.addEventListener('DOMContentLoaded', () => {
+  // Main Trip Countdown
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
+  // Vegas Birthday Countdown
+  updateVegasCountdown();
+  setInterval(updateVegasCountdown, 1000);
+  
+  // Initialize other components
   updateTimelineStatus();
   buildNextUp();
 
@@ -1321,6 +1630,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderPackingItems();
   observeScrollAnimations();
+
+  // Add a helper style for the Vegas countdown animation
+  const vegasPulseStyle = document.createElement('style');
+  vegasPulseStyle.innerHTML = `
+    @keyframes vegasUnitPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(vegasPulseStyle);
 });
 </script>
 </body>
