@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Final</title>
+<title>USA 2025 Adventure — Final (Updated)</title>
 <style>
 /* ========== Base / Reset ========== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -57,9 +58,9 @@ nav{
 .hero::before{
   content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
   width:600px;height:600px;background:radial-gradient(circle,rgba(0,122,255,.08),transparent 70%);
-  animation:heroPulse 4s ease-in-out infinite;pointer-events:none;
+  animation:pulse 4s ease-in-out infinite;pointer-events:none;
 }
-@keyframes heroPulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
 .hero-title{font-size:56px;line-height:1.05;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#2b2d42,#4a4e69);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
 .hero-subtitle{font-size:18px;color:var(--muted);position:relative;z-index:1}
 
@@ -88,66 +89,43 @@ nav{
 /* ========== Layout Container ========== */
 .container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
 
-/* ========== Route 66 Timeline (smaller, uniform, responsive) ========== */
-.route-66-timeline {
-  margin: 22px 0;
-  padding: clamp(12px, 2.5vw, 20px);
-  background: linear-gradient(90deg, rgba(255,215,0,.1), rgba(88,86,214,.1)), #f6f7fb;
-  border-radius: 20px;
-  position: relative;
+/* ========== Route 66 Timeline (clean grid) ========== */
+.route66{
+  margin:22px 0;
   border:1px solid var(--border);
+  border-radius:20px;
+  background:linear-gradient(90deg, rgba(255,215,0,.08), rgba(88,86,214,.08)), #f6f7fb;
   box-shadow:0 12px 28px rgba(16,24,40,.08);
-  overflow: visible; /* allow edge pins to breathe */
+  padding:14px clamp(16px,4vw,36px) 18px;
+  position:relative;
 }
-.timeline-road { position: relative; height: clamp(110px, 16vw, 160px); }
-.road-line {
-  position: absolute; top: 50%; left: 0; width: 100%; height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 2px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  animation: roadPulse 4s infinite ease-in-out;
+.route66 .section-title{margin-bottom:8px}
+.route66__track{position:relative;min-height:150px}
+.route66__road{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  height:3px;border-radius:2px;
+  background:linear-gradient(90deg, var(--primary), var(--secondary));
+  box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:1;
 }
-.timeline-pin, .timeline-marker {
-  position: absolute; top: 50%;
-  transform: translate(-50%, -50%); /* center horizontally so last item never cuts off */
-  text-align: center; transition: transform 0.25s var(--curve); cursor:pointer;
+.route66__stops{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:clamp(6px,1.8vw,16px);position:relative;z-index:2;
 }
-.timeline-pin{width: clamp(64px, 10vw, 72px);}
-.timeline-marker{width: clamp(52px, 9vw, 64px); opacity:.8}
-.timeline-pin:hover { transform: translate(-50%, -60%) scale(1.07); }
-.timeline-marker:hover { opacity:1 }
-.pin-icon, .marker-icon {
-  font-size: clamp(18px, 3.2vw, 28px); margin-bottom: 2px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+.route66__stop{display:grid;grid-template-rows:auto 16px auto;align-items:center;justify-items:center;text-align:center;padding-inline:6px;background:none;border:0;cursor:pointer}
+.route66__date{font-size:clamp(10px,1.4vw,12px);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.route66__dot{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--primary)}
+.route66__icon{color:var(--primary);font-size:clamp(20px,3vw,28px);line-height:1;margin-top:6px}
+.route66__label{font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15;margin-top:3px}
+.route66__progress{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:12px;height:12px;border-radius:50%;
+  background:var(--success);box-shadow:0 0 0 4px rgba(52,199,89,.16);
+  z-index:3;animation:r66move 38s linear infinite;
 }
-.pin-icon.pulse { animation: pinPulse 2s var(--curve) infinite; }
-.pin-icon.spin  { animation: pinSpin  4s linear infinite;  }
-.pin-date, .marker-date {
-  font-size: clamp(9px, 1.4vw, 11px);
-  color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
-}
-.pin-label, .marker-label {
-  font-size: clamp(12px, 1.8vw, 14px); font-weight: 800; color: var(--ink); line-height:1.1;
-}
-.timeline-label {
-  position: absolute; top: calc(50% + 24px); transform: translate(-50%, -50%);
-  font-size: clamp(10px,1.6vw,12px); color: var(--muted); text-transform: uppercase;
-}
-.timeline-label.start{ left: 4% }
-.timeline-label.end{ left: 96% }
-.progress-dot {
-  position: absolute; top: 50%; width: 10px; height: 10px; background: var(--success);
-  border-radius: 50%; box-shadow: 0 0 8px var(--success);
-  transform: translate(-50%,-50%);
-  animation: progressMove 39s linear infinite;
-}
-.timeline-update { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
-@keyframes roadPulse { 0%,100%{ box-shadow:0 2px 8px rgba(0,0,0,.1)} 50%{ box-shadow:0 4px 12px rgba(0,122,255,.25)} }
-@keyframes pinPulse { 0%,100%{ transform: translate(-50%,-50%) scale(1)} 50%{ transform: translate(-50%,-50%) scale(1.18)} }
-@keyframes pinSpin { from{ transform: translate(-50%,-50%) rotate(0deg)} to{ transform: translate(-50%,-50%) rotate(360deg)} }
-@keyframes progressMove { 0%{ left:4% } 100%{ left:96% } }
+@keyframes r66move{0%{left:0%}100%{left:100%}}
+@media (max-width:560px){ .route66__label{font-size:clamp(11px,3.6vw,13px)} .route66{padding-bottom:16px} }
 
-/* ========== NEXT UP SLIDER (trimmed list) ========== */
+/* ========== NEXT UP SLIDER ========== */
 .nu-section{margin:22px 0}
 .nu-card{
   border:1px solid var(--border); border-radius:20px; overflow:hidden;
@@ -167,7 +145,7 @@ nav{
 .nu-progress{height:3px; background:rgba(16,24,40,.08)}
 .nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
 
-/* ========== Live Weather (unchanged) ========== */
+/* ========== Live Weather (clean) ========== */
 .weather-section{margin:40px 0}
 .section-title{font-size:28px;font-weight:900;margin-bottom:14px;text-align:left}
 .weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -200,7 +178,7 @@ nav{
 .weather-card.loading{opacity:0.7}
 .weather-card.error{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,59,48,.05),rgba(255,255,255,.9))}
 
-/* ========== Birthday Widget (unchanged) ========== */
+/* ========== Birthday Widget ========== */
 .birthday-wrap{display:flex;justify-content:center;margin:38px 0}
 .birthday{width:100%;max-width:880px;background:conic-gradient(from 220deg at 90% -10%, rgba(255,215,0,.2), transparent 40%) #fff;border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;position:relative}
 .birthday-inner{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:22px}
@@ -214,7 +192,7 @@ nav{
 @media (min-width: 1024px){ .birthday-inner{grid-template-columns:1.1fr .9fr;padding:26px 28px} }
 @media (max-width: 720px){ .birthday-inner{grid-template-columns:1fr;gap:10px} .cake{font-size:96px} .b-title{font-size:26px} .birthday{border-radius:20px} }
 
-/* ========== Destinations, Moments, Flights, Packing (unchanged from your last) ========== */
+/* ========== Destinations ========== */
 .locations-heading{font-size:32px;text-align:center;font-weight:900;margin:36px 0 20px}
 .locations-grid{display:grid;gap:18px}
 @media (min-width: 1024px){ .locations-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
@@ -231,6 +209,7 @@ nav{
 .activity-chip:hover{transform:scale(1.05)}
 @media (max-width: 600px){ .location-image{height:260px} .location-name{font-size:26px} }
 
+/* ========== Epic Moments ========== */
 .epic-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 18px}
 .moments-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width: 900px){ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
@@ -250,6 +229,7 @@ nav{
 .moment-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,122,255,.25);transition:transform .15s var(--curve)}
 .moment-btn:hover{transform:translateY(-1px)}
 
+/* ========== Flights (Apple-ish) ========== */
 .flights-heading{font-size:32px;text-align:center;font-weight:900;margin:44px 0 16px}
 .flights{display:grid;gap:16px}
 .boarding-pass{display:grid;grid-template-columns:1.6fr .9fr;gap:0;position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));border:1px solid var(--border);box-shadow:0 12px 28px rgba(16,24,40,.08)}
@@ -279,7 +259,7 @@ nav{
   background-blend-mode:normal;filter:contrast(120%)}
 @media (max-width: 760px){ .boarding-pass{grid-template-columns:1fr} .bp-right{border-left:0;border-top:1px dashed rgba(0,0,0,.15)} }
 
-/* ========== Packing (unchanged) ========== */
+/* ========== Packing (mobile-lovely) ========== */
 .packing-section { margin: 40px 0; }
 .packing-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
 .packing-controls .btns{display:flex;gap:10px}
@@ -311,6 +291,10 @@ nav{
 .packing-stat-value{font-size:20px;font-weight:800;color:var(--primary)}
 .packing-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 @media (max-width: 600px){.packing-grid { padding: 16px; grid-template-columns: 1fr; } .packing-item { font-size: 14px; }}
+
+.progress-bar{width:100%;height:8px;background:#eef1f6;border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--success),#4ade80);width:0%;transition:width 0.6s var(--curve)}
+.progress-label{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
 
 /* ========== Modals & Animations ========== */
 @keyframes slideInUp{from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
@@ -351,52 +335,56 @@ nav{
   </header>
 
   <main class="container">
-    <!-- Route 66 Timeline -->
-    <section class="route-66-timeline animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
+    <!-- Route 66 timeline (replaces previous Road Map) -->
+    <section class="route66 animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
       <h2 class="section-title" id="route-title">Your Route 66 Adventure</h2>
-      <div class="timeline-road" aria-live="polite">
-        <div class="road-line"></div>
-        <div class="progress-dot" id="progressDot"></div>
+      <div class="route66__track" aria-live="polite">
+        <div class="route66__road"></div>
+        <div class="route66__progress" aria-hidden="true"></div>
 
-        <!-- NOTE: positions will be set uniformly by JS; no inline left% needed -->
-        <div class="timeline-pin" data-stop="sanfran">
-          <div class="pin-icon pulse">🌉</div>
-          <div class="pin-date">Sep 19–23</div>
-          <div class="pin-label">San Francisco</div>
+        <div class="route66__stops">
+          <button class="route66__stop" onclick="showLocationDetails('sanfran')" aria-label="San Francisco details">
+            <div class="route66__date">Sep 19–23</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🌉</div>
+            <div class="route66__label">San Francisco</div>
+          </button>
+
+          <button class="route66__stop" onclick="showLocationDetails('yosemite')" aria-label="Yosemite details">
+            <div class="route66__date">Sep 23–26</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🏔️</div>
+            <div class="route66__label">Yosemite</div>
+          </button>
+
+          <div class="route66__stop" aria-label="Death Valley (pass-through)">
+            <div class="route66__date">Sep 26–27</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🏜️</div>
+            <div class="route66__label">Death Valley<br>(Pass-through)</div>
+          </div>
+
+          <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
+            <div class="route66__date">Sep 27–29</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🏞️</div>
+            <div class="route66__label">Grand Canyon</div>
+          </button>
+
+          <button class="route66__stop" onclick="showLocationDetails('vegas')" aria-label="Las Vegas details">
+            <div class="route66__date">Sep 29–Oct 1</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🎉</div>
+            <div class="route66__label">Las Vegas</div>
+          </button>
+
+          <button class="route66__stop" onclick="showLocationDetails('nyc')" aria-label="New York City details">
+            <div class="route66__date">Oct 1–3</div>
+            <div class="route66__dot" aria-hidden="true"></div>
+            <div class="route66__icon" aria-hidden="true">🗽</div>
+            <div class="route66__label">New York City</div>
+          </button>
         </div>
-
-        <div class="timeline-pin" data-stop="yosemite">
-          <div class="pin-icon pulse">🏔️</div>
-          <div class="pin-date">Sep 23–26</div>
-          <div class="pin-label">Yosemite</div>
-        </div>
-
-        <div class="timeline-marker" data-stop="deathvalley">
-          <div class="marker-icon">🏜️</div>
-          <div class="marker-date">Sep 26–27</div>
-          <div class="marker-label">Death Valley<br>(Pass-through)</div>
-        </div>
-
-        <div class="timeline-pin" data-stop="grandcanyon">
-          <div class="pin-icon pulse">🏞️</div>
-          <div class="pin-date">Sep 27–29</div>
-          <div class="pin-label">Grand Canyon</div>
-        </div>
-
-        <div class="timeline-pin" data-stop="vegas">
-          <div class="pin-icon spin">🎂</div>
-          <div class="pin-date">Sep 29–Oct 1</div>
-          <div class="pin-label">Las Vegas</div>
-        </div>
-
-        <div class="timeline-pin" data-stop="nyc">
-          <div class="pin-icon">🗽</div>
-          <div class="pin-date">Oct 1–3</div>
-          <div class="pin-label">New York City</div>
-        </div>
-
-        <div class="timeline-label start">Start</div>
-        <div class="timeline-label end">End</div>
       </div>
       <p class="timeline-update" id="timelineStatus">🛤️ Counting down…</p>
     </section>
@@ -521,7 +509,6 @@ nav{
     <!-- Flights -->
     <h2 id="flights" class="flights-heading animate-on-scroll">Flight Itinerary</h2>
     <section class="flights animate-on-scroll" aria-label="Flights">
-      <!-- (unchanged flight cards) -->
       <!-- Leg 1 -->
       <article class="boarding-pass" aria-label="London to San Francisco">
         <div class="bp-left">
@@ -661,7 +648,7 @@ nav{
 <script>
 /* ===== Mobile nav ===== */
 function toggleMobileNav(btn){ const n=btn.closest('nav'); const open=n.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }
-function scrollToSection(id,e){ e?.preventDefault(); const el=document.getElementById(id); if(!el) return; const y=el.getBoundingClientRect().top+window.pageYOffset-80; window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollToSection(id,e){ e?.preventDefault(); document.getElementById(id)?.scrollIntoView({behavior:'smooth'}) }
 
 /* ===== State ===== */
 let packingItems = [
@@ -706,104 +693,34 @@ function updateCountdown(){
   }
 }
 
-/* ===== Route 66 timeline: uniform spacing + smaller text ===== */
-function layoutTimeline(){
-  const road = document.querySelector('.timeline-road');
-  if(!road) return;
-  const stops = [...road.querySelectorAll('.timeline-pin, .timeline-marker')];
-  const n = stops.length;
-  const minPct = 4, maxPct = 96; // keep inside edges
-  stops.forEach((el, i)=>{
-    const pct = (i/(n-1))*100;
-    const clamped = Math.max(minPct, Math.min(maxPct, pct));
-    el.style.left = clamped + '%';
-    const key = el.dataset.stop;
-    if(el.classList.contains('timeline-pin') && key && key!=='deathvalley'){
-      el.onclick = ()=> showLocationDetails(key);
-    }
-  });
-}
-
-/* ===== Route 66 status text ===== */
+/* ===== Route 66 status ===== */
 function updateTimelineStatus(){
   const el = document.getElementById('timelineStatus');
   if(!el) return;
   const start = new Date('2025-09-19T00:00:00-07:00');
-  const now = new Date();
-  const diffDays = Math.ceil((start - now)/86400000);
-  el.textContent = diffDays > 0
-    ? `🛤️ ~${diffDays} day${diffDays!==1?'s':''} until your journey begins!`
-    : `🛤️ You're on the road — make it count!`;
+  const days = Math.ceil((start - new Date())/86400000);
+  el.textContent = days>0 ? `🛤️ ~${days} day${days!==1?'s':''} until your journey begins!`
+                          : `🛤️ You're on the road — make it count!`;
 }
 
-/* ===== Next Up slider (trim to ~75% of ideas) ===== */
+/* ===== Next Up slider (trimmed to 4 items) ===== */
 const TRIP_START = new Date('2025-09-19T09:00:00-07:00');
 const TRIP_END   = new Date('2025-10-03T23:59:59-04:00');
-const NEXT_UP_KEEP_RATIO = 0.75; // <-- tweak here if you want fewer/more
-
-const nextUpPool = [
-  // Dynamic/status
+const nuItems = [
   { emoji:'🗺️', title:'Countdown', body:()=> {
       const d = Math.max(0, Math.ceil((TRIP_START - new Date())/86400000));
       return d===0 ? 'It’s today — let’s go! ✈️' : `${d} day${d!==1?'s':''} until takeoff`;
     } },
-  { emoji:'🌤️', title:'SF Weather (now)', body:()=>{
-      const wx = (window.__WX_CACHE && window.__WX_CACHE.sanfran)||null;
-      return wx ? `${Math.round(wx.temp)}°C • ${wx.desc}` : 'Tap Refresh in Weather';
-    } },
-  { emoji:'📦', title:'Packing progress', body:()=> `${window.__PACKING_PCT|0}% done • Passports, chargers, meds?` },
-
-  // NYC pizza hits
-  { emoji:'🍕', title:'NYC pizza', body:'Joe’s Pizza (Bleecker) — classic slice.' },
-  { emoji:'🍕', title:'NYC pizza', body:'Prince Street — spicy pepperoni squares.' },
-  { emoji:'🍕', title:'NYC pizza', body:'Scarr’s — naturally leavened dough.' },
-
-  // Shopping areas
-  { emoji:'🛍️', title:'SF shopping', body:'Union Square; Hayes Valley for indie boutiques.' },
-  { emoji:'🛍️', title:'Vegas shopping', body:'Forum Shops, Grand Canal, North Outlets.' },
-  { emoji:'🛍️', title:'NYC shopping', body:'SoHo/Nolita for indie; 5th Ave for icons.' },
-
-  // Best bars & bites by stop
-  { emoji:'🍹', title:'SF bars', body:'The Beehive, Trick Dog, Smuggler’s Cove.' },
-  { emoji:'🍸', title:'Vegas bars', body:'Chandelier Bar, Skyfall Lounge, Ghost Donkey.' },
-  { emoji:'🍸', title:'NYC bars', body:'Dante, Death & Co, The Dead Rabbit.' },
-
-  // Yosemite sights (short)
-  { emoji:'🥾', title:'Yosemite hike', body:'Sentinel Dome & Taft Point — sunset stunners.' },
-
-  // Quick logistics
-  { emoji:'🚇', title:'Transit', body:'NYC OMNY contactless; SF Clipper for Muni/BART.' },
-  { emoji:'💵', title:'Tipping', body:'~15–20% at restaurants; check for auto-grat.' },
-  { emoji:'📶', title:'Maps', body:'Download offline maps before you fly.' }
+  { emoji:'🍕', title:'NYC pizza shortlist', body:'Joe’s • Prince Street • Scarr’s • Di Fara' },
+  { emoji:'🍸', title:'Vegas bars to try', body:'Chandelier • Ghost Donkey • Legacy Club' },
+  { emoji:'🛍️', title:'Shopping zones', body:'SF Union Sq • Forum Shops (Vegas) • SoHo (NYC)' }
 ];
-
-let nuItems = [];
 let nuIndex=0, nuTimer=null, nuInterval=5200;
-
 function buildNextUp(){
-  const dynamic = nextUpPool.filter(i=>typeof i.body==='function');
-  const staticPool = nextUpPool.filter(i=>typeof i.body!=='function');
-  const shuffled = staticPool.sort(()=>Math.random()-0.5);
-
-  // Interleave: every 3rd slide gets a dynamic item (if available)
-  nuItems = [];
-  let d = 0;
-  for(let i=0;i<shuffled.length;i++){
-    if(i%3===0 && d<dynamic.length) nuItems.push(dynamic[d++]);
-    nuItems.push(shuffled[i]);
-  }
-  if(d<dynamic.length) nuItems.push(dynamic[d]);
-
-  // Trim to ~75% of the built list, but keep at least all dynamic items * 2
-  const minKeep = Math.max(dynamic.length*2, 8);
-  const target = Math.max(minKeep, Math.ceil(nuItems.length * NEXT_UP_KEEP_RATIO));
-  nuItems = nuItems.slice(0, target);
-
   const track=document.getElementById('nuTrack');
   const dots=document.getElementById('nuDots');
   const bar=document.getElementById('nuBar');
   if(!track||!dots||!bar) return;
-
   track.innerHTML = nuItems.map(item=>{
     const body=typeof item.body==='function'?item.body():item.body;
     return `<article class="nu-slide"><div class="nu-emoji">${item.emoji}</div><div class="nu-text"><h4>${item.title}</h4><p>${body}</p></div></article>`
@@ -822,7 +739,7 @@ function buildNextUp(){
 function goToSlide(i,instant=false){
   const track=document.getElementById('nuTrack'); const dots=document.getElementById('nuDots').children; const bar=document.getElementById('nuBar');
   const n=nuItems.length; nuIndex=(i+n)%n;
-  // refresh dynamic copy on move
+  // refresh dynamic copy
   track.querySelectorAll('.nu-slide').forEach((sl,idx)=>{
     const item=nuItems[idx];
     if(typeof item.body==='function'){ sl.querySelector('p').textContent=item.body(); }
@@ -892,6 +809,7 @@ function createWeatherCard(w){
   const sunrise = daily.sunrise? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
   const sunset  = daily.sunset?  new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--';
   const next = getNextHoursSlice(hourly);
+  // cache minimal for Next Up
   window.__WX_CACHE[location.id] = { temp, desc };
 
   const details = weatherDetails
@@ -951,7 +869,7 @@ function showWeatherDetails(id){
     </div>`);
 }
 
-/* ===== Moments & Locations Modals (unchanged) ===== */
+/* ===== Moments & Locations Modals (minimal) ===== */
 const momentGuides = {
   stargazing:{ title:'Yosemite Stargazing',
     stops:[{name:'Glacier Point',why:'Panoramic sky & Half Dome silhouette',maps:'https://www.google.com/maps?q=Glacier+Point'},
@@ -1003,7 +921,7 @@ function showMomentDetails(key){
   document.getElementById('locationModal').style.display = 'block';
 }
 
-/* Locations modal (for Timeline clicks) */
+/* Locations modal (for Route 66 clicks) */
 const locationDetails = {
   sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'},
     activities:[{day:'Day 1',activity:'Arrival & Union Square'},{day:'Day 2',activity:"Golden Gate & Wharf"},{day:'Day 3',activity:'Alcatraz + Free walking tour'},{day:'Day 4',activity:'Final SF sights'}],
@@ -1015,12 +933,7 @@ const locationDetails = {
     highlights:['Glacier Point','Half Dome','Mist Trail','Milky Way photography'],
     tips:'Warm clothes at night — temps drop!'
   },
-  grandcanyon:{ title:'Grand Canyon', dates:'September 27–29, 2025', stay:{name:'TBC'},
-    activities:[{day:'Day 1',activity:'Drive via Death Valley'},{day:'Day 2',activity:'South Rim lookouts / Skywalk West Rim'},{day:'Day 3',activity:'Return towards Vegas'}],
-    highlights:['Mather Point','Hopi Point','Skywalk (West Rim)'],
-    tips:'Start early for parking; sun protection & water a must.'
-  },
-  vegas:{ title:'Las Vegas', dates:'September 29 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
+  vegas:{ title:'Las Vegas', dates:'September 26 – October 1, 2025', stay:{name:'Strip Hotel (TBC)'},
     activities:[{day:'Day 1',activity:'Explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday!'},{day:'Day 4',activity:'Show & final night'}],
     highlights:['Grand Canyon heli','MSG Sphere','Cirque du Soleil','Rooftop party'],
     tips:'Hydrate & comfy shoes — long walks!'
@@ -1084,7 +997,7 @@ function updatePackingStats(){
   const bar = document.getElementById('packingProgress');
   const label = document.getElementById('packingProgressLabel');
   if(bar) bar.style.width = `${pct}%`;
-  window.__PACKING_PCT = pct;
+  window.__PACKING_PCT = pct; // expose to Next Up
   if(label){
     if(pct===0) label.textContent='🧳 Ready to start packing!';
     else if(pct<50) label.textContent=`🧳 ${pct}% packed - Keep going!`;
@@ -1134,22 +1047,17 @@ function burstConfetti(count=150){
 /* ===== Init ===== */
 document.addEventListener('DOMContentLoaded', ()=>{
   updateCountdown(); setInterval(updateCountdown,1000);
-
-  layoutTimeline();
-  updateTimelineStatus(); setInterval(updateTimelineStatus, 60000);
-
+  updateTimelineStatus();
   buildNextUp();
-
   loadWeather(); setInterval(loadWeather, 120000); // every 2 minutes
   renderPackingItems();
 
+  // animate-on-scroll
   const animateElements = document.querySelectorAll('.animate-on-scroll');
   const observer = new IntersectionObserver((entries)=>entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible')}),{threshold:0.1});
   animateElements.forEach(el=>observer.observe(el));
-
-  // re-layout timeline on resize to keep spacing clean
-  let rAF=null; window.addEventListener('resize', ()=>{ cancelAnimationFrame(rAF); rAF=requestAnimationFrame(layoutTimeline); });
 });
 </script>
 </body>
 </html>
+```
