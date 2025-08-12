@@ -497,7 +497,7 @@ nav{
     background: var(--vegas-card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 24px;
     padding: 32px 24px; max-width: 420px; width: 100%;
-    position: relative; overflow: hidden;
+    position: relative; overflow: visible; /* Changed from hidden to visible */
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.1), inset 0 0 30px rgba(255, 215, 0, 0.05);
     animation: fadeInUp 1s var(--spring) backwards; animation-delay: 0.4s;
 }
@@ -522,7 +522,7 @@ nav{
 .vegas-birthday-section .countdown-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
 
 /* Jackpot CTA Button */
-.vegas-birthday-section .jackpot-button { width: 100%; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); color: var(--vegas-black); border: none; border-radius: 20px; padding: 18px; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: all 0.3s var(--curve); animation: jackpotPulse 2s ease-in-out infinite; }
+.vegas-birthday-section .jackpot-button { width: 100%; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); color: var(--vegas-black); border: none; border-radius: 20px; padding: 18px; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 0; /* Adjusted from 20px */ box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: all 0.3s var(--curve); animation: jackpotPulse 2s ease-in-out infinite; }
 @keyframes jackpotPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); } 50% { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); } }
 .vegas-birthday-section .jackpot-button::before { content: '777 '; position: absolute; top: 50%; left: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRoll 3s linear infinite; }
 .vegas-birthday-section .jackpot-button::after { content: ' 777'; position: absolute; top: 50%; right: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRollReverse 3s linear infinite; }
@@ -531,6 +531,59 @@ nav{
 .vegas-birthday-section .jackpot-button:active { transform: scale(0.96); }
 .vegas-birthday-section .button-emoji { display: inline-block; margin: 0 8px; animation: spin 2s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* === SLOT MACHINE STYLES START === */
+.slot-machine-container {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
+}
+.slot-machine-container.visible {
+    max-height: 150px;
+    opacity: 1;
+    margin-top: 20px;
+}
+.slot-machine {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px;
+    background: linear-gradient(180deg, var(--vegas-dark) 0%, var(--vegas-black) 100%);
+    border-radius: 16px;
+    border: 2px solid var(--vegas-gold);
+    box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2);
+}
+.slot-reel {
+    width: 80px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--vegas-mid), var(--vegas-dark));
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+.slot-reel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+.reel-strip {
+    /* The animation is now controlled by JS transitions */
+}
+.reel-strip span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px; /* Must match slot-reel height */
+    font-size: 50px;
+    color: #fff;
+}
+/* === SLOT MACHINE STYLES END === */
+
 
 /* 30th Birthday Special */
 .vegas-birthday-section .birthday-highlight { background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 20, 147, 0.1)); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 20px; padding: 20px; margin: 24px 0; text-align: center; position: relative; overflow: hidden; }
@@ -885,11 +938,26 @@ nav{
                 </div>
                 
                 <!-- Jackpot Button -->
-                <button class="jackpot-button" id="jackpotBtn" onclick="hitVegasJackpot()">
+                <button class="jackpot-button" id="jackpotBtn" onclick="playSlots()">
                     <span class="button-emoji">🎰</span>
                     HIT THE JACKPOT
                     <span class="button-emoji">🎰</span>
                 </button>
+                
+                <!-- Slot Machine -->
+                <div class="slot-machine-container" id="slotMachineContainer">
+                    <div class="slot-machine">
+                        <div class="slot-reel">
+                            <div class="reel-strip" id="reel1"></div>
+                        </div>
+                        <div class="slot-reel">
+                            <div class="reel-strip" id="reel2"></div>
+                        </div>
+                        <div class="slot-reel">
+                            <div class="reel-strip" id="reel3"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <canvas id="vegasConfettiCanvas"></canvas>
@@ -1500,6 +1568,9 @@ function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag
 document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
 /* ===== NEW: Vegas Birthday JS ===== */
+const slotSymbols = ['💎', '🍒', '7️⃣', '🎰', '🔔'];
+let isSpinning = false; // Prevents re-clicks while spinning
+
 function updateVegasCountdown() {
   const birthday = new Date('2025-09-28T18:00:00-07:00');
   const now = new Date();
@@ -1537,7 +1608,65 @@ function animateVegasNumber(id, value) {
   }
 }
 
-function hitVegasJackpot() {
+function playSlots() {
+    if (isSpinning) return;
+    isSpinning = true;
+
+    const container = document.getElementById('slotMachineContainer');
+    container.classList.add('visible'); // Make slots appear
+
+    const reels = [
+        document.getElementById('reel1'),
+        document.getElementById('reel2'),
+        document.getElementById('reel3')
+    ];
+    
+    const reelHeight = 100; // Must match CSS height of a symbol
+    const symbolCount = slotSymbols.length;
+    const totalSymbolsOnStrip = 30; // Creates a long strip for a good spin effect
+
+    const results = reels.map(() => slotSymbols[Math.floor(Math.random() * symbolCount)]);
+
+    reels.forEach((reel, i) => {
+        reel.style.transition = 'none';
+        
+        const stripArray = [];
+        for(let j = 0; j < totalSymbolsOnStrip; j++) {
+            stripArray.push(slotSymbols[Math.floor(Math.random() * symbolCount)]);
+        }
+        stripArray[totalSymbolsOnStrip - 2] = results[i];
+        reel.innerHTML = stripArray.map(symbol => `<span>${symbol}</span>`).join('');
+
+        reel.style.transform = 'translateY(0)';
+        void reel.offsetHeight;
+
+        const finalPosition = (totalSymbolsOnStrip - 2) * reelHeight;
+        const spinDuration = 2500 + i * 500;
+        
+        reel.style.transition = `transform ${spinDuration / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
+        reel.style.transform = `translateY(-${finalPosition}px)`;
+    });
+
+    const totalSpinTime = 2500 + (reels.length - 1) * 500 + 500;
+    setTimeout(() => {
+        const isWin = results[0] === results[1] && results[1] === results[2];
+        if (isWin) {
+            triggerJackpotConfetti();
+        } else {
+            const loseMessages = [
+                'Almost! Give it another spin!',
+                'So close! The house always wins... usually.',
+                'Better luck next time, high roller!',
+                'Nope! Maybe try a different machine?'
+            ];
+            const randomMsg = loseMessages[Math.floor(Math.random() * loseMessages.length)];
+            showVegasToast('😂', randomMsg);
+        }
+        isSpinning = false;
+    }, totalSpinTime);
+}
+
+function triggerJackpotConfetti() {
   const canvas = document.getElementById('vegasConfettiCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -1583,7 +1712,7 @@ function hitVegasJackpot() {
   }
   
   animateConfetti();
-  showVegasToast('🎰', 'Jackpot! Let\'s celebrate in Vegas!');
+  showVegasToast('🎰', 'Lets win even bigger at Vegas!');
 }
 
 function showVegasToast(emoji, message) {
@@ -1592,13 +1721,13 @@ function showVegasToast(emoji, message) {
   
   const toast = document.createElement('div');
   toast.className = 'vegas-toast';
-  toast.innerHTML = `<span style="font-size:24px">${emoji}</span><span>${message}</span>`;
+  toast.innerHTML = `<span style="font-size:24px">${emoji}</span><span style="color:white;">${message}</span>`;
   document.body.appendChild(toast);
   
   setTimeout(() => {
     toast.style.animation = 'toastSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) reverse forwards';
     setTimeout(() => toast.remove(), 500);
-  }, 3000);
+  }, 4000);
 }
 
 /* ===== UI helpers & alerts ===== */
