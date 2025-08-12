@@ -632,6 +632,11 @@ nav{
             0 0 18px var(--vegas-orange);
     }
 
+    /* Smaller jackpot button on mobile */
+    .vegas-birthday-section .jackpot-button {
+        font-size: 15px;
+    }
+
     /* Redefine animations for mobile with reduced glow */
     @keyframes neonPulse {
         0%, 100% {
@@ -1653,24 +1658,23 @@ function playSlots() {
         if (isWin) {
             triggerJackpotConfetti();
         } else {
-const loseMessages = [
-    'Almost! Give it another spin!',
-    'So close! The house always wins... usually.',
-    'Better luck next time, high roller!',
-    'Nope! Maybe try a different machine?',
-    'Close call! One more spin could do it!',
-    'Not quite! The reels are just warming up.',
-    'Missed it by a whisker! Give it another go.',
-    'Oof! That one wasn’t in your favour.',
-    'No luck this time! But you’re due a win soon.',
-    'Just shy of glory! Spin again?',
-    'Ah, the suspense! One more try?',
-    'Nearly there! Don’t give up now.',
-    'So close you could taste it!',
-    'Not today… but tomorrow’s looking lucky.',
-    'Missed the jackpot! Ready to chase it?'
-];
-
+            const loseMessages = [
+                'Almost! Give it another spin!',
+                'So close! The house always wins... usually.',
+                'Better luck next time, high roller!',
+                'Nope! Maybe try a different machine?',
+                'Close call! One more spin could do it!',
+                'Not quite! The reels are just warming up.',
+                'Missed it by a whisker! Give it another go.',
+                'Oof! That one wasn’t in your favour.',
+                'No luck this time! But you’re due a win soon.',
+                'Just shy of glory! Spin again?',
+                'Ah, the suspense! One more try?',
+                'Nearly there! Don’t give up now.',
+                'So close you could taste it!',
+                'Not today… but tomorrow’s looking lucky.',
+                'Missed the jackpot! Ready to chase it?'
+            ];
             const randomMsg = loseMessages[Math.floor(Math.random() * loseMessages.length)];
             showVegasToast('😂', randomMsg);
         }
