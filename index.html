@@ -36,7 +36,7 @@ overflow-x:hidden; padding-top:var(--safe-top);
 .hero{background:var(--bg-primary); padding:32px 20px 40px; text-align:center;}
 .hero-title{font-size:clamp(32px, 8vw, 48px); font-weight:800; letter-spacing:-0.02em; line-height:1.1; margin-bottom:8px;}
 .hero-subtitle{font-size:18px; font-weight:500; color:var(--text-secondary); margin-bottom:24px;}
-.countdown-container{display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap;}
+.countdown-container{display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:nowrap;}
 .countdown-card{background:var(--surface); border:1px solid var(--separator); border-radius:var(--radius-lg); padding:16px 12px; min-width:72px; box-shadow:var(--shadow-sm);}
 .countdown-value{font-size:28px; font-weight:800; color:var(--primary); line-height:1; display:block; font-variant-numeric:tabular-nums;}
 .countdown-label{font-size:12px; font-weight:600; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px;}
@@ -405,14 +405,13 @@ margin-top: 24px;
 }
 
 @media (max-width: 768px) {
-  /* UPDATED: Removed negative margin to create proper spacing from screen edge */
   .moments-grid {
     display: flex;
     overflow-x: auto;
     flex-wrap: nowrap;
     gap: 12px;
-    margin: 0; /* Let grid sit inside the parent's padding */
-    padding: 4px 0; /* Reset horizontal padding */
+    margin: 0;
+    padding: 4px 0;
     scrollbar-width: none;
     scroll-snap-type: x mandatory;
   }
@@ -423,7 +422,6 @@ margin-top: 24px;
     max-width: 260px;
     scroll-snap-align: start;
   }
-  /* Add padding to the right of the scroll area for better visual finish */
   .moments-grid::after {
       content: '';
       display: block;
@@ -431,6 +429,26 @@ margin-top: 24px;
       width: 8px;
   }
 }
+
+/* ========== FIX: Countdown on small screens ========== */
+@media (max-width: 380px) {
+  .countdown-container {
+    gap: 8px; /* Reduce the gap between cards */
+    flex-wrap: nowrap; /* Force single line */
+  }
+  .countdown-card {
+    padding: 12px 6px; /* Reduce padding */
+    min-width: 0; /* Allow card to shrink */
+    flex: 1; /* Distribute space evenly */
+  }
+  .countdown-value {
+    font-size: 22px; /* Reduce font size to fit */
+  }
+  .countdown-label {
+    font-size: 10px; /* Slightly smaller label */
+  }
+}
+
 .animate-on-scroll{opacity:0;transform:translateY(20px);transition:all 0.6s var(--ease-ios);}
 .animate-on-scroll.visible{opacity:1;transform:translateY(0);}
 </style>
