@@ -2,1825 +2,878 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>USA 2025 Adventure — Final (iOS Weather + Mobile Tweaks + Currency Tracker)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="USA 2025"/>
+<title>USA 2025 Adventure</title>
 <style>
-/* ========== Base / Reset ========== */
-*{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --primary:#007AFF;--secondary:#5856D6;--success:#34C759;--warning:#FF9500;--danger:#FF3B30;
-  --ink:#11131a;--muted:#5c6270;--panel:#ffffff;--panel-ghost:rgba(255,255,255,.72);
-  --border:rgba(16,24,40,.08);--radius:20px;--shadow:0 10px 30px rgba(16,24,40,.06);
-  --glass:rgba(255,255,255,.6);--glass-dark:rgba(17,19,26,.35);
-  --curve:cubic-bezier(.4,0,.2,1)
+  --primary: #FF385C; --primary-light: #FFE8ED; --secondary: #00A699; --success: #34C759;
+  --text-primary: #1D1D1F; --text-secondary: #6E6E73; --text-tertiary: #8E8E93;
+  --bg-primary: #FFFFFF; --bg-secondary: #F2F2F7; --surface: #FFFFFF;
+  --separator: rgba(60,60,67,0.12); --link: #007AFF;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04); --shadow-md: 0 4px 12px rgba(0,0,0,0.08); --shadow-lg: 0 8px 32px rgba(0,0,0,0.12); --shadow-xl: 0 16px 64px rgba(0,0,0,0.16);
+  --radius-lg: 16px; --radius-xl: 20px; --radius-2xl: 24px;
+  --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); --ease-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
 }
-html,body{height:100%}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
-  color:var(--ink);
-  background:
-    radial-gradient(900px 220px at -10% -10%, rgba(0,0,0,.04), transparent),
-    radial-gradient(1100px 260px at 110% -10%, rgba(0,0,0,.04), transparent),
-    radial-gradient(1200px 200px at 50% 105%, rgba(0,0,0,.03), transparent),
-    #f6f7fb;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg-secondary); color:var(--text-primary);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden; padding-top:var(--safe-top);
 }
 
-/* ========== Navigation ========== */
-nav{
-  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom:1px solid var(--border)
-}
-.nav-container{max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative}
-.logo{font-weight:800;letter-spacing:.2px;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:16px;list-style:none}
-.nav-link{padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--ink);font-weight:600;font-size:14px;border:1px solid transparent;transition:all 0.2s var(--curve)}
-.nav-link:hover{background:rgba(0,0,0,.04);transform:translateY(-1px)}
-.nav-link.active{background:var(--primary);color:#fff;border-color:transparent}
-.nav-toggle{
-  display:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);
-  background:#fff;box-shadow:var(--shadow);align-items:center;justify-content:center;font-size:20px;cursor:pointer;
-}
-@media (max-width: 768px){
-  .nav-toggle{display:flex}
-  .nav-links{
-    display:none;position:absolute;top:calc(100% + 8px);left:16px;right:16px;
-    background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;box-shadow:var(--shadow)
-  }
-  nav.open .nav-links{display:grid;grid-template-columns:1fr;gap:6px}
-  .nav-link{display:block;width:100%;padding:12px 14px;font-size:15px;border-radius:10px}
-  .nav-link.active{background:#eef3ff;color:var(--primary)}
-}
+/* ========== Header & Hero ========== */
+.status-aware-header{position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.8); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-bottom:0.5px solid var(--separator); padding:8px 20px;}
+.nav-container{max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:48px;}
+.logo{font-size:20px; font-weight:700; color:var(--primary); display:flex; align-items:center; gap:6px;}
+.hero{background:var(--bg-primary); padding:32px 20px 40px; text-align:center;}
+.hero-title{font-size:clamp(32px, 8vw, 48px); font-weight:800; letter-spacing:-0.02em; line-height:1.1; margin-bottom:8px;}
+.hero-subtitle{font-size:18px; font-weight:500; color:var(--text-secondary); margin-bottom:24px;}
+.countdown-container{display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap;}
+.countdown-card{background:var(--surface); border:1px solid var(--separator); border-radius:var(--radius-lg); padding:16px 12px; min-width:72px; box-shadow:var(--shadow-sm);}
+.countdown-value{font-size:28px; font-weight:800; color:var(--primary); line-height:1; display:block; font-variant-numeric:tabular-nums;}
+.countdown-label{font-size:12px; font-weight:600; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px;}
 
-/* ========== Hero ========== */
-.hero{padding:64px 24px 24px;text-align:center;position:relative;overflow:hidden}
-.hero::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:600px;height:600px;background:radial-gradient(circle,rgba(0,122,255,.08),transparent 70%);
-  animation:pulse 4s ease-in-out infinite;pointer-events:none;
-}
-@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.3} 50%{transform:translateX(-50%) scale(1.1);opacity:.1}}
-.hero-title{
-  font-size:clamp(28px,6vw,56px);line-height:1.05;letter-spacing:-1.2px;margin-bottom:12px;
-  background:linear-gradient(135deg,#2b2d42,#4a4e69);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.hero-subtitle{
-  font-size:clamp(12px,3.6vw,18px);color:var(--muted);position:relative;z-index:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+/* ========== Content Sections ========== */
+.content-section{background:var(--bg-primary); margin:8px; border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-md);}
+.section-header{padding:24px 20px 16px; border-bottom:1px solid var(--separator);}
+.section-title{font-size:24px; font-weight:700; color:var(--text-primary); margin-bottom:4px;}
+.section-subtitle{font-size:16px; color:var(--text-secondary);}
+.section-content{padding:20px;}
 
-/* Countdown */
-.countdown{display:flex;justify-content:center;gap:16px;margin-top:24px;flex-wrap:nowrap;overflow-x:auto}
-.countdown-item{
-  background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 18px;min-width:86px;
-  box-shadow:var(--shadow);transition:transform 0.3s var(--curve);position:relative;overflow:hidden;
-}
-.countdown-item:hover{transform:translateY(-2px) scale(1.02)}
-.countdown-item::before{
-  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
-  transition:left 0.5s ease;
-}
-.countdown-item.tick::before{left:100%}
-.countdown-value{
-  font-size:32px;font-weight:800;
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  transition:transform 0.2s var(--curve);
-}
-.countdown-item.tick .countdown-value{transform:scale(1.1)}
-.countdown-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+/* ========== Destinations Hub (Main Component) ========== */
+.tabs{display:flex;gap:12px;margin-bottom:24px;overflow-x:auto;flex-wrap:nowrap;padding:4px 20px;margin-left:-20px;margin-right:-20px; scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:10px 20px;background:var(--surface);border:1px solid var(--separator);border-radius:30px;font-weight:600;cursor:pointer;transition:all .3s var(--ease-ios); white-space:nowrap; flex-shrink:0;}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 16px rgba(255,56,92,.25)}
+.tab:hover:not(.active){transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.main-card{background:var(--surface);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);display:flex;transition:opacity .4s var(--ease-ios), transform .4s var(--ease-ios);opacity:0;transform:translateY(20px)}
+.main-card.visible{opacity:1;transform:translateY(0)}
+.hero-image{flex:1;min-height:500px;background-size:cover;background-position:center;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:32px;color:#fff}
+.hero-image::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 55%)}
+.hero-image-title{position:relative;z-index:1;font-size:36px;font-weight:800;line-height:1.2}
+.hero-area{position:relative;z-index:1;font-size:18px;font-weight:500;opacity:.95;margin-top:4px}
+.content-column{flex:0 0 350px;padding:24px;display:flex;flex-direction:column;gap:24px;max-height:500px;overflow-y:auto; background:var(--bg-secondary);}
+.info-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--separator);font-size:16px}
+.info-item:last-child{border-bottom:none}
+.info-item span:first-child{color:var(--text-secondary)}
+.info-item span:last-child{font-weight:600}
+.weather-main{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.weather-icon{font-size:46px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.weather-temp{font-size:40px;font-weight:800}
+.weather-desc{font-size:15px;color:var(--text-secondary)}
+.widget{background:var(--surface);border:1px solid var(--separator);box-shadow:var(--shadow-sm);border-radius:var(--radius-lg);padding:20px}
+.widget h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text-primary)}
+.widget-list{display:grid;gap:12px}
+.widget-item{display:flex;gap:14px;padding:12px;border:1px solid var(--separator);border-radius:var(--radius-lg);align-items:center;transition:transform .15s var(--ease-ios),background .15s var(--ease-ios)}
+.widget-item:hover{transform:translateY(-2px);background:var(--primary-light)}
+.widget-icon{font-size:24px;width:30px;text-align:center}
+.widget-text h4{font-size:16px;font-weight:600}
+.widget-text p{font-size:14px;color:var(--text-secondary)}
+.widget-item.a{cursor:pointer;text-decoration:none;color:inherit}
 
-/* Smaller countdown on small iPhones */
-@media (max-width:480px){
-  .countdown{gap:8px}
-  .countdown-item{min-width:64px;padding:8px 10px}
-  .countdown-value{font-size:22px}
-  .countdown-label{font-size:10px}
-}
-
-/* ========== Layout Container ========== */
-.container{max-width:1200px;margin:0 auto;padding:0 24px 80px}
-
-/* ========== Road Trip Map (Final Polished Layout) ========== */
-.route66{
-  margin:22px 0;
-  border:1px solid var(--border);
-  border-radius:20px;
-  background:linear-gradient(90deg, rgba(255,215,0,.08), rgba(88,86,214,.08)), #f6f7fb;
-  box-shadow:0 12px 28px rgba(16,24,40,.08);
-  padding:14px 0 18px; /* Remove side padding from main container on all screen sizes */
-  position:relative;
-}
-.route66 .section-title{margin-bottom:12px; padding: 0 24px;} /* Add padding to title */
-.route66__track{
-    position: relative;
-    min-height: 120px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-.route66__track::-webkit-scrollbar{ display: none; }
-
-.route66__content-scroller {
-    position: relative;
-    width: 150%; /* Make the inner content wider for scrolling */
-    min-height: 100px;
-    padding: 0 24px; /* Add padding here for start/end spacing */
-}
-
-.route66__road{
-  position:absolute;left:24px;right:24px;bottom:5px;
-  height:3px;border-radius:2px;
-  background:linear-gradient(90deg, var(--primary), var(--secondary));
-  box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:1;
-}
-.route66__stops{
-  display:grid;grid-template-columns:repeat(6,1fr);
-  gap:clamp(6px,1.8vw,16px);
-  position:relative;z-index:2;
-  height: 100%;
-}
-.route66__stop{
-  display: flex;
-  flex-direction: column;
-  align-items:center;
-  text-align:center;
-  justify-content: flex-end;
-  background:none; border:0; padding:0; cursor: pointer;
-}
-.route66__date{ font-size:clamp(10px,1.4vw,12px);color:var(--muted);text-transform:uppercase;letter-spacing:.08em; margin-bottom: 6px;}
-.route66__icon{ font-size:clamp(20px,3vw,28px);line-height:1; margin-bottom: 4px; }
-.route66__label{ font-size:clamp(12px,1.9vw,14px);font-weight:800;line-height:1.15; margin-bottom: 8px; color: var(--primary); }
-.route66__dot{ width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--primary); }
-
-.route66__progress{
-  position:absolute;bottom:0px;
-  left: 0; /* Animation will control this */
-  width:12px;height:12px;border-radius:50%;
-  background:var(--success);box-shadow:0 0 0 4px rgba(52,199,89,.16);
-  z-index:3;
-  animation: r66move 38s linear infinite;
-}
-
-@keyframes r66move{
-    0% { left: 24px; }
-    100% { left: calc(100% - 24px - 6px); }
-}
-
-@media (max-width:768px){
-  .route66__content-scroller { width: 200%; } /* Increase scroll width for mobile */
-  .route66__label { font-size: 11px; }
-  .route66__icon { font-size: 20px; }
-  @keyframes r66move {
-      0% { left: 24px; }
-      100% { left: calc(100% - 24px - 6px); } /* Same logic works if applied to the scroller */
-  }
-}
-
-/* ========== Next Up slider ========== */
-.nu-section{margin:22px 0}
-.nu-card{border:1px solid var(--border); border-radius:20px; overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9)); box-shadow:0 14px 34px rgba(16,24,40,.1)}
-.nu-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px}
-.nu-title{font-weight:900; letter-spacing:.3px}
-.nu-dots{display:flex; gap:8px}
-.nu-dot{width:8px;height:8px;border-radius:999px;background:rgba(16,24,40,.18);cursor:pointer;transition:transform .2s}
-.nu-dot.active{background:var(--primary); transform:scale(1.2)}
-.nu-viewport{position:relative; overflow:hidden}
-.nu-track{display:flex; transition:transform .5s var(--curve)}
-.nu-slide{flex:0 0 100%; padding:16px 16px 18px; display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:center}
-.nu-emoji{font-size:28px; filter:drop-shadow(0 1px 4px rgba(0,0,0,.12))}
-.nu-text h4{margin:0 0 2px 0; font-size:16px}
-.nu-text p{margin:0; color:var(--muted); font-size:14px}
-.nu-progress{height:3px; background:rgba(16,24,40,.08)}
-.nu-bar{height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width .2s linear}
-
-/* ========== Currency Tracker Widget ========== */
-.currency-section { margin: 24px 0; }
-.currency-card {
-  background: var(--glass);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow);
-}
-.currency-card .nu-title {
-  padding: 0;
-  margin-bottom: 8px;
-}
-.currency-rate-display {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin: 10px 0 14px;
-}
-.currency-rate-display #exchangeRate {
-  font-size: clamp(22px, 5vw, 28px);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
-.currency-rate-display #usdRate {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--muted);
-}
-.currency-converter {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 12px;
-  align-items: center;
-  background: rgba(255,255,255,.7);
-  padding: 12px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-}
-.currency-converter input,
-.currency-converter select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-size: 14px;
-  font-family: inherit;
-}
-.currency-converter input:focus,
-.currency-converter select:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 1px;
-}
-#currencyResult {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--primary);
-  text-align: right;
-  padding: 8px 0;
-}
-#rateTrend {
-  margin-top: 16px;
-  max-height: 80px;
-}
-.currency-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-}
-.currency-actions button {
-  flex-grow: 1;
-  background: var(--primary);
-  color: #fff;
-  border: 0;
-  padding: 10px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: all 0.2s var(--curve);
-  box-shadow: 0 8px 18px rgba(0, 122, 255, .18);
-}
-.currency-actions button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(0, 122, 255, .25);
-}
-
-
-/* ========== Live Weather (iOS-ish) ========== */
-.weather-section{margin:40px 0}
-.weather-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width: 960px){ .weather-grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width: 640px){
-  .weather-grid{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
-  .weather-card{min-width:85%;scroll-snap-align:center}
-}
-.weather-card{
-  position:relative;overflow:hidden;isolation:isolate;cursor:pointer;min-height:230px;
-  border-radius:22px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));
-  box-shadow:0 8px 28px rgba(16,24,40,.08);
-  padding:18px;transition:transform .25s var(--curve), box-shadow .25s var(--curve);
-  backdrop-filter:saturate(140%) blur(10px);
-}
-.weather-card::before{content:"";position:absolute;inset:-30%;background:radial-gradient(600px 220px at 10% 0%, rgba(0,122,255,.10), transparent 60%),radial-gradient(600px 220px at 90% 100%, rgba(88,86,214,.10), transparent 60%);z-index:-1}
-.weather-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
-.weather-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.weather-location{font-weight:800;color:var(--primary);font-size:16px;display:flex;gap:6px;align-items:center}
-.weather-badge{font-size:11px;padding:6px 8px;border-radius:999px;background:#eef3ff;border:1px solid rgba(0,0,0,.06)}
-.weather-main{display:flex;align-items:center;gap:12px;margin:4px 0 8px}
-.weather-temp{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--ink),var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.weather-icon{font-size:44px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
-.weather-desc{font-size:13px;color:var(--muted)}
-.wx-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.wx-kv .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.wx-kv .value{font-size:14px;font-weight:700}
-.wx-hours{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-.wx-hour{min-width:64px;text-align:center;border:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.6);border-radius:10px;padding:6px}
+/* ========== Weather Overlay ========== */
+.wx-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:2200;display:flex;align-items:center;justify-content:center}
+.wx-overlay.show{opacity:1;pointer-events:auto}
+.wx-sheet{position:relative;overflow:hidden;color:#fff;border-radius:var(--radius-2xl);box-shadow:0 30px 80px rgba(0,0,0,.4);width:min(500px,94vw);max-height:min(86vh,900px);display:flex;flex-direction:column; transform:scale(0.95); transition:transform 0.3s var(--spring);}
+.wx-overlay.show .wx-sheet{transform:scale(1);}
+.wx-sunny{background:linear-gradient(135deg,#f6d365,#fda085)}
+.wx-cloudy{background:linear-gradient(135deg,#7f8fa6,#718093)}
+.wx-rainy{background:linear-gradient(135deg,#74b9ff,#0984e3)}
+.wx-close{position:absolute;top:12px;right:12px;border:none;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;z-index:10; font-size:16px;}
+.wx-top{padding:22px;position:relative}
+.weather-animation{position:absolute;inset:0;pointer-events:none}
+.rain-drop{position:absolute;width:2px;height:20px;background:rgba(255,255,255,0.6);border-radius:1px;animation:rain 1s linear infinite}
+@keyframes rain{0%{transform:translateY(-10px);opacity:0}50%{opacity:1}100%{transform:translateY(60px);opacity:0}}
+.wx-city{font-weight:800;letter-spacing:.3px}
+.wx-meta{display:flex;align-items:baseline;gap:10px;margin-top:6px}
+.wx-temp-lg{font-size:56px;font-weight:900;line-height:1}
+.wx-desc-lg{opacity:.95}
+.wx-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.wx-chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:10px 12px;font-size:14px;display:flex;justify-content:space-between}
+.wx-body{background:rgba(0,0,0,.12);backdrop-filter:blur(4px);padding:14px;overflow:auto}
+.wx-body h4{font-size:16px;font-weight:600;margin-bottom:8px;opacity:0.9;}
+.wx-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px; scrollbar-width:none;}
+.wx-row::-webkit-scrollbar{display:none}
+.wx-hour{min-width:72px;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:10px}
 .wx-hour .t{font-weight:800}
-.weather-update{font-size:11px;color:var(--muted);margin-top:8px;opacity:0.8}
-.weather-card.loading{opacity:0.7}
-.weather-card.error{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,59,48,.05),rgba(255,255,255,.9))}
-@media (max-width:480px){
-  .weather-temp{font-size:28px}
-  .weather-icon{font-size:38px}
-  .weather-card{min-height:210px}
-}
-.wx-3day{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.wx-3day .d{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.wx-3day .d .t{font-weight:800}
-.wx-3day .d .hi{font-weight:800}
-.wx-3day .d .lo{opacity:.7}
-.advice{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.advice .chip{padding:6px 10px;border-radius:999px;background:#f3f5fb;border:1px solid var(--border);font-size:12px;font-weight:700}
-.advice .chip.warn{background:rgba(255,149,0,.14);border-color:rgba(255,149,0,.3)}
-.advice .chip.danger{background:rgba(255,59,48,.14);border-color:rgba(255,59,48,.3)}
+.wx-days{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.wx-day{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:10px;text-align:center}
+.wx-day .hi{font-weight:800}
+.wx-day .lo{opacity:.85}
 
+/* ========== Moments & Flights Section ========== */
+.moments-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;}
+.moment-card{background:var(--surface);border:1px solid var(--separator);border-radius:var(--radius-lg);padding:20px;transition:all 0.2s var(--ease-ios);cursor:pointer;}
+.moment-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary);}
+.moment-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.moment-icon{font-size:32px;}
+.moment-title{font-size:18px;font-weight:600;}
+.moment-description{font-size:14px;color:var(--text-secondary);line-height:1.5;}
+.flights-list{display:grid;gap:16px;}
+.flight-card{background:var(--surface);border:1px solid var(--separator);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
+.flight-header{padding:16px 20px;border-bottom:1px solid var(--separator);}
+.flight-route{font-size:20px;font-weight:700;}
+.flight-date{font-size:14px;color:var(--text-secondary);}
+.flight-details{padding:20px;display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:16px;}
+.detail-label{font-size:12px;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:4px;}
+.detail-value{font-size:16px;font-weight:600;}
+.flight-status{background:rgba(52,199,89,0.15);color:#34C759;font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--radius-lg);display:inline-block;}
 
-/* ========== NEW VEGAS BIRTHDAY SECTION ========== */
-.vegas-birthday-section {
+/* ========== Packing Section ========== */
+.packing-container{padding:20px;}
+.packing-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.packing-stat{background:var(--bg-secondary);padding:16px;border-radius:var(--radius-lg);text-align:center;}
+.stat-value{font-size:24px;font-weight:800;color:var(--primary);display:block;font-variant-numeric:tabular-nums;}
+.stat-label{font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px;}
+.packing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;background:var(--bg-secondary);border-radius:var(--radius-lg);padding:20px;}
+@media (max-width:640px){.packing-grid{grid-template-columns:1fr}}
+.packing-column{background:var(--surface);border:2px dashed var(--separator);border-radius:var(--radius-lg);padding:16px;min-height:200px;transition:all 0.3s var(--ease-ios);}
+.packing-column.drag-over{border-color:var(--primary);background:var(--primary-light);}
+.column-title{font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.packing-list{list-style:none;}
+.packing-item{background:var(--surface);border:1px solid var(--separator);border-radius:var(--radius-lg);padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:grab;transition:all 0.2s var(--ease-ios);box-shadow:var(--shadow-sm);}
+.packing-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.packing-item.dragging{transform:scale(1.05) rotate(2deg);box-shadow:var(--shadow-lg);z-index:1000;}
+.item-text{flex:1;}
+.packed .item-text{color:var(--text-secondary);text-decoration:line-through;}
+
+/* ========== Concierge & Modals ========== */
+.concierge-btn{position:fixed;bottom:calc(var(--safe-bottom) + 20px);right:20px;background:var(--primary);color:#fff;border:none;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-xl);transition:all .3s var(--spring);z-index:1000}
+.concierge-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(255,56,92,.4)}
+.concierge-btn .icon{font-size:24px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;z-index:2000}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{background:var(--surface);border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:16px 20px calc(var(--safe-bottom) + 20px);width:100%;max-width:500px;transform:translateY(100%);transition:transform .4s var(--spring)}
+.modal-overlay.show .modal{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--separator);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:20px;font-weight:600;text-align:center;margin-bottom:16px;}
+.quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:14px}
+.quick-action{display:flex;flex-direction:column;align-items:center;padding:16px;background:var(--bg-secondary);border-radius:var(--radius-lg);text-decoration:none;color:inherit;transition:transform .2s var(--ease-ios), background .2s var(--ease-ios)}
+.quick-action:hover{transform:translateY(-4px);background:var(--primary-light)}
+.quick-action .icon{font-size:28px;margin-bottom:10px}
+.quick-action .label{font-weight:600;font-size:14px;text-align:center}
+.modal-overlay-custom{position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s var(--ease-ios);}
+.modal-overlay-custom.show{opacity:1; pointer-events:auto;}
+.modal-content-custom{background:var(--surface); border-radius:var(--radius-xl); max-width:600px; width:90%; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; transform:scale(0.95); transition:transform 0.3s var(--spring);}
+.modal-overlay-custom.show .modal-content-custom{transform:scale(1);}
+.modal-header-custom{padding:16px 20px; border-bottom:1px solid var(--separator); display:flex; justify-content:space-between; align-items:center;}
+.modal-title-custom{font-size:20px; font-weight:600;}
+.modal-close-btn{background:var(--bg-secondary); border:0; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center;}
+.modal-body-custom{padding:20px; overflow-y:auto;}
+.modal-list-item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-lg);margin-bottom:8px;}
+.modal-item-text strong{display:block;font-size:16px;font-weight:600;}
+.modal-item-text span{font-size:14px;color:var(--text-secondary);}
+.modal-item-action{background:var(--primary);color:white;text-decoration:none;padding:8px 16px;border-radius:var(--radius-lg);font-size:14px;font-weight:600;}
+
+/* Vegas Birthday Section */
+.vegas-birthday {
     position: relative;
-    margin: 38px 0;
-    padding: 0;
-    border-radius: 24px;
+    margin: 8px;
+    border-radius: var(--radius-xl);
     overflow: hidden;
     background: #0A0A0F;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
     color: #FFFFFF;
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: transparent;
-
-    /* Scoped CSS Variables */
-    --vegas-gold: #FFD700;
-    --vegas-pink: #FF1493;
-    --vegas-purple: #9D00FF;
-    --vegas-cyan: #00F5FF;
-    --vegas-red: #FF0040;
-    --vegas-green: #00FF41;
-    --vegas-orange: #FF6B35;
-    --vegas-black: #0A0A0F;
-    --vegas-dark: #151521;
-    --vegas-mid: #1F1F2E;
-    --vegas-card: rgba(20, 20, 35, 0.9);
-    --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-thick: rgba(255, 255, 255, 0.08);
-    --gold-glass: rgba(255, 215, 0, 0.1);
-    --text-primary: #FFFFFF;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --text-muted: rgba(255, 255, 255, 0.4);
-    --spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --safe-top: env(safe-area-inset-top);
-    --safe-bottom: env(safe-area-inset-bottom);
+    padding: 32px 20px;
+    text-align: center;
 }
-
-/* Vegas Background with animated lights */
-.vegas-birthday-section .vegas-backdrop {
+.vegas-backdrop {
     position: absolute;
     inset: 0;
     z-index: 1;
     background: 
-        radial-gradient(ellipse at 20% 0%, var(--vegas-purple) 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 100%, var(--vegas-pink) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 50%, var(--vegas-dark) 0%, transparent 100%),
-        var(--vegas-black);
+        radial-gradient(ellipse at 20% 0%, #9D00FF 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 100%, #FF1493 0%, transparent 40%),
+        #0A0A0F;
     animation: vegasGlow 10s ease-in-out infinite alternate;
 }
-
-@keyframes vegasGlow {
-    0% { opacity: 0.8; }
-    100% { opacity: 1; filter: brightness(1.1); }
-}
-
-/* Animated Neon Grid */
-.vegas-birthday-section .neon-grid {
-    position: absolute;
-    inset: 0;
-    background-image: 
-        linear-gradient(var(--vegas-pink) 1px, transparent 1px),
-        linear-gradient(90deg, var(--vegas-cyan) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.03;
-    animation: gridScroll 20s linear infinite;
-    z-index: 2;
-}
-
-@keyframes gridScroll {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
-}
-
-/* Main Container */
-.vegas-birthday-section .birthday-experience {
-    position: relative;
-    z-index: 10;
-    padding: calc(var(--safe-top) + 40px) 20px calc(var(--safe-bottom) + 40px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Neon Sign Title */
-.vegas-birthday-section .neon-sign {
-    text-align: center;
-    margin-bottom: 32px;
-    animation: fadeInUp 1s var(--spring) backwards;
-    animation-delay: 0.2s;
-}
-
-.vegas-birthday-section .neon-text-small {
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--vegas-gold);
-    text-shadow: var(--neon-glow);
-    margin-bottom: 8px;
-    animation: flicker 3s infinite alternate;
-}
-
-.vegas-birthday-section .neon-text-large {
-    font-size: clamp(48px, 10vw, 72px);
+@keyframes vegasGlow { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+.vegas-content { position: relative; z-index: 10; }
+.neon-title {
+    font-size: clamp(36px, 10vw, 64px);
     font-weight: 900;
-    line-height: 0.9;
-    background: linear-gradient(
-        45deg,
-        var(--vegas-gold) 0%,
-        var(--vegas-pink) 30%,
-        var(--vegas-purple) 60%,
-        var(--vegas-cyan) 100%
-    );
-    background-size: 200% 200%;
+    line-height: 1;
+    background: linear-gradient(45deg, #FFD700, #FF1493, #00F5FF);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 20px var(--vegas-pink)) 
-            drop-shadow(0 0 40px var(--vegas-purple));
-    animation: neonPulse 2s ease-in-out infinite, gradientMove 3s linear infinite;
+    filter: drop-shadow(0 0 15px #FF1493);
+    animation: gradientMove 3s linear infinite, neonPulse 2s ease-in-out infinite;
     margin-bottom: 8px;
 }
-
-.vegas-birthday-section .neon-text-vegas {
-    font-size: clamp(28px, 7vw, 42px);
+@keyframes gradientMove { to { background-position: 200% center; } }
+@keyframes neonPulse { 50% { filter: drop-shadow(0 0 25px #FF1493); } }
+.vegas-subtitle { font-size: 16px; color: rgba(255, 255, 255, 0.8); margin-bottom: 24px; }
+.jackpot-btn {
+    background: linear-gradient(135deg, #FFD700, #FF6B35);
+    color: #0A0A0F;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 18px 32px;
+    font-size: 16px;
     font-weight: 700;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--vegas-gold);
-    text-shadow: 
-        0 0 10px var(--vegas-gold),
-        0 0 20px var(--vegas-gold),
-        0 0 30px var(--vegas-orange);
-    animation: vegasFlash 1.5s ease-in-out infinite alternate;
+    cursor: pointer;
+    transition: all 0.3s var(--spring);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+    margin-top: 24px;
 }
-
-/* Keyframes for Animations (Desktop) */
-@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-@keyframes neonPulse { 0%, 100% { filter: drop-shadow(0 0 20px var(--vegas-pink)) drop-shadow(0 0 40px var(--vegas-purple)); } 50% { filter: drop-shadow(0 0 30px var(--vegas-pink)) drop-shadow(0 0 60px var(--vegas-purple)); } }
-@keyframes vegasFlash { 0% { text-shadow: 0 0 10px var(--vegas-gold), 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-orange); } 100% { text-shadow: 0 0 20px var(--vegas-gold), 0 0 30px var(--vegas-gold), 0 0 40px var(--vegas-orange); } }
-@keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Location Badge */
-.vegas-birthday-section .location-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--gold-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--vegas-gold); border-radius: 30px;
-    padding: 12px 20px; margin-bottom: 24px;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
-    animation: fadeInUp 1s var(--spring) backwards; animation-delay: 0.3s;
-}
-.vegas-birthday-section .location-icon { font-size: 20px; animation: bounce 2s infinite; }
-.vegas-birthday-section .location-text { font-size: 14px; font-weight: 600; color: var(--vegas-gold); text-transform: uppercase; letter-spacing: 1px; }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-/* Casino Card Container */
-.vegas-birthday-section .casino-card {
-    background: var(--vegas-card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 24px;
-    padding: 32px 24px; max-width: 420px; width: 100%;
-    position: relative; overflow: visible; /* Changed from hidden to visible */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.1), inset 0 0 30px rgba(255, 215, 0, 0.05);
-    animation: fadeInUp 1s var(--spring) backwards; animation-delay: 0.4s;
-}
-
-/* Playing Card Decorations */
-.vegas-birthday-section .card-suits { position: absolute; inset: 0; overflow: hidden; opacity: 0.05; pointer-events: none; }
-.vegas-birthday-section .suit { position: absolute; font-size: 60px; color: var(--vegas-gold); animation: floatSuit 15s linear infinite; }
-.vegas-birthday-section .suit:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-.vegas-birthday-section .suit:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
-.vegas-birthday-section .suit:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 6s; }
-.vegas-birthday-section .suit:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 9s; }
-@keyframes floatSuit { 0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.05; } 50% { transform: rotate(180deg) scale(1.2); opacity: 0.1; } }
-
-/* Countdown Section */
-.vegas-birthday-section .countdown-title { text-align: center; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; font-weight: 600; }
-.vegas-birthday-section .countdown-display { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
-.vegas-birthday-section .countdown-unit { background: linear-gradient(135deg, var(--glass), var(--glass-thick)); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 16px; padding: 16px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s var(--curve); }
-.vegas-birthday-section .countdown-unit::before { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent); transform: translateX(-100%); transition: transform 0.6s; }
-.vegas-birthday-section .countdown-unit:active { transform: scale(0.95); border-color: var(--vegas-gold); }
-.vegas-birthday-section .countdown-unit:active::before { transform: translateX(100%); }
-.vegas-birthday-section .countdown-number { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); display: block; line-height: 1; }
-.vegas-birthday-section .countdown-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
-
-/* Jackpot CTA Button */
-.vegas-birthday-section .jackpot-button { width: 100%; background: linear-gradient(135deg, var(--vegas-gold), var(--vegas-orange)); color: var(--vegas-black); border: none; border-radius: 20px; padding: 18px; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 0; /* Adjusted from 20px */ box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: all 0.3s var(--curve); animation: jackpotPulse 2s ease-in-out infinite; }
-@keyframes jackpotPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); } 50% { box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); } }
-.vegas-birthday-section .jackpot-button::before { content: '777 '; position: absolute; top: 50%; left: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRoll 3s linear infinite; }
-.vegas-birthday-section .jackpot-button::after { content: ' 777'; position: absolute; top: 50%; right: -100px; transform: translateY(-50%); font-size: 20px; opacity: 0.3; animation: slotRollReverse 3s linear infinite; }
-@keyframes slotRoll { to { left: calc(100% + 100px); } }
-@keyframes slotRollReverse { to { right: calc(100% + 100px); } }
-.vegas-birthday-section .jackpot-button:active { transform: scale(0.96); }
-.vegas-birthday-section .button-emoji { display: inline-block; margin: 0 8px; animation: spin 2s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* === SLOT MACHINE STYLES START === */
-.slot-machine-container {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
-}
-.slot-machine-container.visible {
-    max-height: 150px;
-    opacity: 1;
-    margin-top: 20px;
-}
-.slot-machine {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    padding: 10px;
-    background: linear-gradient(180deg, var(--vegas-dark) 0%, var(--vegas-black) 100%);
-    border-radius: 16px;
-    border: 2px solid var(--vegas-gold);
-    box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2);
-}
-.slot-reel {
-    width: 80px;
-    height: 100px;
-    background: linear-gradient(135deg, var(--vegas-mid), var(--vegas-dark));
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    position: relative;
-}
-.slot-reel::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%);
-    pointer-events: none;
-    z-index: 2;
-}
-.reel-strip {
-    /* The animation is now controlled by JS transitions */
-}
-.reel-strip span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100px; /* Must match slot-reel height */
-    font-size: 50px;
-    color: #fff;
-}
-/* === SLOT MACHINE STYLES END === */
-
-
-/* 30th Birthday Special */
-.vegas-birthday-section .birthday-highlight { background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 20, 147, 0.1)); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 20px; padding: 20px; margin: 24px 0; text-align: center; position: relative; overflow: hidden; }
-.vegas-birthday-section .birthday-highlight::before { content: '30'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; font-weight: 900; opacity: 0.05; color: var(--vegas-gold); }
-.vegas-birthday-section .milestone-text { font-size: 16px; color: var(--vegas-gold); font-weight: 600; margin-bottom: 8px; position: relative; z-index: 1; }
-.vegas-birthday-section .milestone-subtext { font-size: 14px; color: var(--text-secondary); position: relative; z-index: 1; }
-
-/* Dice Animation */
-.vegas-birthday-section .dice-container { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
-.vegas-birthday-section .dice { width: 50px; height: 50px; background: linear-gradient(135deg, var(--vegas-black), var(--vegas-mid)); border: 2px solid var(--vegas-gold); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2); animation: diceRoll 4s ease-in-out infinite; }
-@keyframes diceRoll { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); } 75% { transform: rotate(270deg); } }
-.vegas-birthday-section .dice:nth-child(2) { animation-delay: 0.2s; }
-
-/* Confetti Canvas */
+.jackpot-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6); }
 #vegasConfettiCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+.slot-machine-container { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out; }
+.slot-machine-container.visible { max-height: 150px; opacity: 1; margin-top: 20px; }
+.slot-machine { display: flex; justify-content: center; gap: 12px; padding: 10px; background: linear-gradient(180deg, #1F1F2E, #0A0A0F); border-radius: 16px; border: 2px solid #FFD700; box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2); }
+.slot-reel { width: 80px; height: 100px; background: #151521; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
+.slot-reel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%); z-index: 2; }
+.reel-strip span { display: flex; align-items: center; justify-content: center; height: 100px; font-size: 50px; color: #fff; }
+.vegas-toast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -120px); background: rgba(20, 20, 35, 0.9); backdrop-filter: blur(10px); border: 1px solid #FFD700; border-radius: var(--radius-lg); padding: 16px 24px; display: flex; align-items: center; gap: 12px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.4); color: #fff; transition: transform 0.5s var(--spring); }
+.vegas-toast.show { transform: translate(-50%, 0); }
 
-/* Toast Notification (positioned globally) */
-.vegas-toast {
-    position: fixed; top: 20px; left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: var(--vegas-card, rgba(20, 20, 35, 0.9));
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--vegas-gold, #FFD700);
-    border-radius: 20px; padding: 16px 24px;
-    display: flex; align-items: center; gap: 12px;
-    z-index: 10000;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
-    animation: toastSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    color: var(--text-primary, #FFFFFF);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+/* ========== MOBILE & RESPONSIVE STYLES ========== */
+@media (max-width: 800px){
+  .main-card{flex-direction:column}
+  .content-column{max-height:none}
+  .hero-image{min-height:420px}
+  .tab { padding: 8px 18px; font-size: 15px; } /* Compact tabs for mobile */
 }
-@keyframes toastSlide { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
-/* Mobile-Specific Neon Adjustments */
 @media (max-width: 768px) {
-    .vegas-birthday-section .countdown-display { grid-template-columns: repeat(2, 1fr); }
-
-    /* Toned-down glow for mobile */
-    .vegas-birthday-section .neon-text-large {
-        filter: drop-shadow(0 0 12px var(--vegas-pink)) 
-                drop-shadow(0 0 25px var(--vegas-purple));
+    /* --- Epic Moments Slider for Mobile --- */
+    .moments-grid {
+        display: flex;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 16px;
+        /* Edge-to-edge scrolling feel */
+        margin: 0 -20px;
+        padding: 4px 20px;
+        scrollbar-width: none; /* Hide scrollbar */
+        scroll-snap-type: x mandatory; /* Enable scroll snapping */
     }
-    .vegas-birthday-section .neon-text-vegas {
-        text-shadow: 
-            0 0 8px var(--vegas-gold),
-            0 0 18px var(--vegas-orange);
+    .moments-grid::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for webkit browsers */
     }
-    
-    /* FIX: Smaller jackpot button on mobile */
-    .vegas-birthday-section .jackpot-button {
-        font-size: 14px;
-        padding: 16px 10px;
-        letter-spacing: 0.5px;
-    }
-    .vegas-birthday-section .button-emoji {
-        margin: 0 4px;
-    }
-
-    /* Redefine animations for mobile with reduced glow */
-    @keyframes neonPulse {
-        0%, 100% {
-            filter: drop-shadow(0 0 12px var(--vegas-pink)) drop-shadow(0 0 25px var(--vegas-purple));
-        }
-        50% {
-            filter: drop-shadow(0 0 18px var(--vegas-pink)) drop-shadow(0 0 35px var(--vegas-purple));
-        }
-    }
-    @keyframes vegasFlash {
-        0% {
-            text-shadow: 0 0 8px var(--vegas-gold), 0 0 18px var(--vegas-orange);
-        }
-        100% {
-            text-shadow: 0 0 12px var(--vegas-gold), 0 0 25px var(--vegas-orange);
-        }
+    .moments-grid .moment-card {
+        flex-shrink: 0;
+        width: 80vw; /* Each card takes up 80% of the viewport width */
+        max-width: 320px;
+        scroll-snap-align: start; /* Snap to the start of each card */
     }
 }
 
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    .vegas-birthday-section *, .vegas-birthday-section *::before, .vegas-birthday-section *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
+.animate-on-scroll{opacity:0;transform:translateY(20px);transition:all 0.6s var(--ease-ios);}
+.animate-on-scroll.visible{opacity:1;transform:translateY(0);}
 
-
-/* ========== Destinations ========== */
-.locations-heading{
-  font-size:clamp(26px,6vw,32px);text-align:center;font-weight:900;margin:36px 0 20px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.locations-grid{display:grid;gap:18px}
-@media (min-width: 1024px){ .locations-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
-.location-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s var(--curve)}
-.location-card:hover{transform:translateY(-3px)}
-.location-image{height:220px;background-size:cover;background-position:center;position:relative}
-.location-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%, rgba(0,0,0,.65) 100%);display:flex;align-items:flex-end;padding:16px}
-.location-name{color:#fff;font-weight:900;font-size:24px;text-shadow:0 2px 8px rgba(0,0,0,.4)}
-.location-details{padding:18px}
-.location-dates{font-weight:700;color:var(--primary);margin-bottom:8px}
-.location-hotel{font-size:14px;color:var(--muted)}
-/* .activity-chip is defined in the main CSS, this keeps it consistent */
-.location-card .activity-chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3b5bdb;font-size:12px;margin:3px;transition:transform 0.2s var(--curve)}
-.location-card .activity-chip:hover{transform:scale(1.05)}
-@media (max-width: 600px){ .location-image{height:260px} .location-name{font-size:26px} }
-
-/* ========== Epic Moments ========== */
-.epic-heading{
-  font-size:clamp(22px,5.2vw,32px);text-align:center;font-weight:900;margin:36px 0 14px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.moments-grid{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
-@media (max-width: 900px){ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width: 700px){
-  .moments-grid{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;padding:4px 2px 10px}
-  .moment-card{min-width:82%;min-height:160px;scroll-snap-align:center;padding:14px}
-  .moment-icon{font-size:28px}
-  .moment-card h3{font-size:18px}
-  .moment-card p{font-size:13px}
-}
-.moment-card{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.86));backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow);transition:transform .2s var(--curve);min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
-.moment-card:hover{transform:translateY(-4px)}
-.moment-card .top{display:flex;align-items:center;gap:10px}
-.moment-icon{font-size:36px}
-.moment-card h3{font-size:18px}
-.moment-card p{font-size:14px;color:var(--muted)}
-.moment-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-.hype-level{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--primary)}
-.moment-btn{appearance:none;border:0;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(0,122,255,.25);transition:transform .15s var(--curve)}
-.moment-btn:hover{transform:translateY(-1px)}
-
-/* ========== Flights ========== */
-.flights-heading{
-  font-size:clamp(22px,5vw,32px);text-align:center;font-weight:900;margin:44px 0 16px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.flights{display:grid;gap:16px}
-.boarding-pass{display:grid;grid-template-columns:1.6fr .9fr;gap:0;position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.9));border:1px solid var(--border);box-shadow:0 12px 28px rgba(16,24,40,.08)}
-.boarding-pass::before,.boarding-pass::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#f6f7fb;border:1px solid var(--border);z-index:2}
-.boarding-pass::before{left:-13px}
-.boarding-pass::after{right:-13px}
-.bp-left,.bp-right{padding:16px 18px;position:relative}
-.bp-right{border-left:1px dashed rgba(0,0,0,.15);background:radial-gradient(200px 120px at 100% 0%, rgba(0,122,255,.08), transparent)}
-.bp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.route{font-weight:900;font-size:18px}
-.iata{background:#f0f3ff;border:1px solid rgba(0,0,0,.06);padding:6px 10px;border-radius:10px}
-.tag{padding:6px 10px;border-radius:999px;background:#eef1f6;font-weight:800;font-size:12px}
-.tag.green{color:#0a7a33;background:rgba(52,199,89,.18)}
-.tag.blue{color:#0b63c9;background:rgba(0,122,255,.18)}
-.bp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.bp-field span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.bp-field strong{font-size:16px}
-.airline{font-weight:900;letter-spacing:.3px}
-.bp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-.barcode{height:42px;border-top:1px dashed var(--border);background:
-  repeating-linear-gradient(90deg, rgba(0,0,0,.8) 0 2px, transparent 2px 4px, rgba(0,0,0,.8) 4px 5px, transparent 5px 7px);opacity:.25}
-.qr{width:72px;height:72px;background:conic-gradient(from 0deg, #000 0 25%, transparent 0 50%, #000 0 75%, transparent 0) ,
-    radial-gradient(circle at 20% 20%, #000 10%, transparent 0),
-    radial-gradient(circle at 80% 80%, #000 12%, transparent 0),
-    radial-gradient(circle at 20% 80%, #000 12%, transparent 0),
-    radial-gradient(circle at 80% 20%, #000 12%, transparent 0);
-  background-blend-mode:normal;filter:contrast(120%)}
-@media (max-width: 760px){ .boarding-pass{grid-template-columns:1fr} .bp-right{border-left:0;border-top:1px dashed rgba(0,0,0,.15)} }
-
-/* ========== Packing ========== */
-.packing-section { margin: 40px 0; }
-.packing-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
-.packing-controls .btns{display:flex;gap:10px}
-.packing-controls button{background:var(--primary);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.2s var(--curve);box-shadow:0 8px 18px rgba(0,122,255,.18)}
-.packing-controls button:hover{background:var(--secondary);transform:translateY(-1px)}
-@media (max-width: 560px){
-  .packing-controls{flex-direction:column;align-items:center}
-  .packing-stats{order:1}
-  .packing-controls .btns{order:2;justify-content:center}
-}
-.packing-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,.6));border: 1px solid var(--border);border-radius: 18px;padding: 24px;box-shadow: 0 18px 44px rgba(16,24,40,.12);backdrop-filter: blur(12px) saturate(140%)}
-.packing-column {min-height: 220px;background:radial-gradient(500px 160px at -20% 0%, rgba(0,122,255,.08), transparent 60%),radial-gradient(500px 160px at 120% 120%, rgba(88,86,214,.08), transparent);border-radius:14px;border:2px dashed var(--border);padding:16px;transition:all 0.3s var(--curve)}
-.packing-column.drag-over{border-color:var(--primary);transform:scale(1.01)}
-.packing-column h3{color:var(--primary);margin-bottom:12px;font-size:18px}
-.packing-column.packed h3{color:var(--success)}
-.packing-list { list-style: none; min-height: 100px; }
-.packing-item {background: linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.86));border: 1px solid var(--border);padding: 14px;border-radius: 12px;margin-bottom: 10px;cursor: grab;transition: all 0.2s var(--curve);display: flex;align-items: center;gap: 10px;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.06)}
-.packing-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1);border-color:rgba(0,0,0,.08)}
-.packing-item.dragging { opacity: 0.9; transform: scale(1.04) rotate(1deg); z-index:1000; box-shadow:0 12px 28px rgba(0,0,0,.18)}
-.packing-item.packed{background:linear-gradient(135deg,rgba(52,199,89,.14),rgba(52,199,89,.06));border-color:rgba(52,199,89,.35);color:var(--success)}
-.packing-icon{font-size:20px;min-width:24px}
-.packing-text{flex:1;font-weight:500}
-.packing-item button {margin-left: auto;background: none;border: 1px solid var(--border);border-radius: 10px;padding: 6px 10px;cursor: pointer;font-size: 12px;transition:all 0.2s var(--curve);opacity:0.8}
-.packing-item:hover button{opacity:1}
-.packing-item button:hover { background: var(--primary); color: #fff; transform:translateY(-1px)}
-.packing-item.packed button:hover { background: var(--success) }
-.packing-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:0}
-.packing-stat{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.8));border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;backdrop-filter: blur(8px)}
-.packing-stat-value{font-size:20px;font-weight:800;color:var(--primary)}
-.packing-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-
-/* ========== Modals & Animations ========== */
-@keyframes slideInUp{from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
-@keyframes bounceIn{0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.05)} 70%{transform:scale(0.9)} 100%{transform:scale(1);opacity:1}}
-.animate-on-scroll{opacity:0;transform:translateY(20px);transition:all 0.6s var(--curve)}
-.animate-on-scroll.visible{opacity:1;transform:translateY(0)}
-.modal{display:none;position:fixed;inset:0;background:var(--glass-dark);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:100}
-.modal-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:20px;padding:28px;max-width:880px;width:92%;max-height:80vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.25)}
-.modal-close{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#f3f4f7;cursor:pointer;font-size:18px;transition:all 0.2s var(--curve)}
-.modal-close:hover{background:var(--danger);color:#fff;transform:scale(1.05)}
 </style>
 </head>
 <body>
-  <nav>
+  <header class="status-aware-header">
     <div class="nav-container">
       <div class="logo">USA 2025 ✈️</div>
-      <button class="nav-toggle" aria-expanded="false" aria-label="Open menu" onclick="toggleMobileNav(this)">☰</button>
-      <ul class="nav-links">
-        <li class="nav-link active" onclick="scrollToSection('route-timeline',event)">Overview</li>
-        <li class="nav-link" onclick="scrollToSection('live-weather',event)">Weather</li>
-        <li class="nav-link" onclick="scrollToSection('destinations',event)">Destinations</li>
-        <li class="nav-link" onclick="scrollToSection('timeline',event)">Moments</li>
-        <li class="nav-link" onclick="scrollToSection('flights',event)">Flights</li>
-        <li class="nav-link" onclick="scrollToSection('packing',event)">Packing</li>
-      </ul>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <h1 class="hero-title">Your American Adventure</h1>
-    <p class="hero-subtitle">September 19 – October 3, 2025 • 15 Days</p>
-    <div class="countdown">
-      <div class="countdown-item"><div class="countdown-value" id="days">--</div><div class="countdown-label">Days</div></div>
-      <div class="countdown-item"><div class="countdown-value" id="hours">--</div><div class="countdown-label">Hours</div></div>
-      <div class="countdown-item"><div class="countdown-value" id="minutes">--</div><div class="countdown-label">Minutes</div></div>
-      <div class="countdown-item"><div class="countdown-value" id="seconds">--</div><div class="countdown-label">Seconds</div></div>
     </div>
   </header>
 
-  <main class="container">
-    <!-- Road Trip Map -->
-    <section class="route66 animate-on-scroll" id="route-timeline" aria-labelledby="route-title">
-      <h2 class="section-title" id="route-title">Road Trip Map</h2>
-      <div class="route66__track" aria-live="polite">
-        <div class="route66__content-scroller">
-            <div class="route66__road"></div>
-            <div class="route66__progress" aria-hidden="true"></div>
-            <div class="route66__stops">
-              <button class="route66__stop" onclick="showLocationDetails('sanfran')" aria-label="San Francisco details">
-                <div class="route66__date">Sep 19–23</div><div class="route66__icon">🌉</div><div class="route66__label">San Francisco</div><div class="route66__dot"></div>
-              </button>
-              <button class="route66__stop" onclick="showLocationDetails('yosemite')" aria-label="Yosemite details">
-                <div class="route66__date">Sep 23–26</div><div class="route66__icon">🏔️</div><div class="route66__label">Yosemite</div><div class="route66__dot"></div>
-              </button>
-              <div class="route66__stop" aria-label="Death Valley (pass-through)">
-                <div class="route66__date">Sep 26–27</div><div class="route66__icon">🏜️</div><div class="route66__label">Death Valley</div><div class="route66__dot"></div>
+  <section class="hero">
+    <h1 class="hero-title">Your American Adventure</h1>
+    <p class="hero-subtitle">September 19 – October 3, 2025 • 15 Days</p>
+    <div class="countdown-container">
+      <div class="countdown-card"><span class="countdown-value" id="days">--</span><div class="countdown-label">Days</div></div>
+      <div class="countdown-card"><span class="countdown-value" id="hours">--</span><div class="countdown-label">Hours</div></div>
+      <div class="countdown-card"><span class="countdown-value" id="minutes">--</span><div class="countdown-label">Minutes</div></div>
+      <div class="countdown-card"><span class="countdown-value" id="seconds">--</span><div class="countdown-label">Seconds</div></div>
+    </div>
+  </section>
+
+  <main>
+    <section id="destinations-hub" class="content-section animate-on-scroll">
+        <div class="section-header">
+            <h2 class="section-title">Destinations & Stays</h2>
+            <p class="section-subtitle">Your interactive trip itinerary</p>
+        </div>
+        <div class="section-content">
+            <div class="tabs" id="tabs" role="tablist"></div>
+            <div class="main-card" id="main-card" aria-live="polite">
+              <div class="hero-image" id="hero-image">
+                <h2 class="hero-image-title" id="hero-title"></h2>
+                <p class="hero-area" id="hero-area"></p>
               </div>
-              <button class="route66__stop" onclick="showMomentDetails('grandCanyon')" aria-label="Grand Canyon guide">
-                <div class="route66__date">Sep 27–29</div><div class="route66__icon">🏞️</div><div class="route66__label">Grand Canyon</div><div class="route66__dot"></div>
-              </button>
-              <button class="route66__stop" onclick="showLocationDetails('vegas')" aria-label="Las Vegas details">
-                <div class="route66__date">Sep 29–Oct 1</div><div class="route66__icon">🎉</div><div class="route66__label">Las Vegas</div><div class="route66__dot"></div>
-              </button>
-              <button class="route66__stop" onclick="showLocationDetails('nyc')" aria-label="New York City details">
-                <div class="route66__date">Oct 1–3</div><div class="route66__icon">🗽</div><div class="route66__label">New York City</div><div class="route66__dot"></div>
-              </button>
+              <aside class="content-column" id="content-column"></aside>
             </div>
         </div>
-      </div>
-      <p class="timeline-update" id="timelineStatus" style="padding: 0 24px;">🛤️ Counting down…</p>
     </section>
 
-    <!-- Next Up slider -->
-    <section class="nu-section animate-on-scroll" aria-labelledby="nu-title">
-      <div class="nu-card">
-        <div class="nu-head">
-          <div class="nu-title">Trip Planner</div>
-          <div class="nu-dots" id="nuDots"></div>
+    <section class="vegas-birthday animate-on-scroll">
+      <div class="vegas-backdrop"></div>
+      <canvas id="vegasConfettiCanvas"></canvas>
+      <div class="vegas-content">
+        <h2 class="neon-title">DIRTY 30</h2>
+        <p class="vegas-subtitle">The Strip • September 28th</p>
+        <button class="jackpot-btn" id="jackpotBtn" onclick="playSlots()">🎰 Hit The Jackpot 🎰</button>
+        <div class="slot-machine-container" id="slotMachineContainer">
+            <div class="slot-machine">
+                <div class="slot-reel"><div class="reel-strip" id="reel1"></div></div>
+                <div class="slot-reel"><div class="reel-strip" id="reel2"></div></div>
+                <div class="slot-reel"><div class="reel-strip" id="reel3"></div></div>
+            </div>
         </div>
-        <div class="nu-viewport" id="nuViewport">
-          <div class="nu-track" id="nuTrack"></div>
-        </div>
-        <div class="nu-progress"><div class="nu-bar" id="nuBar"></div></div>
       </div>
     </section>
     
-    <!-- Live Currency Exchange Tracker -->
-    <section class="currency-section animate-on-scroll" id="currency-tracker-section" aria-labelledby="currency-title">
-      <div class="currency-card">
-        <div class="nu-head" style="padding: 0 0 8px 0;">
-          <div class="nu-title" id="currency-title">💷 GBP to USD Tracker</div>
-        </div>
-        <div class="currency-rate-display">
-          <div id="exchangeRate">--</div>
-          <div id="usdRate">1 GBP = $-- USD</div>
-        </div>
-        <div class="currency-converter">
-          <input id="currencyInput" type="number" placeholder="Enter amount">
-          <select id="currencyDir">
-            <option value="gbp-usd">GBP to USD</option>
-            <option value="usd-gbp">USD to GBP</option>
-          </select>
-          <div id="currencyResult">--</div>
-        </div>
-        <canvas id="rateTrend" aria-label="Recent exchange rate trend"></canvas>
-        <div class="currency-actions">
-           <button onclick="setRateAlert()">Set Rate Alert</button>
-        </div>
+    <section id="dynamic-moments-section" class="content-section animate-on-scroll">
+      <div class="section-header">
+        <h2 class="section-title">Epic Moments</h2>
+        <p class="section-subtitle">Unforgettable experiences planned</p>
+      </div>
+      <div class="section-content">
+        <div class="moments-grid" id="dynamic-moments-grid"></div>
       </div>
     </section>
 
-    <!-- Live Weather -->
-    <section class="weather-section animate-on-scroll" id="live-weather" aria-labelledby="wx-title">
-      <h2 class="section-title" id="wx-title">Live Weather Dashboard</h2>
-      <div class="weather-grid" id="liveWeatherGrid" aria-live="polite"></div>
-      <div style="display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap">
-        <button onclick="refreshWeather(this)" style="background:var(--primary);color:#fff;border:0;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600">🔄 Refresh Weather</button>
-        <button onclick="toggleWeatherDetails(this)" style="background:var(--secondary);color:#fff;border:0;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600">📊 Show Details</button>
+    <section id="dynamic-flights-section" class="content-section animate-on-scroll">
+        <div class="section-header">
+            <h2 class="section-title">Flight Schedule</h2>
+            <p class="section-subtitle">Your journey to the next stop</p>
+        </div>
+        <div class="section-content">
+            <div class="flights-list" id="dynamic-flights-list"></div>
+        </div>
+    </section>
+
+    <section class="content-section animate-on-scroll">
+      <div class="section-header">
+        <h2 class="section-title">Packing Checklist</h2>
+        <p class="section-subtitle">Stay organized for your trip</p>
       </div>
-      <p class="weather-update" id="wxStatus">🌤️ Live weather updates every 2 minutes</p>
-    </section>
-
-    <!-- NEW Vegas Birthday Section -->
-    <section class="vegas-birthday-section animate-on-scroll">
-        <div class="vegas-backdrop"></div>
-        <div class="neon-grid"></div>
-        <div class="birthday-experience">
-            <!-- Neon Sign Header -->
-            <div class="neon-sign">
-                <div class="neon-text-small">Welcome to</div>
-                <div class="neon-text-large">DIRTY 30</div>
-                <div class="neon-text-vegas">LAS VEGAS</div>
-            </div>
-            
-            <!-- Location Badge -->
-            <div class="location-badge">
-                <span class="location-icon">🎰</span>
-                <span class="location-text">The Strip • Sept 28</span>
-            </div>
-            
-            <!-- Main Casino Card -->
-            <div class="casino-card">
-                <div class="card-suits">
-                    <span class="suit">♠</span><span class="suit">♥</span><span class="suit">♦</span><span class="suit">♣</span>
-                </div>
-                
-                <!-- Countdown -->
-                <div class="countdown-title">Time Until Jackpot</div>
-                <div class="countdown-display">
-                    <div class="countdown-unit"><span class="countdown-number" id="bday-days">--</span><span class="countdown-label">Days</span></div>
-                    <div class="countdown-unit"><span class="countdown-number" id="bday-hours">--</span><span class="countdown-label">Hours</span></div>
-                    <div class="countdown-unit"><span class="countdown-number" id="bday-minutes">--</span><span class="countdown-label">Minutes</span></div>
-                    <div class="countdown-unit"><span class="countdown-number" id="bday-seconds">--</span><span class="countdown-label">Seconds</span></div>
-                </div>
-                
-                <!-- Dice Animation -->
-                <div class="dice-container">
-                    <div class="dice">🎲</div>
-                    <div class="dice">🎲</div>
-                </div>
-                
-                <!-- 30th Birthday Highlight -->
-                <div class="birthday-highlight">
-                    <div class="milestone-text">THE BIG 3-0 IN VEGAS</div>
-                    <div class="milestone-subtext">Where legends are made</div>
-                </div>
-                
-                <!-- Jackpot Button -->
-                <button class="jackpot-button" id="jackpotBtn" onclick="playSlots()">
-                    <span class="button-emoji">🎰</span>
-                    HIT THE JACKPOT
-                    <span class="button-emoji">🎰</span>
-                </button>
-                
-                <!-- Slot Machine -->
-                <div class="slot-machine-container" id="slotMachineContainer">
-                    <div class="slot-machine">
-                        <div class="slot-reel">
-                            <div class="reel-strip" id="reel1"></div>
-                        </div>
-                        <div class="slot-reel">
-                            <div class="reel-strip" id="reel2"></div>
-                        </div>
-                        <div class="slot-reel">
-                            <div class="reel-strip" id="reel3"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <canvas id="vegasConfettiCanvas"></canvas>
-    </section>
-
-
-    <!-- Destinations -->
-    <h2 id="destinations" class="locations-heading animate-on-scroll">Destinations</h2>
-    <section class="locations-grid animate-on-scroll" aria-label="Destinations grid">
-      <article class="location-card" onclick="showLocationDetails('sanfran')">
-        <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2070&q=80')">
-          <div class="location-overlay"><div class="location-name">San Francisco</div></div>
-        </div>
-        <div class="location-details">
-          <div class="location-dates">📅 Sept 19–23</div>
-          <div class="location-hotel">🏨 Hotel (TBC)</div>
-          <div class="location-activities">
-            <span class="activity-chip">Free Walking Tour</span><span class="activity-chip">Golden Gate</span>
-            <span class="activity-chip">Alcatraz</span><span class="activity-chip">Fisherman's Wharf</span>
-          </div>
-        </div>
-      </article>
-      <article class="location-card" onclick="showLocationDetails('yosemite')">
-        <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=2070&q=80')">
-          <div class="location-overlay"><div class="location-name">Yosemite</div></div>
-        </div>
-        <div class="location-details">
-          <div class="location-dates">📅 Sept 23–26</div>
-          <div class="location-hotel">🏨 Stay (TBC)</div>
-          <div class="location-activities">
-            <span class="activity-chip">Glacier Point</span><span class="activity-chip">Mist Trail</span>
-            <span class="activity-chip">Sentinel Dome</span><span class="activity-chip">Stargazing</span>
-          </div>
-        </div>
-      </article>
-      <article class="location-card" onclick="showLocationDetails('vegas')">
-        <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?auto=format&fit=crop&w=2070&q=80')">
-          <div class="location-overlay"><div class="location-name">Las Vegas</div></div>
-        </div>
-        <div class="location-details">
-          <div class="location-dates">📅 Sept 26 – Oct 1</div>
-          <div class="location-hotel">🏨 Stay (TBC)</div>
-          <div class="location-activities">
-            <span class="activity-chip">Grand Canyon</span><span class="activity-chip">Hoover Dam</span>
-            <span class="activity-chip">MSG Sphere</span><span class="activity-chip">Cirque du Soleil</span>
-          </div>
-        </div>
-      </article>
-      <article class="location-card" onclick="showLocationDetails('nyc')">
-        <div class="location-image" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=2070&q=80')">
-          <div class="location-overlay"><div class="location-name">New York City</div></div>
-        </div>
-        <div class="location-details">
-          <div class="location-dates">📅 Oct 1–3</div>
-          <div class="location-hotel">🏨 Stay (TBC)</div>
-          <div class="location-activities">
-            <span class="activity-chip">Manhattan</span><span class="activity-chip">Broadway</span><span class="activity-chip">Central Park</span>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Epic Moments -->
-    <h2 id="timeline" class="epic-heading animate-on-scroll">Epic Moments Planned 🔥</h2>
-    <section class="moments-grid animate-on-scroll" aria-label="Epic moments">
-      <article class="moment-card"><div class="top"><span class="moment-icon">🏔️</span><h3>Yosemite Stargazing</h3></div><p>Milky Way hunt from Glacier Point or Tunnel View.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('stargazing')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🎰</span><h3>Vegas Boys Night</h3></div><p>Neon crawl: Bellagio → Chandelier Bar → Fremont.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('vegasNight')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🗽</span><h3>NYC Street Food</h3></div><p>Slices, bagels, halal — easy walking loop.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('nycFood')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🌉</span><h3>Golden Gate Sunrise</h3></div><p>Battery Spencer first light, wind layer ready.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('ggSunrise')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🛩️</span><h3>Grand Canyon Trip</h3></div><p>Heli West Rim or road to South Rim.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('grandCanyon')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🌐</span><h3>MSG Sphere</h3></div><p>Arrive early, centre seats for full dome.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('sphere')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🎭</span><h3>Broadway Night</h3></div><p>Matinee + dinner or late show + stroll.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('broadway')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🏞️</span><h3>Hoover Dam</h3></div><p>Morning tour, Boulder City coffee stop.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('hoover')">Guide</button></div></article>
-      <article class="moment-card"><div class="top"><span class="moment-icon">🥂</span><h3>Rooftop Toast</h3></div><p>Legacy Club • Skyfall • Foundation Room.</p><div class="moment-actions"><div class="hype-level"><span>Hype:</span><span class="stars">⭐⭐⭐⭐⭐</span></div><button class="moment-btn" onclick="showMomentDetails('bdayToast')">Guide</button></div></article>
-    </section>
-
-    <!-- Flights -->
-    <h2 id="flights" class="flights-heading animate-on-scroll">Flight Itinerary</h2>
-    <section class="flights animate-on-scroll" aria-label="Flights">
-      <article class="boarding-pass" aria-label="London to San Francisco">
-        <div class="bp-left">
-          <div class="bp-header"><div class="airline">✈️ TransAtlantic Airways</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">LON</span> → <span class="iata">SFO</span></div>
-          <div class="bp-grid" style="margin-top:10px">
-            <div class="bp-field"><span>Date</span><strong>19 Sep</strong></div>
-            <div class="bp-field"><span>Departs</span><strong>10:35</strong></div>
-            <div class="bp-field"><span>Arrives</span><strong>13:40</strong></div>
-            <div class="bp-field"><span>Flight</span><strong>TA 017</strong></div>
-            <div class="bp-field"><span>Terminal</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Gate</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Boarding</span><strong>—</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-          </div>
-          <div class="bp-footer"><div style="font-size:12px;color:var(--muted)">Have passports & ESTA ready</div><div class="qr" aria-hidden="true"></div></div>
-        </div>
-        <div class="bp-right">
-          <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:8px"><span class="iata">LON</span> → <span class="iata">SFO</span></div>
-          <div class="bp-grid">
-            <div class="bp-field"><span>PNR</span><strong>ABC123</strong></div>
-            <div class="bp-field"><span>Group</span><strong>3</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-            <div class="bp-field"><span>Bag</span><strong>1</strong></div>
-          </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
-        </div>
-      </article>
-
-      <article class="boarding-pass" aria-label="Las Vegas to New York">
-        <div class="bp-left">
-          <div class="bp-header"><div class="airline">🛫 DesertJet</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">LAS</span> → <span class="iata">NYC</span></div>
-          <div class="bp-grid" style="margin-top:10px">
-            <div class="bp-field"><span>Date</span><strong>01 Oct</strong></div>
-            <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Arrives</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Flight</span><strong>DJ 442</strong></div>
-            <div class="bp-field"><span>Terminal</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Gate</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Boarding</span><strong>—</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-          </div>
-          <div class="bp-footer"><div style="font-size:12px;color:var(--muted)">Heads-up: time zone change</div><div class="qr" aria-hidden="true"></div></div>
-        </div>
-        <div class="bp-right">
-          <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:8px"><span class="iata">LAS</span> → <span class="iata">NYC</span></div>
-          <div class="bp-grid">
-            <div class="bp-field"><span>PNR</span><strong>NYC991</strong></div>
-            <div class="bp-field"><span>Group</span><strong>2</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-            <div class="bp-field"><span>Bag</span><strong>1</strong></div>
-          </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
-        </div>
-      </article>
-
-      <article class="boarding-pass" aria-label="New York to London">
-        <div class="bp-left">
-          <div class="bp-header"><div class="airline">🛬 Atlantic Home</div><div class="tag green">Booked</div></div>
-          <div class="route"><span class="iata">NYC</span> → <span class="iata">LON</span></div>
-          <div class="bp-grid" style="margin-top:10px">
-            <div class="bp-field"><span>Date</span><strong>03 Oct</strong></div>
-            <div class="bp-field"><span>Departs</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Arrives</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Flight</span><strong>AH 021</strong></div>
-            <div class="bp-field"><span>Terminal</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Gate</span><strong>TBD</strong></div>
-            <div class="bp-field"><span>Boarding</span><strong>—</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-          </div>
-          <div class="bp-footer"><div style="font-size:12px;color:var(--muted)">Keep liquids in a clear bag</div><div class="qr" aria-hidden="true"></div></div>
-        </div>
-        <div class="bp-right">
-          <div class="bp-header"><div class="airline">Boarding Stub</div><div class="tag blue">Economy</div></div>
-          <div class="route" style="margin-bottom:8px"><span class="iata">NYC</span> → <span class="iata">LON</span></div>
-          <div class="bp-grid">
-            <div class="bp-field"><span>PNR</span><strong>LHR650</strong></div>
-            <div class="bp-field"><span>Group</span><strong>4</strong></div>
-            <div class="bp-field"><span>Seat</span><strong>—</strong></div>
-            <div class="bp-field"><span>Bag</span><strong>1</strong></div>
-          </div>
-          <div class="barcode" aria-hidden="true" style="margin-top:12px"></div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Packing -->
-    <section class="packing-section animate-on-scroll" id="packing" aria-labelledby="packing-title">
-      <h2 class="section-title" id="packing-title">Interactive Packing Checklist</h2>
-      <div class="packing-controls">
+      <div class="packing-container">
         <div class="packing-stats">
-          <div class="packing-stat"><div class="packing-stat-value" id="packedCount">0</div><div class="packing-stat-label">Packed</div></div>
-          <div class="packing-stat"><div class="packing-stat-value" id="totalCount">0</div><div class="packing-stat-label">Total</div></div>
-          <div class="packing-stat"><div class="packing-stat-value" id="packingPercent">0%</div><div class="packing-stat-label">Complete</div></div>
+          <div class="packing-stat"><span class="stat-value" id="packedCount">0</span><div class="stat-label">Packed</div></div>
+          <div class="packing-stat"><span class="stat-value" id="totalCount">0</span><div class="stat-label">Total</div></div>
+          <div class="packing-stat"><span class="stat-value" id="packingPercent">0%</span><div class="stat-label">Complete</div></div>
         </div>
-        <div class="btns">
-          <button onclick="addCustomItem()">➕ Add Item</button>
-          <button onclick="resetPacking()">🔄 Reset All</button>
-        </div>
-      </div>
-      <div class="packing-grid">
-        <div class="packing-column" id="toPack" ondragover="allowDrop(event)" ondrop="drop(event, 'toPack')">
-          <h3>📦 To Pack</h3>
-          <ul class="packing-list" id="toPackList"></ul>
-        </div>
-        <div class="packing-column packed" id="packed" ondragover="allowDrop(event)" ondrop="drop(event, 'packed')">
-          <h3>✅ Packed & Ready</h3>
-          <ul class="packing-list" id="packedList"></ul>
+        <div class="packing-grid">
+          <div class="packing-column" id="toPackColumn"><h3 class="column-title">📦 To Pack</h3><ul class="packing-list" id="toPackList"></ul></div>
+          <div class="packing-column" id="packedColumn"><h3 class="column-title">✅ Packed</h3><ul class="packing-list" id="packedList"></ul></div>
         </div>
       </div>
-      <div class="progress-bar" style="margin-top:20px"><div class="progress-fill" id="packingProgress" style="width:0%"></div></div>
-      <p class="progress-label" id="packingProgressLabel">🧳 Ready to start packing!</p>
     </section>
   </main>
 
-  <!-- Modals -->
-  <div id="locationModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
-      <div id="modalContent"></div>
+  <div class="wx-overlay" id="wx-overlay" onclick="toggleWx(false)">
+    <div class="wx-sheet" id="wx-sheet" onclick="event.stopPropagation()">
+      <button class="wx-close" onclick="toggleWx(false)">✕</button>
+      <div class="wx-top">
+        <div id="wx-anim-detail" class="weather-animation"></div>
+        <div class="wx-city" id="wx-city"></div><div class="wx-meta"><div class="wx-temp-lg" id="wx-temp-lg"></div><div class="wx-desc-lg" id="wx-desc-lg"></div></div>
+        <div class="wx-grid">
+          <div class="wx-chip"><span>Feels like</span><span id="wx-feels"></span></div><div class="wx-chip"><span>Humidity</span><span id="wx-hum"></span></div>
+          <div class="wx-chip"><span>Wind</span><span id="wx-wind"></span></div><div class="wx-chip"><span>Rain %</span><span id="wx-rain"></span></div>
+        </div>
+      </div>
+      <div class="wx-body">
+        <h4>Next 8 Hours</h4><div class="wx-row" id="wx-hourly-cards"></div>
+        <h4 style="margin-top:16px;">Next 3 Days</h4><div class="wx-days" id="wx-days-cards"></div>
+      </div>
     </div>
   </div>
-  <div id="alertModal" class="modal" role="dialog" aria-modal="true">
-    <div class="modal-content" style="max-width:500px">
-      <button class="modal-close" onclick="closeAlert()" aria-label="Close">×</button>
-      <div id="alertContent"></div>
+  
+  <button class="concierge-btn" onclick="toggleConcierge()"><span class="icon">✨</span></button>
+  <div class="modal-overlay" id="concierge-overlay" onclick="toggleConcierge()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="concierge-title"></div>
+      <div class="quick-actions" id="quick-actions"></div>
     </div>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div class="modal-overlay-custom" id="modalOverlayCustom" onclick="closeCustomModal()"><div class="modal-content-custom" onclick="event.stopPropagation()"><div class="modal-header-custom"><h2 class="modal-title-custom" id="modalTitleCustom"></h2><button class="modal-close-btn" onclick="closeCustomModal()">✕</button></div><div class="modal-body-custom" id="modalBodyCustom"></div></div></div>
+
 <script>
-/* ===== Mobile nav + smooth scroll ===== */
-function toggleMobileNav(btn){ const n=btn.closest('nav'); const open=n.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }
-function scrollToSection(id,e){ e?.preventDefault(); document.getElementById(id)?.scrollIntoView({behavior:'smooth'}) }
+/* ========== GLOBAL STATE & DATA ========== */
+const cities = {
+  sanfran:{
+    name:"San Francisco", hero:"https://images.unsplash.com/photo-1506146332389-18140dc7b241?auto=format&fit=crop&w=1400&q=80", dates:"19–23 Sep", area:"Union Square", lat:37.7749, lon:-122.4194,
+    food:[
+        {icon:"🍞", name:"Boudin Bakery", desc:"Sourdough bowls at the Wharf.", url:"https://www.google.com/maps/search/?api=1&query=Boudin+Bakery+Fisherman%27s+Wharf"},
+        {icon:"🥗", name:"Greens Restaurant", desc:"Iconic vegetarian dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Greens+Restaurant+Fort+Mason", veg:true},
+        {icon:"🌯", name:"La Taqueria", desc:"Authentic Mission-style burritos.", url:"https://www.google.com/maps/search/?api=1&query=La+Taqueria+San+Francisco"},
+        {icon:"🍫", name:"Ghirardelli Square", desc:"World-famous chocolate & sundaes.", url:"https://www.google.com/maps/search/?api=1&query=Ghirardelli+Square"}
+    ],
+    moments:[
+        {id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind."},
+        {id:"alcatraz", icon:"⛓️", title:"Alcatraz Island Tour", description:"Explore the infamous prison."},
+        {id:"cableCar", icon:"🚃", title:"Ride a Cable Car", description:"Climb the hills of SF."},
+        {id:"muirWoods", icon:"🌲", title:"Walk with Giants", description:"Visit the majestic redwood forest at Muir Woods."}
+    ],
+    flights:[ {route:"LON → SFO", date:"Sep 19", number:"TA 017", status:"Booked"} ],
+    concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco"}, {icon:"☕", label:"Coffee", url:"https://www.google.com/maps/search/?api=1&query=coffee+near+Union+Square+SF"}, {icon:"💊", label:"Pharmacy", url:"https://www.google.com/maps/search/?api=1&query=pharmacy+near+Union+Square+SF"} ]
+  },
+  yosemite:{
+    name:"Yosemite", hero:"https://images.unsplash.com/photo-1519045395453-6d0422c54b42?auto=format&fit=crop&w=1400&q=80", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
+    food:[
+        {icon:"🍕", name:"Curry Village Pizza", desc:"Casual outdoor patio pies.", url:"https://www.google.com/maps/search/?api=1&query=Curry+Village+Pizza+Deck"},
+        {icon:"🍔", name:"Village Grill Deck", desc:"Classic grill fare with great views. Veggie burgers available.", url:"https://www.google.com/maps/search/?api=1&query=Village+Grill+Yosemite", veg:true},
+        {icon:"🏨", name:"The Ahwahnee Dining", desc:"Historic fine dining experience.", url:"https://www.google.com/maps/search/?api=1&query=The+Ahwahnee+Dining+Room"}
+    ],
+    moments:[
+        {id:"stargazing", icon:"🌌", title:"Yosemite Stargazing", description:"Milky Way hunt from Glacier Point or Tunnel View."},
+        {id:"mistTrail", icon:"💦", title:"Hike the Mist Trail", description:"Get soaked by Vernal Fall."},
+        {id:"sequoias", icon:"🌲", title:"Mariposa Grove", description:"Walk among giant sequoias."},
+        {id:"tunnelViewSunset", icon:"🌅", title:"Tunnel View Sunset", description:"Watch the valley light up at golden hour."}
+    ],
+    concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Visitor+Center"}, {icon:"🥾", label:"Trail Maps", url:"https://www.nps.gov/yose/planyourvisit/maps.htm"}, {icon:"🚌", label:"Shuttle", url:"https://www.nps.gov/yose/planyourvisit/publictransportation.htm"} ]
+  },
+  vegas:{
+    name:"Las Vegas", hero:"https://images.unsplash.com/photo-1580006825960-4a173930b8df?auto=format&fit=crop&w=1400&q=80", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
+    food:[
+        {icon:"🍽️", name:"Bacchanal Buffet", desc:"Caesars’ legendary mega buffet.", url:"https://www.google.com/maps/search/?api=1&query=Bacchanal+Buffet"},
+        {icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
+        {icon:"🌮", name:"Tacos El Gordo", desc:"Famous Tijuana-style tacos.", url:"https://www.google.com/maps/search/?api=1&query=Tacos+El+Gordo+Las+Vegas"},
+        {icon:"🥩", name:"Gordon Ramsay Steak", desc:"High-end steakhouse experience.", url:"https://www.google.com/maps/search/?api=1&query=Gordon+Ramsay+Steak+Las+Vegas"}
+    ],
+    moments:[
+        {id:"vegasNight", icon:"🎰", title:"Vegas Boys Night", description:"Neon crawl: Bellagio → Chandelier Bar → Fremont."},
+        {id:"sphere", icon:"🌐", title:"MSG Sphere", description:"Arrive early, centre seats for full dome experience."},
+        {id:"grandCanyon", icon:"🚁", title:"Grand Canyon Trip", description:"Heli West Rim or road to South Rim."},
+        {id:"hooverDam", icon:"🌊", title:"Hoover Dam", description:"Morning tour, Boulder City coffee stop."},
+        {id:"rooftopToast", icon:"🥂", title:"Rooftop Toast", description:"Legacy Club • Skyfall • Foundation Room."},
+        {id:"neonBoneyard", icon:"💀", title:"Neon Boneyard", description:"Explore the history of Vegas through its signs."}
+    ],
+    flights:[ {route:"LAS → NYC", date:"Oct 1", number:"DJ 442", status:"Booked"} ],
+    concierge:[ {icon:"🎰", label:"Casinos", url:"https://www.google.com/maps/search/?api=1&query=casinos+Las+Vegas+Strip"}, {icon:"🍸", label:"Bars", url:"https://www.google.com/search?q=best+cocktail+bars+las+vegas"}, {icon:"🎭", label:"Shows", url:"https://www.google.com/search?q=las+vegas+shows+tickets"} ]
+  },
+  nyc:{
+    name:"New York City", hero:"https://images.unsplash.com/photo-1546436836-07a91091f160?auto=format&fit=crop&w=1400&q=80", dates:"1–3 Oct", area:"Midtown", lat:40.7128, lon:-74.0060,
+    food:[
+        {icon:"🍕", name:"Joe’s Pizza", desc:"The quintessential NY slice.", url:"https://www.google.com/maps/search/?api=1&query=Joe%27s+Pizza+NYC"},
+        {icon:"🥙", name:"The Halal Guys", desc:"Famous street cart (falafel avail.)", url:"https://www.google.com/maps/search/?api=1&query=The+Halal+Guys", veg: true},
+        {icon:"🥯", name:"Russ & Daughters", desc:"Iconic bagels and lox.", url:"https://www.google.com/maps/search/?api=1&query=Russ+%26+Daughters"},
+        {icon:"🍜", name:"Ippudo", desc:"World-class ramen bowls.", url:"https://www.google.com/maps/search/?api=1&query=Ippudo+NYC"}
+    ],
+    moments:[
+        {id:"broadway", icon:"🎭", title:"Broadway Night", description:"Matinee + dinner or late show + stroll."},
+        {id:"topOfRock", icon:"🏙️", title:"Top of the Rock", description:"Unbeatable skyline views."},
+        {id:"streetFood", icon:"🥡", title:"NYC Street Food", description:"Slices, bagels, halal — easy walking loop."},
+        {id:"brooklynBridge", icon:"🌉", title:"Brooklyn Bridge Walk", description:"Iconic walk for incredible skyline views."},
+        {id:"heliTour", icon:"🚁", title:"Manhattan Heli Tour", description:"See the Big Apple from the sky."}
+    ],
+    flights:[ {route:"NYC → LON", date:"Oct 3", number:"AH 021", status:"Booked"} ],
+    concierge:[ {icon:"🗺️", label:"Subway", url:"https://new.mta.info/map/5256"}, {icon:"🍕", label:"Pizza", url:"https://www.google.com/search?q=best+pizza+slice+nyc"}, {icon:"🎭", label:"Broadway", url:"https://www.broadway.com/"} ]
+  }
+};
+let currentCityId = 'sanfran';
+let weatherCache = new Map();
 
-/* ===== State ===== */
-let packingItems = [
-  { id: 'passport', text: 'Passport & Travel Documents', icon: '📄', column: 'toPack' },
-  { id: 'clothes', text: 'Clothes for All Climates', icon: '👕', column: 'toPack' },
-  { id: 'camera', text: 'Camera for Epic Shots', icon: '📸', column: 'toPack' },
-  { id: 'hiking', text: 'Hiking Gear for Yosemite', icon: '🥾', column: 'toPack' },
-  { id: 'sunglasses', text: 'Sunglasses for Vegas', icon: '🕶️', column: 'toPack' },
-  { id: 'broadway', text: 'Broadway Show Tickets', icon: '🎭', column: 'toPack' },
-  { id: 'chargers', text: 'Phone & Camera Chargers', icon: '🔌', column: 'toPack' },
-  { id: 'medications', text: 'Medications & First Aid', icon: '💊', column: 'toPack' },
-  { id: 'snacks', text: 'Travel Snacks', icon: '🍪', column: 'toPack' }
+const packingItems = [
+  { id: 'passport', text: 'Passport & Docs' }, { id: 'clothes', text: 'All-Climate Clothes' },
+  { id: 'camera', text: 'Camera & Charger' }, { id: 'hiking', text: 'Hiking Gear' },
+  { id: 'sunglasses', text: 'Sunglasses' }, { id: 'meds', text: 'Medications' },
+  { id: 'formal', text: 'Vegas/NYC Outfit' }, { id: 'adapter', text: 'Power Adapter' },
 ];
+let packedItems = [];
 
-let weatherDetails = false;
-let lastWeatherUpdate = null;
-let weatherStore = {}; 
+/* ========== INITIALIZATION ========== */
+document.addEventListener('DOMContentLoaded', () => {
+    setupCountdown();
+    observeScrollAnimations();
+    buildTabs();
+    switchCity(currentCityId, true);
+    renderPackingLists();
+});
 
-/* ===== Hero countdown ===== */
-function updateCountdown(){
+/* ========== CORE UI FUNCTIONS ========== */
+function setupCountdown() {
   const tripDate = new Date('2025-09-19T09:00:00-07:00');
-  const now = new Date();
-  const diff = tripDate.getTime() - now.getTime();
-  if(diff > 0){
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    const set = (id, v)=>{ const el=document.getElementById(id);
-      if(el && el.textContent !== String(v).padStart(2,'0')){
-        el.textContent=String(v).padStart(2,'0'); el.parentElement.classList.add('tick');
-        setTimeout(()=>el.parentElement.classList.remove('tick'),200);
-      }};
-    set('days',days); set('hours',hours); set('minutes',minutes); set('seconds',seconds);
-  } else {
-    const c = document.querySelector('.countdown');
-    if(c && !c.querySelector('.trip-started')){
-      c.innerHTML = '<div class="trip-started" style="background:linear-gradient(135deg,var(--success),#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:24px;font-weight:900;padding:20px">🎉 Your Adventure Has Begun! 🎉</div>';
+  const update = () => {
+    const diff = tripDate.getTime() - new Date().getTime();
+    if (diff <= 0) {
+      document.querySelector('.countdown-container').innerHTML = `<div style="font-size:18px;font-weight:600;color:var(--success);">🎉 Adventure Time!</div>`;
+      clearInterval(countdownInterval);
+      return;
     }
+    const set = (id, v) => document.getElementById(id).textContent = String(v).padStart(2,'0');
+    set('days', Math.floor(diff / 864e5));
+    set('hours', Math.floor((diff % 864e5) / 36e5));
+    set('minutes', Math.floor((diff % 36e5) / 6e4));
+    set('seconds', Math.floor((diff % 6e4) / 1e3));
+  };
+  update();
+  const countdownInterval = setInterval(update, 1000);
+}
+
+function observeScrollAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+}
+
+function buildTabs() {
+  const container = document.getElementById('tabs');
+  container.innerHTML = Object.keys(cities).map((id, i) =>
+    `<button class="tab ${i===0?'active':''}" data-city="${id}">${cities[id].name}</button>`
+  ).join('');
+  container.addEventListener('click', e => { if (e.target.matches('.tab')) switchCity(e.target.dataset.city); });
+}
+
+function switchCity(cityId, isInitial = false) {
+  currentCityId = cityId;
+  const city = cities[cityId];
+  const card = document.getElementById('main-card');
+  
+  const updateContent = () => {
+    document.getElementById('hero-image').style.backgroundImage = `url('${city.hero}')`;
+    document.getElementById('hero-title').textContent = city.name;
+    document.getElementById('hero-area').textContent = city.area;
+
+    const foodHtml = `
+      <div class="widget">
+        <h3>Good Food Spots</h3>
+        <div class="widget-list">
+          ${city.food.map(item => `
+            <a class="widget-item a" href="${item.url}" target="_blank" rel="noopener">
+              <div class="widget-icon">${item.icon}</div>
+              <div class="widget-text">
+                <h4>${item.name} ${item.veg ? '<span style="color:var(--success);font-size:12px;">🌱</span>' : ''}</h4>
+                <p>${item.desc}</p>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>`;
+
+    document.getElementById('content-column').innerHTML = `
+      <div style="background:var(--surface);padding:16px;border-radius:var(--radius-lg);">
+        <div class="info-item"><span>Dates</span><span>${city.dates}</span></div>
+        <div class="info-item"><span>Area</span><span>${city.area}</span></div>
+      </div>
+      <div class="widget" style="cursor:pointer;" id="weather-widget">
+        <h3>Live Weather</h3>
+        <div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Loading...</div></div></div>
+      </div>
+      ${foodHtml}
+      `;
+      
+    renderWeather(cityId);
+    renderDynamicSections(cityId);
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.city === cityId));
+    card.classList.add('visible');
+  };
+
+  if (isInitial) {
+    updateContent();
+  } else {
+    card.classList.remove('visible');
+    setTimeout(updateContent, 300);
   }
 }
 
-/* ===== Road Trip timeline status ===== */
-function updateTimelineStatus(){
-  const el = document.getElementById('timelineStatus');
-  if(!el) return;
-  const start = new Date('2025-09-19T00:00:00-07:00');
-  const days = Math.ceil((start - new Date())/86400000);
-  el.textContent = days>0 ? `🛤️ ~${days} day${days!==1?'s':''} until your journey begins!`
-                          : `🛤️ You're on the road — make it count!`;
-}
+function renderDynamicSections(cityId) {
+    const city = cities[cityId];
 
-/* ===== Next Up slider ===== */
-const nuItems = [
-  { emoji:'📄', title:'ESTA Application', body:'Apply for your ESTA at least 72 hours before travel. Don’t leave it late!' },
-  { emoji:'🎟️', title:'National Parks Pass', body:'Consider an "America the Beautiful" pass to cover Yosemite & Grand Canyon entry.'},
-  { emoji:'🧳', title:'Smart Packing Tip', body:'Use packing cubes to separate clothes for different climates (e.g., SF vs. Vegas).' },
-  { emoji:'🍕', title:'NYC Pizza Shortlist', body:'Joe’s • Prince Street • Scarr’s • Di Fara. A slice a day keeps the doctor away.' },
-  { emoji:'🍸', title:'Vegas Bars to Try', body:'Chandelier • Ghost Donkey • Legacy Club. Stay hydrated between stops!' },
-  { emoji:'🛍️', title:'Top Shopping Zones', body:'SF Union Sq for high-end, Vegas Forum Shops for luxury, NYC SoHo for boutiques.' }
-];
-let nuIndex=0, nuTimer=null, nuInterval=5200;
-function buildNextUp(){
-  const track=document.getElementById('nuTrack');
-  const dots=document.getElementById('nuDots');
-  const bar=document.getElementById('nuBar');
-  if(!track||!dots||!bar) return;
-  track.innerHTML = nuItems.map(item=>{
-    const body=typeof item.body==='function'?item.body():item.body;
-    return `<article class="nu-slide"><div class="nu-emoji">${item.emoji}</div><div class="nu-text"><h4>${item.title}</h4><p>${body}</p></div></article>`
-  }).join('');
-  dots.innerHTML = nuItems.map((_,i)=>`<div class="nu-dot ${i===0?'active':''}" data-i="${i}"></div>`).join('');
-  dots.querySelectorAll('.nu-dot').forEach(d=>d.addEventListener('click', ()=>goToSlide(+d.dataset.i)));
-  const viewport=document.getElementById('nuViewport');
-  let startX=0,dx=0;
-  viewport.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;dx=0;stopAuto();},{passive:true});
-  viewport.addEventListener('touchmove',e=>{dx=e.touches[0].clientX-startX;},{passive:true});
-  viewport.addEventListener('touchend',()=>{if(Math.abs(dx)>50){dx<0?nextSlide():prevSlide()} startAuto();});
-  viewport.addEventListener('mouseenter',stopAuto);
-  viewport.addEventListener('mouseleave',startAuto);
-  goToSlide(0,true); startAuto();
-}
-function goToSlide(i,instant=false){
-  const track=document.getElementById('nuTrack'); const dots=document.getElementById('nuDots').children; const bar=document.getElementById('nuBar');
-  const n=nuItems.length; nuIndex=(i+n)%n;
-  track.style.transitionDuration = instant?'0ms':'500ms';
-  track.style.transform=`translateX(-${nuIndex*100}%)`;
-  [...dots].forEach((d,di)=>d.classList.toggle('active', di===nuIndex));
-  bar.style.transition='none'; bar.style.width='0%';
-  setTimeout(()=>{bar.style.transition=`width ${nuInterval}ms linear`; bar.style.width='100%';},10);
-}
-function nextSlide(){goToSlide(nuIndex+1)}
-function prevSlide(){goToSlide(nuIndex-1)}
-function startAuto(){ stopAuto(); nuTimer=setInterval(nextSlide,nuInterval); const bar=document.getElementById('nuBar'); bar.style.transition=`width ${nuInterval}ms linear`; bar.style.width='100%' }
-function stopAuto(){ clearInterval(nuTimer); nuTimer=null; const bar=document.getElementById('nuBar'); bar.style.transition='none'; bar.style.width='0%' }
-
-/* ===== Live Currency Exchange Tracker ===== */
-let exchangeRate = 1.35; 
-let trendChart = null; 
-
-async function fetchExchangeRate() {
-  const url = 'https://open.er-api.com/v6/latest/GBP';
-  const rateEl = document.getElementById('exchangeRate');
-  const usdRateEl = document.getElementById('usdRate');
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Network error: ${response.statusText}`);
-    const data = await response.json();
-    
-    if (data.result === 'success' && data.rates && data.rates.USD) {
-      exchangeRate = data.rates.USD;
-      const history = Array.from({length: 7}, (_, i) => {
-          const fluctuation = (Math.random() - 0.5) * 0.02;
-          const trend = (i - 3) * 0.001; 
-          return exchangeRate + fluctuation - trend;
-      });
-      history.push(exchangeRate);
-      updateTrendChart(history);
+    const momentsSection = document.getElementById('dynamic-moments-section');
+    const momentsGrid = document.getElementById('dynamic-moments-grid');
+    if (city.moments?.length > 0) {
+        momentsGrid.innerHTML = city.moments.map(moment => `<article class="moment-card" onclick="openCustomModal('moment', '${moment.id}')"><div class="moment-header"><div class="moment-icon">${moment.icon}</div><h3 class="moment-title">${moment.title}</h3></div><p class="moment-description">${moment.description}</p></article>`).join('');
+        momentsSection.style.display = 'block';
     } else {
-      throw new Error('Invalid API data');
+        momentsSection.style.display = 'none';
     }
-  } catch (error) {
-    console.error("Failed to fetch exchange rate:", error);
-    rateEl.textContent = "Rate N/A";
-    usdRateEl.textContent = "Could not update rate";
-    updateTrendChart([1.33, 1.34, 1.35, 1.34, 1.35, 1.34, 1.35, 1.36]);
-  }
 
-  rateEl.textContent = `£1 = $${exchangeRate.toFixed(3)}`;
-  usdRateEl.textContent = `1 GBP = ${exchangeRate.toFixed(3)} USD`;
-  
-  rateEl.style.animation = 'bounceIn .6s var(--curve)';
-  setTimeout(() => rateEl.style.animation = '', 600);
-  
-  convertCurrency();
-}
-
-function updateTrendChart(history) {
-  if (typeof Chart === 'undefined') {
-    console.error("Chart.js not loaded");
-    return;
-  }
-  const ctx = document.getElementById('rateTrend').getContext('2d');
-  
-  if(trendChart) trendChart.destroy();
-
-  trendChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['-7h', '-6h', '-5h', '-4h', '-3h', '-2h', '-1h', 'Now'],
-      datasets: [{ 
-        data: history, 
-        borderColor: 'var(--primary)',
-        backgroundColor: 'rgba(0, 122, 255, 0.1)',
-        tension: 0.4, 
-        fill: true,
-        pointRadius: 0,
-        pointHitRadius: 10,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { 
-        x: { display: false }, 
-        y: { display: false, min: Math.min(...history) * 0.995, max: Math.max(...history) * 1.005 } 
-      }, 
-      plugins: { 
-        legend: { display: false }, 
-        tooltip: { 
-            enabled: true, mode: 'index', intersect: false, displayColors: false,
-            callbacks: { title: () => '', label: (c) => `Rate: ${parseFloat(c.raw).toFixed(4)}` }
-        } 
-      }
+    const flightsSection = document.getElementById('dynamic-flights-section');
+    const flightsList = document.getElementById('dynamic-flights-list');
+    if (city.flights?.length > 0) {
+        flightsList.innerHTML = city.flights.map(flight => `<article class="flight-card"><div class="flight-header"><div class="flight-route">${flight.route}</div><div class="flight-date">${flight.date}</div></div><div class="flight-details"><div class="flight-detail"><div class="detail-label">Flight</div><div class="detail-value">${flight.number}</div></div><div class="flight-detail"><div class="detail-label">Status</div><div class="flight-status">${flight.status}</div></div></div></article>`).join('');
+        flightsSection.style.display = 'block';
+    } else {
+        flightsSection.style.display = 'none';
     }
-  });
 }
 
-function convertCurrency() {
-  const inputEl = document.getElementById('currencyInput');
-  const resultEl = document.getElementById('currencyResult');
-  const dir = document.getElementById('currencyDir').value;
-  const amount = parseFloat(inputEl.value);
-  
-  if (!amount || isNaN(amount)) {
-    resultEl.textContent = '--';
-    return;
-  }
-  
-  let result;
-  if (dir === 'gbp-usd') {
-    result = (amount * exchangeRate).toFixed(2);
-    resultEl.textContent = `$${result}`;
-  } else {
-    result = (amount / exchangeRate).toFixed(2);
-    resultEl.textContent = `£${result}`;
-  }
-  
-  if ('vibrate' in navigator) navigator.vibrate(50);
+/* ========== WEATHER LOGIC ========== */
+async function fetchWeather(city) {
+    const cache = weatherCache.get(city.name);
+    if (cache && (Date.now() - cache.ts) < 900000) return cache.data;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,precipitation_probability&hourly=temperature_2m,weather_code,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&windspeed_unit=kmh&timezone=auto&forecast_days=7`;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('API Error');
+        const data = await res.json();
+        weatherCache.set(city.name, { data, ts: Date.now() });
+        return data;
+    } catch (e) { console.error("Weather fetch failed:", e); return null; }
 }
 
-function setRateAlert() {
-  const target = prompt('Enter your target USD rate for 1 GBP (e.g., 1.30):');
-  const targetRate = parseFloat(target);
-  if (target && !isNaN(targetRate) && targetRate > 0) {
-    showAlert('✅ Rate Alert Set!', `We'll simulate a notification if 1 GBP reaches $${targetRate.toFixed(3)}. Your dollars are getting ready for Vegas! 😉`);
-    localStorage.setItem('rateTarget', targetRate);
-  } else if (target) {
-     showAlert('⚠️ Invalid Rate', `Please enter a valid number (e.g., 1.30).`);
-  }
+async function renderWeather(cityId) {
+    const city = cities[cityId];
+    const widget = document.getElementById('weather-widget');
+    if (!widget) return;
+    const data = await fetchWeather(city);
+    if (!data) { widget.querySelector('.weather-desc').textContent = "Failed to load"; return; }
+    const current = data.current;
+    widget.querySelector('.weather-icon').textContent = wmoIcon(current.weather_code);
+    widget.querySelector('.weather-temp').textContent = `${Math.round(current.temperature_2m)}°C`;
+    widget.querySelector('.weather-desc').textContent = weatherDescriptions[current.weather_code] || 'Clear';
+    widget.onclick = () => openWeatherDetail(city, data);
 }
 
-/* ===== Weather (Open-Meteo) ===== */
-const tripLocations = [
-  { id: "sanfran", name: "San Francisco", lat: 37.7749, lon: -122.4194, emoji: "🌉" },
-  { id: "yosemite", name: "Yosemite", lat: 37.7456, lon: -119.5936, emoji: "🏔️" },
-  { id: "vegas", name: "Las Vegas", lat: 36.1699, lon: -115.1398, emoji: "🎰" },
-  { id: "nyc", name: "New York", lat: 40.7128, lon: -74.0060, emoji: "🗽" }
-];
-const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌧️",55:"🌧️",61:"🌧️",63:"🌧️",65:"🌧️",66:"🌧️",67:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",77:"🌨️",80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"🌨️",95:"⛈️",96:"⛈️",99:"⛈️"};
-const weatherDescriptions = {0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Depositing rime fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",61:"Slight rain",63:"Moderate rain",65:"Heavy rain",66:"Light freezing rain",67:"Heavy freezing rain",71:"Slight snow fall",73:"Moderate snow fall",75:"Heavy snow fall",77:"Snow grains",80:"Slight rain showers",81:"Moderate rain showers",82:"Violent rain showers",85:"Slight snow showers",86:"Heavy snow showers",95:"Thunderstorm",96:"Thunderstorm with slight hail",99:"Thunderstorm with heavy hail"};
-
-async function fetchWeatherData(location) {
-  try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m&hourly=temperature_2m,weather_code,precipitation_probability,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset,uv_index_max,weather_code&timezone=auto&forecast_days=3`;
-    const res = await fetch(url);
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    return { location, current:data.current||{}, daily:data.daily||{}, hourly:data.hourly||{}, success:true };
-  } catch (e) {
-    console.error(`Weather fetch failed for ${location.name}:`, e);
-    return { location, error:e.message, success:false };
-  }
-}
-function getNextHoursSlice(hourly){
-  if(!hourly || !hourly.time) return [];
-  const now = Date.now();
-  const idx = hourly.time.findIndex(t => new Date(t).getTime() >= now);
-  const start = Math.max(0, idx);
-  return Array.from({length:6}).map((_,i)=>{
-    const t = hourly.time[start+i];
-    const temp = hourly.temperature_2m?.[start+i];
-    const code = hourly.weather_code?.[start+i];
-    const prob = hourly.precipitation_probability?.[start+i];
-    return t?{time:t,temp,code,prob}:null;
-  }).filter(Boolean);
-}
-function createWeatherCard(w){
-  const { location, current, daily, hourly, success, error } = w;
-  if(!success){
-    return `<div class="weather-card error" id="weather-${location.id}"><div class="weather-head"><div class="weather-location">${location.emoji} ${location.name}</div><span class="weather-badge">Offline</span></div><div class="weather-main"><div class="weather-icon">⚠️</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Unable to load</div></div></div><div class="weather-update">Error: ${error||'Network issue'}</div></div>`;
-  }
-  const temp = Math.round(current.temperature_2m||0);
-  const feels = Math.round(current.apparent_temperature||temp);
-  const code = current.weather_code||0;
-  const icon = weatherIcons[code]||"🌡️";
-  const desc = weatherDescriptions[code]||"—";
-  const wind = Math.round((current.wind_speed_10m||0)*2.237);
-  const hi = daily.temperature_2m_max?Math.round(daily.temperature_2m_max[0]):null;
-  const lo = daily.temperature_2m_min?Math.round(daily.temperature_2m_min[0]):null;
-  const rain = daily.precipitation_sum?daily.precipitation_sum[0]:0;
-  const uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : null;
-  const next = getNextHoursSlice(hourly);
-
-  const details = weatherDetails
-    ? `<div class="wx-metrics"><div class="wx-kv"><div class="label">Feels</div><div class="value">${feels}°C</div></div><div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div><div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax ?? '—'}</div></div><div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div><div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div></div>`
-    : `<div class="wx-metrics"><div class="wx-kv"><div class="label">High / Low</div><div class="value">${hi??'--'}° / ${lo??'--'}°</div></div><div class="wx-kv"><div class="label">Rain</div><div class="value">${(rain||0).toFixed(1)}mm</div></div></div>`;
-
-  const hours = `<div class="wx-hours">${next.map(h=>{const ic = weatherIcons[h.code]||'·'; const t = new Date(h.time).toLocaleTimeString([], {hour:'2-digit'}); const deg = Math.round(h.temp); const p  = (h.prob ?? 0) + '%'; return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;}).join('')}</div>`;
-
-  return `<div class="weather-card" id="weather-${location.id}" onclick="showWeatherDetails('${location.id}')"><div class="weather-head"><div class="weather-location">${location.emoji} ${location.name}</div><span class="weather-badge">Today</span></div><div class="weather-main"><div class="weather-icon">${icon}</div><div><div class="weather-temp">${temp}°C</div><div class="weather-desc">${desc}</div></div></div>${details}${hours}</div>`;
-}
-async function loadWeather(){
-  const grid = document.getElementById('liveWeatherGrid');
-  if(!grid) return;
-  grid.innerHTML = tripLocations.map(l=>`<div class="weather-card loading"><div class="weather-head"><div class="weather-location">${l.emoji} ${l.name}</div><span class="weather-badge">Loading</span></div><div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Fetching...</div></div></div>`).join('');
-  const results = await Promise.all(tripLocations.map(fetchWeatherData));
-  results.forEach(r => { weatherStore[r.location.id] = r; });
-  grid.innerHTML = results.map(createWeatherCard).join('');
-  lastWeatherUpdate = new Date();
-  const s = document.getElementById('wxStatus');
-  if(s){ s.innerHTML = `🌤️ Last updated: ${lastWeatherUpdate.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} • <span onclick="refreshWeather(this)" style="color:var(--primary);cursor:pointer;text-decoration:underline">Refresh now</span>`; }
-}
-function refreshWeather(btn){ loadWeather(); if(btn){ btn.style.transform='rotate(360deg)'; setTimeout(()=>btn.style.transform='',600); } }
-function toggleWeatherDetails(btn){ weatherDetails=!weatherDetails; loadWeather(); if(btn){ btn.textContent = weatherDetails? '📊 Hide Details' : '📊 Show Details'; } }
-
-function buildWeatherAdvice(w){
-  const tips=[],c=w.current||{}, d=w.daily||{}, h=w.hourly||{},temp = Math.round(c.temperature_2m ?? 0),feels = Math.round(c.apparent_temperature ?? temp),wind = Math.round((c.wind_speed_10m||0)*2.237),gust = c.wind_gusts_10m ? Math.round(c.wind_gusts_10m*2.237) : null,hum = c.relative_humidity_2m ?? null,hi = d.temperature_2m_max ? Math.round(d.temperature_2m_max[0]) : null,lo = d.temperature_2m_min ? Math.round(d.temperature_2m_min[0]) : null,swing = (hi!=null && lo!=null) ? hi-lo : null,uvMax = d.uv_index_max ? Math.round(d.uv_index_max[0]) : null;
-  let nextProb = null;
-  if(h.precipitation_probability && h.time){ const now = Date.now(); const idx = h.time.findIndex(t => new Date(t).getTime() >= now); nextProb = h.precipitation_probability[idx] ?? null;}
-  if(nextProb!=null && nextProb>=40) tips.push({t:'Showers likely — pack a light rain jacket',level:'warn'});
-  if(uvMax!=null && uvMax>=7) tips.push({t:'High UV — sunscreen, hat, sunglasses',level:'warn'});
-  if(temp>=30 || feels>=32) tips.push({t:'Hot today — hydrate frequently',level:'warn'});
-  if(temp<=5) tips.push({t:'Chilly — bring warm layers',level:'warn'});
-  if(swing!=null && swing>=12) tips.push({t:'Big temperature swing — layer up', level:'warn'});
-  if(wind>=25 || (gust!=null && gust>=35)) tips.push({t:'Windy — secure hats; cooler wind chill', level:'warn'});
-  if(hum!=null && temp>=26 && hum>=60) tips.push({t:'Humid — it may feel muggier than temp', level:'warn'});
-  const city = w.location.id;
-  if(city==='sanfran') tips.unshift({t:'SF microclimates: bring a light jacket for fog',level:''});
-  if(city==='yosemite') tips.unshift({t:'Trail shoes + warm layer for evening stargazing',level:''});
-  if(city==='vegas') tips.unshift({t:'Sunscreen + sunglasses for daytime Strip walks',level:''});
-  if(city==='nyc') tips.unshift({t:'Comfy walking shoes; lots of steps!',level:''});
-  return tips;
-}
-function formatDay(iso){ return new Date(iso).toLocaleDateString([], {weekday:'short'}); }
-
-function showWeatherDetails(id){
-  const w = weatherStore[id]; const l = tripLocations.find(x=>x.id===id); if(!w || !l){ showAlert('Weather','Details not available yet. Try refresh.'); return; }
-  const {current, daily, hourly} = w, next = getNextHoursSlice(hourly), uvMax = daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : '—', sunrise = daily.sunrise ? new Date(daily.sunrise[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--', sunset  = daily.sunset  ? new Date(daily.sunset[0]).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '--', wind = Math.round((current.wind_speed_10m||0)*2.237), feels = Math.round(current.apparent_temperature ?? current.temperature_2m ?? 0);
-  const tips = buildWeatherAdvice(w), three = daily.time ? [0,1,2].map(i=>{ const code = daily.weather_code?.[i], ic = weatherIcons[code] || (daily.precipitation_sum?.[i] > 0 ? '🌧️' : '☀️'), hi = daily.temperature_2m_max ? Math.round(daily.temperature_2m_max[i]) : '—', lo = daily.temperature_2m_min ? Math.round(daily.temperature_2m_min[i]) : '—'; return {d: formatDay(daily.time[i]), ic, hi, lo}; }) : [];
-  const html = `<h2 id="modalTitle" style="font-size:24px;margin-bottom:6px;color:var(--primary)">${l.emoji} ${l.name}</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0"><div class="wx-kv"><div class="label">Feels Like</div><div class="value">${feels}°C</div></div><div class="wx-kv"><div class="label">Wind</div><div class="value">${wind} mph</div></div><div class="wx-kv"><div class="label">UV Max</div><div class="value">${uvMax}</div></div><div class="wx-kv"><div class="label">Sunrise / Sunset</div><div class="value">${sunrise} / ${sunset}</div></div></div><h3 style="margin:12px 0 6px;color:var(--secondary)">Next Hours</h3><div class="wx-hours" style="margin-top:6px">${next.map(h=>{const ic=weatherIcons[h.code]||'·';const t=new Date(h.time).toLocaleTimeString([],{hour:'2-digit'});const deg=Math.round(h.temp);const p=(h.prob??0)+'%';return `<div class="wx-hour"><div>${t}</div><div>${ic}</div><div class="t">${deg}°</div><div style="font-size:11px;opacity:.7">${p}</div></div>`;}).join('')}</div><h3 style="margin:16px 0 6px;color:var(--secondary)">3-Day Outlook</h3><div class="wx-3day">${three.map(d=>`<div class="d"><div class="t">${d.d}</div><div style="font-size:22px;margin:2px 0">${d.ic}</div><div><span class="hi">${d.hi}°</span> / <span class="lo">${d.lo}°</span></div></div>`).join('')}</div><h3 style="margin:16px 0 6px;color:var(--secondary)">Advice</h3><div class="advice">${tips.map(t=>`<span class="chip ${t.level}">${t.t}</span>`).join('')}</div>`;
-  showAlert(`${l.emoji} ${l.name} Weather`, html);
+function openWeatherDetail(city, data) {
+    const { current, hourly, daily } = data;
+    const type = wmoAnimType(current.weather_code);
+    document.getElementById('wx-sheet').className = `wx-sheet wx-${type}`;
+    document.getElementById('wx-anim-detail').innerHTML = wmoAnimHTML(type);
+    document.getElementById('wx-city').textContent = city.name;
+    document.getElementById('wx-temp-lg').textContent = `${Math.round(current.temperature_2m)}°`;
+    document.getElementById('wx-desc-lg').textContent = weatherDescriptions[current.weather_code] || 'Clear';
+    document.getElementById('wx-feels').textContent = `${Math.round(current.apparent_temperature)}°`;
+    document.getElementById('wx-hum').textContent = `${current.relative_humidity_2m}%`;
+    document.getElementById('wx-wind').textContent = `${Math.round(current.wind_speed_10m)} km/h`;
+    document.getElementById('wx-rain').textContent = `${current.precipitation_probability}%`;
+    const startIndex = hourly.time.findIndex(t => new Date(t) > new Date());
+    document.getElementById('wx-hourly-cards').innerHTML = hourly.time.slice(startIndex, startIndex + 8).map((time, i) => {
+        const index = startIndex + i;
+        return `<div class="wx-hour"><div>${new Date(time).getHours()}:00</div><div style="font-size:22px;margin:4px 0">${wmoIcon(hourly.weather_code[index])}</div><div class="t">${Math.round(hourly.temperature_2m[index])}°</div></div>`;
+    }).join('');
+    document.getElementById('wx-days-cards').innerHTML = daily.time.slice(0, 3).map((date, i) => `
+        <div class="wx-day"><div>${new Date(date).toLocaleDateString('en-US', {weekday:'short'})}</div><div style="font-size:22px;margin:6px 0">${wmoIcon(daily.weather_code[i])}</div><div><span class="hi">${Math.round(daily.temperature_2m_max[i])}°</span> / <span class="lo">${Math.round(daily.temperature_2m_min[i])}°</span></div></div>
+    `).join('');
+    toggleWx(true);
 }
 
-/* ===== Moments Guides ===== */
-const momentGuides = {
-  stargazing:{ title:'Yosemite Stargazing', stops:[{name:'Glacier Point',why:'Panoramic sky & Half Dome silhouette',maps:'https://www.google.com/maps?q=Glacier+Point'},{name:'Tunnel View',why:'Iconic valley frame, good foregrounds',maps:'https://www.google.com/maps?q=Tunnel+View'}], tips:['Arrive before full darkness for setup','Use red light to preserve night vision','Temps drop fast — pack layers']},
-  vegasNight:{ title:'Vegas Boys Night', stops:[{name:'Bellagio Fountains',why:'Kick-off with the classics',maps:'https://www.google.com/maps?q=Bellagio+Fountains'},{name:'Chandelier Bar',why:'Cocktails beneath crystal glow',maps:'https://www.google.com/maps?q=The+Chandelier+Bar+Cosmopolitan'},{name:'Fremont Street',why:'LED canopy + live bands',maps:'https://www.google.com/maps?q=Fremont+Street+Experience'}], tips:['Book rides between Strip & Downtown','Hydrate — it sneaks up on you','Smart casual dress for easier entry']},
-  nycFood:{ title:'NYC Street Food Tour', stops:[{name:'Joe’s Pizza',why:'Foldable slice perfection',maps:'https://www.google.com/maps?q=Joes+Pizza+NYC'},{name:'Ess-a-Bagel',why:'Proper New York bagel',maps:'https://www.google.com/maps?q=Ess+a+Bagel'},{name:'The Halal Guys',why:'Late-night classic',maps:'https://www.google.com/maps?q=The+Halal+Guys'}], tips:['Carry cash for small vendors','Order “regular” unless you love heat','Walk, don’t Uber — you’ll see more']},
-  ggSunrise:{ title:'Golden Gate at Sunrise', stops:[{name:'Battery Spencer',why:'Front-row bridge viewpoint',maps:'https://www.google.com/maps?q=Battery+Spencer'},{name:'Marshall’s Beach',why:'Beach-level compositions',maps:'https://www.google.com/maps?q=Marshalls+Beach'}], tips:['Arrive 30–40 mins before sunrise','Bring a windproof layer','Coffee in Sausalito afterwards']},
-  grandCanyon:{ title:'Grand Canyon Day Trip', stops:[{name:'West Rim (Skywalk)',why:'Closest from Vegas, quick wow',maps:'https://www.google.com/maps?q=Grand+Canyon+West'},{name:'South Rim',why:'Classic overlooks (Mather, Yavapai)',maps:'https://www.google.com/maps?q=Grand+Canyon+South+Rim'}], tips:['Heli = time saver, road = cheaper','Pack snacks & water','Desert sun is strong — sunscreen!']},
-  sphere:{ title:'MSG Sphere Immersion', stops:[{name:'Sphere',why:'Arrive 45 mins early for lobby exhibits',maps:'https://www.google.com/maps?q=MSG+Sphere+Las+Vegas'}], tips:['Middle sections = best dome coverage','Earplugs if sensitive to volume']},
-  broadway:{ title:'Broadway Night', stops:[{name:'TKTS or Box Office',why:'Same-day options or pre-book',maps:'https://www.google.com/maps?q=Times+Square+TKTS'}], tips:['Dress in layers (theatres vary)','No big bags','Plan dinner close to the theatre']},
-  hoover:{ title:'Hoover Dam Tour', stops:[{name:'Visitor Center',why:'Guided tour & exhibits',maps:'https://www.google.com/maps?q=Hoover+Dam+Visitor+Center'}], tips:['Morning = cooler & quieter','Bring hat & water','Combine with Boulder City coffee stop']},
-  bdayToast:{ title:'Rooftop Birthday Toast', stops:[{name:'Legacy Club',why:'Panoramic desert sunset',maps:'https://www.google.com/maps?q=Legacy+Club+Las+Vegas'},{name:'Skyfall Lounge',why:'South Strip views',maps:'https://www.google.com/maps?q=Skyfall+Lounge'},{name:'Foundation Room',why:'Balcony over the Strip',maps:'https://www.google.com/maps?q=Foundation+Room'}], tips:['Golden hour bookings fill fast','Smart footwear (lots of standing)']}
-};
-function showMomentDetails(key){
-  const g = momentGuides[key]; if(!g) return;
-  const html = `<h2 id="modalTitle" style="font-size:26px;margin-bottom:12px;color:var(--primary)">${g.title}</h2><div style="display:grid;grid-template-columns:1fr;gap:14px"><div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:16px;border-radius:14px"><h3 style="margin-bottom:8px;color:var(--secondary)">📍 Suggested Stops</h3>${g.stops.map(s=>`<div style='display:flex;justify-content:space-between;gap:10px;padding:10px;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,.06)'><div><strong>${s.name}</strong><div style='color:var(--muted);font-size:13px'>${s.why}</div></div><a href='${s.maps}' target='_blank' style='white-space:nowrap;align-self:center;background:var(--primary);color:#fff;text-decoration:none;padding:8px 10px;border-radius:10px;font-weight:700'>Open in Maps</a></div>`).join('')}</div><div style="background:linear-gradient(135deg,rgba(0,122,255,.06),rgba(88,86,214,.06));border:1px solid var(--border);padding:16px;border-radius:14px"><h3 style="margin-bottom:8px;color:var(--primary)">💡 Tips</h3><ul style="padding-left:18px;line-height:1.6">${g.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div></div>`;
-  const content = document.getElementById('modalContent');
-  content.innerHTML = html;
-  document.getElementById('locationModal').style.display = 'block';
-}
-
-/* ===== Destination modal content ===== */
-const locationDetails = {
-  sanfran:{ title:'San Francisco', dates:'September 19–23, 2025', stay:{name:'Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrival & Union Square exploration'},{day:'Day 2',activity:"Golden Gate Bridge & Fisherman’s Wharf"},{day:'Day 3',activity:'Alcatraz tour & Free walking tour'},{day:'Day 4',activity:'Final SF sights before Yosemite'}], highlights:['Golden Gate Bridge','Alcatraz Island','Lombard Street','Pier 39'], tips:'Dress in layers — SF weather can change dramatically throughout the day!' },
-  yosemite:{ title:'Yosemite National Park', dates:'September 23–26, 2025', stay:{name:'Lodge/Camping (TBC)'}, activities:[{day:'Day 1',activity:'Drive from SF, settle in'},{day:'Day 2',activity:'Glacier Point & Tunnel View'},{day:'Day 3',activity:'Mist Trail, Sentinel Dome & stargazing'}], highlights:['Glacier Point','Half Dome views','Mist Trail','Milky Way photography'], tips:'Bring warm clothes for evening stargazing — temperatures drop significantly!' },
-  vegas:{ title:'Las Vegas', dates:'September 26 – Oct 1, 2025', stay:{name:'Strip Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrive & explore the Strip'},{day:'Day 2',activity:'Grand Canyon day trip'},{day:'Day 3',activity:'30th Birthday celebration!'},{day:'Day 4',activity:'Shows & entertainment'},{day:'Day 5',activity:'Hoover Dam & final Vegas night'}], highlights:['Grand Canyon helicopter tour','MSG Sphere experience','Cirque du Soleil','Rooftop birthday party'], tips:'Stay hydrated and bring good walking shoes — the Strip is longer than it looks!' },
-  nyc:{ title:'New York City', dates:'October 1–3, 2025', stay:{name:'Manhattan Hotel (TBC)'}, activities:[{day:'Day 1',activity:'Arrival & Times Square'},{day:'Day 2',activity:'Central Park & Broadway show'},{day:'Day 3',activity:'Final sights before departure'}], highlights:['Broadway show','Central Park','Brooklyn Bridge','Food tour'], tips:'Book Broadway shows in advance and wear comfortable shoes for all the walking!' }
-};
-function showLocationDetails(key){
-  const d = locationDetails[key]; if(!d) return;
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `<h2 id="modalTitle" style="font-size:28px;margin-bottom:12px;color:var(--primary)">${d.title}</h2><p style="font-weight:700;margin-bottom:20px;color:var(--secondary)">${d.dates}</p><div style="background:linear-gradient(135deg,#f8faff,#eef2ff);border:1px solid var(--border);padding:18px;border-radius:16px;margin-bottom:20px"><h3 style="margin-bottom:8px;color:var(--primary)">🏨 Accommodation</h3><p style="font-weight:600">${d.stay.name}</p></div><div style="margin-bottom:20px"><h3 style="margin-bottom:12px;color:var(--primary)">📅 Daily Itinerary</h3>${d.activities.map(a=>`<div style="padding:12px;background:#fafbff;border-radius:10px;margin-bottom:8px;border-left:4px solid var(--primary)"><strong style="color:var(--secondary)">${a.day}:</strong> ${a.activity}</div>`).join('')}</div><div style="margin-bottom:20px"><h3 style="margin-bottom:12px;color:var(--primary)">✨ Must-See Highlights</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">${d.highlights.map(h=>`<span style="padding:8px 12px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;text-align:center;font-weight:600;font-size:14px">${h}</span>`).join('')}</div></div><div style="background:linear-gradient(135deg,rgba(255,149,0,.1),rgba(255,149,0,.05));border:1px solid rgba(255,149,0,.3);padding:16px;border-radius:12px"><strong style="color:var(--warning)">💡 Pro Tip:</strong> ${d.tips}</div>`;
-  document.getElementById('locationModal').style.display = 'block';
-}
-function closeModal(){ document.getElementById('locationModal').style.display='none'; }
-
-/* ===== Packing ===== */
-function renderPackingItems(){
-  const toPackList = document.getElementById('toPackList'), packedList = document.getElementById('packedList'); if(!toPackList || !packedList) return;
-  const toPackItems = packingItems.filter(i=>i.column==='toPack'), packedItems = packingItems.filter(i=>i.column==='packed');
-  toPackList.innerHTML = toPackItems.map(item=>`<li class="packing-item" draggable="true" data-id="${item.id}" ondragstart="drag(event)"><span class="packing-icon">${item.icon}</span><span class="packing-text">${item.text}</span><button onclick="moveItem('${item.id}','packed')" aria-label="Pack ${item.text}">✓</button></li>`).join('');
-  packedList.innerHTML = packedItems.map(item=>`<li class="packing-item packed" draggable="true" data-id="${item.id}" ondragstart="drag(event)"><span class="packing-icon">✅</span><span class="packing-text">${item.text}</span><button onclick="moveItem('${item.id}','toPack')" aria-label="Unpack ${item.text}">↺</button></li>`).join('');
-  updatePackingStats();
-}
-function updatePackingStats(){
-  const packed = packingItems.filter(i=>i.column==='packed').length;
-  const total = packingItems.length;
-  const pct = total? Math.round(packed/total*100) : 0;
-  document.getElementById('packedCount').textContent = packed;
-  document.getElementById('totalCount').textContent = total;
-  document.getElementById('packingPercent').textContent = `${pct}%`;
-  const bar = document.getElementById('packingProgress'), label = document.getElementById('packingProgressLabel');
-  if(bar) bar.style.width = `${pct}%`;
-  if(label){
-    if(pct===0) label.textContent='🧳 Ready to start packing!';
-    else if(pct<50) label.textContent=`🧳 ${pct}% packed - Keep going!`;
-    else if(pct<100) label.textContent=`🧳 ${pct}% packed - Almost there!`;
-    else { 
-      label.textContent='🎉 All packed and ready for adventure!'; 
+function toggleWx(open = true) {
+    const overlay = document.getElementById('wx-overlay');
+    if (open) {
+        overlay.classList.add('show'); document.body.style.overflow = 'hidden';
+    } else {
+        overlay.classList.remove('show'); document.body.style.overflow = '';
     }
-  }
 }
-function moveItem(id,to){ const it = packingItems.find(i=>i.id===id); if(!it) return; it.column=to; renderPackingItems();
-  setTimeout(()=>{ const el=document.querySelector(`[data-id="${id}"]`); if(el){ el.style.animation='bounceIn .6s var(--curve)'; setTimeout(()=>el.style.animation='',600); }},50);
-}
-function addCustomItem(){
-  const text = prompt('What item would you like to add to your packing list?');
-  if(text && text.trim()){
-    packingItems.push({id:`custom_${Date.now()}`,text:text.trim(),icon:'📦',column:'toPack'});
-    renderPackingItems(); showAlert('✅ Item Added', `"${text}" has been added to your packing list!`);
-  }
-}
-function resetPacking(){
-  if(confirm('Reset all packing progress?')){ packingItems.forEach(i=>i.column='toPack'); renderPackingItems(); showAlert('🔄 Reset Complete','All items moved back to "To Pack".'); }
-}
-function allowDrop(e){ e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
-function drag(e){ e.dataTransfer.setData('text', e.target.dataset.id); e.target.classList.add('dragging'); }
-function drop(e,col){ e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const id=e.dataTransfer.getData('text'); moveItem(id,col); document.querySelectorAll('.packing-item').forEach(x=>x.classList.remove('dragging')); }
-document.addEventListener('dragleave', (e)=>{ if(e.target.classList?.contains('packing-column')) e.target.classList.remove('drag-over'); });
 
-/* ===== NEW: Vegas Birthday JS ===== */
+/* ========== CONCIERGE & MODAL LOGIC ========== */
+function toggleConcierge() {
+    const overlay = document.getElementById('concierge-overlay');
+    const isOpen = overlay.classList.contains('show');
+    if (!isOpen) {
+        const city = cities[currentCityId];
+        document.getElementById('concierge-title').textContent = `${city.name} Concierge`;
+        document.getElementById('quick-actions').innerHTML = city.concierge.map(a => `<a class="quick-action" href="${a.url}" target="_blank" rel="noopener"><div class="icon">${a.icon}</div><div class="label">${a.label}</div></a>`).join('');
+    }
+    overlay.classList.toggle('show');
+    document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+
+function openCustomModal(type, id) {
+  const modal = document.getElementById('modalOverlayCustom');
+  const title = document.getElementById('modalTitleCustom');
+  const body = document.getElementById('modalBodyCustom');
+  const data = momentData[id];
+  title.textContent = data.title;
+  body.innerHTML = `
+    <p style="color:var(--text-secondary); line-height:1.6; margin-bottom: 24px;">${data.description}</p>
+    <h4 style="font-size: 16px; font-weight: 600; margin-bottom:12px;">📍 Key Locations & Notes</h4>
+    ${data.locations.map(loc => `
+      <div class="modal-list-item">
+        <div class="modal-item-text"><strong>${loc.name}</strong><span>${loc.why}</span></div>
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name)}" target="_blank" class="modal-item-action">Map</a>
+      </div>`).join('')}
+  `;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCustomModal() {
+  document.getElementById('modalOverlayCustom').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+/* ========== BIRTHDAY & SLOT MACHINE ========== */
 const slotSymbols = ['💎', '🍒', '7️⃣', '🎰', '🔔'];
-let isSpinning = false; // Prevents re-clicks while spinning
-
-function updateVegasCountdown() {
-  const birthday = new Date('2025-09-28T18:00:00-07:00');
-  const now = new Date();
-  const diff = birthday - now;
-  
-  if (diff > 0) {
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    animateVegasNumber('bday-days', days);
-    animateVegasNumber('bday-hours', hours);
-    animateVegasNumber('bday-minutes', minutes);
-    animateVegasNumber('bday-seconds', seconds);
-  } else {
-    document.getElementById('jackpotBtn').innerHTML = '🎂 IT\'S YOUR 30TH! 🎂';
-  }
-}
-
-function animateVegasNumber(id, value) {
-  const element = document.getElementById(id);
-  if (!element) return;
-  const formatted = String(value).padStart(2, '0');
-  
-  if (element.textContent !== formatted) {
-    element.textContent = formatted;
-    const unit = element.parentElement;
-    unit.style.animation = 'none';
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            unit.style.animation = 'vegasUnitPulse 0.3s ease-in-out';
-        }, 0);
-    });
-  }
-}
+let isSpinning = false;
 
 function playSlots() {
     if (isSpinning) return;
     isSpinning = true;
 
     const container = document.getElementById('slotMachineContainer');
-    container.classList.add('visible'); // Make slots appear
+    container.classList.add('visible');
 
-    const reels = [
-        document.getElementById('reel1'),
-        document.getElementById('reel2'),
-        document.getElementById('reel3')
-    ];
+    const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+    const results = reels.map(() => slotSymbols[Math.floor(Math.random() * slotSymbols.length)]);
     
-    const reelHeight = 100; // Must match CSS height of a symbol
-    const symbolCount = slotSymbols.length;
-    const totalSymbolsOnStrip = 30; // Creates a long strip for a good spin effect
-
-    const results = reels.map(() => slotSymbols[Math.floor(Math.random() * symbolCount)]);
-
     reels.forEach((reel, i) => {
+        const strip = Array.from({ length: 30 }, () => slotSymbols[Math.floor(Math.random() * slotSymbols.length)]);
+        strip[strip.length - 2] = results[i]; // Set final symbol
+        reel.innerHTML = strip.map(symbol => `<span>${symbol}</span>`).join('');
+
         reel.style.transition = 'none';
-        
-        const stripArray = [];
-        for(let j = 0; j < totalSymbolsOnStrip; j++) {
-            stripArray.push(slotSymbols[Math.floor(Math.random() * symbolCount)]);
-        }
-        stripArray[totalSymbolsOnStrip - 2] = results[i];
-        reel.innerHTML = stripArray.map(symbol => `<span>${symbol}</span>`).join('');
-
         reel.style.transform = 'translateY(0)';
-        void reel.offsetHeight;
+        void reel.offsetHeight; // Force reflow
 
-        const finalPosition = (totalSymbolsOnStrip - 2) * reelHeight;
-        const spinDuration = 2500 + i * 500;
-        
-        reel.style.transition = `transform ${spinDuration / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
+        const finalPosition = (strip.length - 2) * 100;
+        reel.style.transition = `transform ${2500 + i * 500}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
         reel.style.transform = `translateY(-${finalPosition}px)`;
     });
 
-    const totalSpinTime = 2500 + (reels.length - 1) * 500 + 500;
     setTimeout(() => {
-        const isWin = results[0] === results[1] && results[1] === results[2];
+        const isWin = results.every(val => val === results[0]);
         if (isWin) {
-            triggerJackpotConfetti();
+            celebrateBirthday();
         } else {
-            const loseMessages = [
-                'Almost! Give it another spin!',
-                'So close! The house always wins... usually.',
-                'Better luck next time, high roller!',
-                'Nope! Maybe try a different machine?',
-                'Close call! One more spin could do it!',
-                'Not quite! The reels are just warming up.',
-                'Missed it by a whisker! Give it another go.',
-                'Oof! That one wasn’t in your favour.',
-                'No luck this time! But you’re due a win soon.',
-                'Just shy of glory! Spin again?',
-                'Ah, the suspense! One more try?',
-                'Nearly there! Don’t give up now.',
-                'So close you could taste it!',
-                'Not today… but tomorrow’s looking lucky.',
-                'Missed the jackpot! Ready to chase it?'
-            ];
-            const randomMsg = loseMessages[Math.floor(Math.random() * loseMessages.length)];
-            showVegasToast('😂', randomMsg);
+            showVegasToast('😂', 'So close! Try again!');
         }
         isSpinning = false;
-    }, totalSpinTime);
+    }, 3500);
+}
+
+function celebrateBirthday() {
+    triggerJackpotConfetti();
+    showVegasToast('🎉', 'JACKPOT! Happy 30th!');
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
 }
 
 function triggerJackpotConfetti() {
-  const canvas = document.getElementById('vegasConfettiCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-  
-  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
-  
-  const particles = [];
-  const colors = ['#FFD700', '#FF1493', '#00F5FF', '#9D00FF', '#00FF41', '#FF6B35'];
-  const emojis = ['💰', '🎰', '🎲', '💎', '🍾', '🎉', '👑', '💵'];
-  
-  for (let i = 0; i < 200; i++) {
-    const isEmoji = Math.random() > 0.7;
-    particles.push({
-      x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
-      vx: (Math.random() - 0.5) * 8, vy: Math.random() * 2 + 3,
-      size: isEmoji ? 24 : Math.random() * 12 + 6,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      emoji: isEmoji ? emojis[Math.floor(Math.random() * emojis.length)] : null,
-      rotation: Math.random() * Math.PI * 2, rotationSpeed: (Math.random() - 0.5) * 0.3,
-      opacity: 1, gravity: 0.08
-    });
-  }
-  
-  function animateConfetti() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((p, i) => {
-      p.vy += p.gravity; p.x += p.vx; p.y += p.vy; p.rotation += p.rotationSpeed;
-      if (p.y > canvas.height * 0.8) p.opacity -= 0.02;
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity;
-      if (p.emoji) {
-        ctx.font = `${p.size}px Arial`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(p.emoji, 0, 0);
-      } else {
-        ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill();
-      }
-      ctx.restore();
-      if (p.opacity <= 0) particles.splice(i, 1);
-    });
-    if (particles.length > 0) requestAnimationFrame(animateConfetti);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  
-  animateConfetti();
-  showVegasToast('🎰', 'Lets win even bigger at Vegas!');
-}
-
-function showVegasToast(emoji, message) {
-  const existingToast = document.querySelector('.vegas-toast');
-  if (existingToast) existingToast.remove();
-  
-  const toast = document.createElement('div');
-  toast.className = 'vegas-toast';
-  toast.innerHTML = `<span style="font-size:24px">${emoji}</span><span style="color:white;">${message}</span>`;
-  document.body.appendChild(toast);
-  
-  setTimeout(() => {
-    toast.style.animation = 'toastSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) reverse forwards';
-    setTimeout(() => toast.remove(), 500);
-  }, 4000);
-}
-
-/* ===== UI helpers & alerts ===== */
-function showAlert(title, html){
-  const modal=document.getElementById('alertModal'); const content=document.getElementById('alertContent');
-  content.innerHTML = `<h2 style="margin-bottom:16px;color:var(--primary)">${title}</h2><div style="color:var(--ink);line-height:1.5">${html}</div><button onclick="closeAlert()" style="margin-top:20px;background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Got it!</button>`;
-  modal.style.display='block';
-}
-function closeAlert(){ document.getElementById('alertModal').style.display='none'; }
-
-/* ===== Scroll animations ===== */
-function observeScrollAnimations() {
-  const els = document.querySelectorAll('.animate-on-scroll');
-  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } }); }, {threshold:0.12});
-  els.forEach(el=>obs.observe(el));
-}
-
-/* ===== Global modal/nav UX ===== */
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeModal(); closeAlert(); }
-});
-window.addEventListener('click', (e) => {
-  const locationModal = document.getElementById('locationModal');
-  const alertModal = document.getElementById('alertModal');
-  if (e.target === locationModal) closeModal();
-  if (e.target === alertModal) closeAlert();
-});
-document.addEventListener('click', (e) => {
-  if (window.innerWidth > 768) return;
-  const nav = document.querySelector('nav');
-  if (nav.classList.contains('open') && !nav.contains(e.target)) {
-    nav.classList.remove('open');
-    document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
-  }
-});
-
-/* ===== Init ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  // Main Trip Countdown
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  // Vegas Birthday Countdown
-  updateVegasCountdown();
-  setInterval(updateVegasCountdown, 1000);
-  
-  // Initialize other components
-  updateTimelineStatus();
-  buildNextUp();
-
-  fetchExchangeRate();
-  setInterval(fetchExchangeRate, 60000 * 15);
-  document.getElementById('currencyInput').addEventListener('input', convertCurrency);
-  document.getElementById('currencyDir').addEventListener('change', convertCurrency);
-
-  loadWeather();
-  setInterval(loadWeather, 120000);
-
-  renderPackingItems();
-  observeScrollAnimations();
-
-  // Add a helper style for the Vegas countdown animation
-  const vegasPulseStyle = document.createElement('style');
-  vegasPulseStyle.innerHTML = `
-    @keyframes vegasUnitPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
+    const canvas = document.getElementById('vegasConfettiCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+    
+    const particles = [];
+    const colors = ['#FFD700', '#FF1493', '#00F5FF'];
+    const emojis = ['💰', '🎰', '💎', '🎉'];
+    
+    for (let i = 0; i < 150; i++) {
+        const isEmoji = Math.random() > 0.8;
+        particles.push({
+            x: canvas.width / 2, y: canvas.height,
+            vx: (Math.random() - 0.5) * 10, vy: -Math.random() * 15 - 5,
+            size: isEmoji ? 24 : Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            emoji: isEmoji ? emojis[Math.floor(Math.random() * emojis.length)] : null,
+            opacity: 1, gravity: 0.2
+        });
     }
-  `;
-  document.head.appendChild(vegasPulseStyle);
-});
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+            p.vy += p.gravity; p.x += p.vx; p.y += p.vy;
+            p.opacity -= 0.005;
+            ctx.globalAlpha = p.opacity;
+            if (p.emoji) {
+                ctx.font = `${p.size}px Arial`;
+                ctx.fillText(p.emoji, p.x, p.y);
+            } else {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            if (p.opacity <= 0) particles.splice(i, 1);
+        });
+        if (particles.length > 0) requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+}
+
+function showVegasToast(icon, message) {
+    const existing = document.querySelector('.vegas-toast');
+    if(existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'vegas-toast';
+    toast.innerHTML = `<span style="font-size:24px">${icon}</span><span>${message}</span>`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => toast.remove());
+    }, 3000);
+}
+
+
+/* ========== PACKING LOGIC ========== */
+function renderPackingLists() {
+    const toPackList = document.getElementById('toPackList');
+    const packedList = document.getElementById('packedList');
+    toPackList.innerHTML = packingItems.map(item => `<li class="packing-item" draggable="true" data-id="${item.id}"><span class="item-text">${item.text}</span></li>`).join('');
+    packedList.innerHTML = packedItems.map(item => `<li class="packing-item packed" draggable="true" data-id="${item.id}"><span class="item-text">${item.text}</span></li>`).join('');
+    updatePackingStats();
+    addDragListeners();
+}
+
+function updatePackingStats() {
+    const total = packingItems.length + packedItems.length;
+    document.getElementById('packedCount').textContent = packedItems.length;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('packingPercent').textContent = total > 0 ? `${Math.round((packedItems.length / total) * 100)}%` : '0%';
+}
+
+function addDragListeners() {
+    document.querySelectorAll('.packing-item').forEach(item => {
+        item.addEventListener('dragstart', e => {
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+        });
+        item.addEventListener('dragend', e => e.target.classList.remove('dragging'));
+    });
+
+    document.querySelectorAll('.packing-column').forEach(col => {
+        col.addEventListener('dragover', e => {
+            e.preventDefault();
+            col.classList.add('drag-over');
+        });
+        col.addEventListener('dragleave', e => col.classList.remove('drag-over'));
+        col.addEventListener('drop', e => {
+            e.preventDefault();
+            col.classList.remove('drag-over');
+            const id = e.dataTransfer.getData('text/plain');
+            const fromList = packedItems.find(i => i.id === id) ? packedItems : packingItems;
+            const toList = col.id === 'packedColumn' ? packedItems : packingItems;
+            const itemIndex = fromList.findIndex(i => i.id === id);
+            if(itemIndex > -1 && fromList !== toList) {
+                const [item] = fromList.splice(itemIndex, 1);
+                toList.push(item);
+                renderPackingLists();
+            }
+        });
+    });
+}
+
+
+const momentData = {
+  ggSunrise:{ title:'Golden Gate Sunrise', description:'Catching the first light over the iconic bridge from the Marin Headlands. Remember to bring a wind-proof layer!', locations:[{name:'Battery Spencer', why:'The classic postcard view'}, {name:'Hawk Hill', why:'A higher, wider perspective'}]},
+  alcatraz:{ title:'Alcatraz Island Tour', description:'Explore the historic and infamous island prison in the San Francisco Bay. Book tickets well in advance!', locations:[{name:'Alcatraz Island', why:'Main prison tour'}, {name:'Pier 33 Alcatraz Landing', why:'Ferry departure point'}]},
+  cableCar:{ title:'Ride a Cable Car', description:"Experience San Francisco's iconic moving landmark and see the city from a unique angle.", locations:[{name:'Powell-Hyde Cable Car Line', why:'Most scenic route'}, {name:'Cable Car Museum', why:'See the giant winding wheels'}]},
+  muirWoods:{ title:'Walk with Giants', description:'A serene trip to Muir Woods National Monument to stand in awe of the coastal redwoods.', locations:[{name:'Muir Woods National Monument', why:'Main visitor trails'}, {name:'Muir Beach Overlook', why:'Stunning coastal views nearby'}]},
+  stargazing:{ title:'Yosemite Stargazing', description:'Witness the Milky Way in a certified dark sky park, far from city lights.', locations:[{name:'Glacier Point', why:'Panoramic sky with Half Dome'}, {name:'Tunnel View', why:'Iconic valley view, also great for stars'}]},
+  mistTrail:{ title:'Hike the Mist Trail', description:'A signature Yosemite hike to the base of the powerful Vernal Fall. Bring a poncho!', locations:[{name:'Vernal Fall Footbridge', why:'First great viewpoint'}, {name:'Top of Vernal Fall', why:'Feel the power (and spray)'}]},
+  sequoias:{ title:'Mariposa Grove', description:'Walk among a forest of giant sequoia trees, some of the largest living things on Earth.', locations:[{name:'Grizzly Giant', why:'One of the largest trees'}, {name:'California Tunnel Tree', why:'The famous walk-through tree'}]},
+  tunnelViewSunset: { title:'Tunnel View Sunset', description:"Watch the last light of day paint El Capitan and Half Dome in incredible colors from this classic viewpoint.", locations:[{name:'Tunnel View, Yosemite', why:'The most famous viewpoint in the park'}]},
+  vegasNight:{ title:'Vegas Boys Night', description:"A celebratory night out exploring iconic bars and neon-lit streets.", locations:[{name:'The Chandelier Bar', why:'Cocktails inside a crystal masterpiece'},{name:'Fountains of Bellagio', why:'Classic Vegas spectacle'}, {name:'Fremont Street Experience', why:'Classic neon & live music'}]},
+  sphere:{ title:'MSG Sphere Experience', description:"An absolute must-see. The future of immersive entertainment. Arrive early for the full experience and aim for central seats.", locations:[{name:'MSG Sphere Las Vegas', why:'The main attraction'}]},
+  grandCanyon:{ title:'Grand Canyon Trip', description:'Take a helicopter from Las Vegas for a breathtaking flight over and into the Grand Canyon.', locations:[{name:"Maverick Helicopters Las Vegas", why:"Departure terminal for West Rim"}, {name:"Grand Canyon South Rim", why:"Accessible by road for a full day trip"}]},
+  hooverDam:{ title:'Hoover Dam Tour', description:"A morning tour to marvel at this incredible feat of modern engineering.", locations:[{name:'Hoover Dam', why:'Take the Power Plant or Full Dam Tour'}, {name:"Boulder City", why:"Historic town for a coffee stop"}]},
+  rooftopToast:{ title:'Rooftop Toast', description:"Evening cocktails with breathtaking, panoramic views of the Las Vegas Strip.", locations:[{name:'Legacy Club Rooftop Cocktails', why:'Elegant downtown views'}, {name:'Skyfall Lounge', why:'Chic lounge at the Delano'},{name:'Foundation Room', why:'Lounge with a terrace at Mandalay Bay'}]},
+  neonBoneyard:{ title:'Neon Boneyard', description:"A guided tour through a dazzling collection of iconic, retired Las Vegas signs. Best visited at night.", locations:[{name:'The Neon Museum Las Vegas', why:'Book tour tickets online in advance'}]},
+  broadway:{ title:'Broadway Show', description:'A night of world-class theatre in the heart of Manhattan. Can be a matinee followed by dinner, or a late show followed by a stroll.', locations:[{name:'TKTS Ticket Booth Times Square', why:'Discounted same-day tickets'}, {name:'Broadway Theatre District', why:'The heart of it all'}]},
+  topOfRock:{ title:'Top of the Rock', description:'Get the best, unobstructed 360° views of the NYC skyline, including the Empire State Building.', locations:[{name:'Top of the Rock Observation Deck', why:'The main viewpoint'}]},
+  streetFood:{ title:'NYC Street Food', description:"A walking tour of some of NYC's most iconic and delicious street eats.", locations:[{name:"Joe's Pizza", why:'The quintessential NY slice'}, {name:"The Halal Guys", why:'Famous chicken/falafel and rice'}, {name:"A local bagel shop", why:"A morning must-have"}]},
+  brooklynBridge:{ title:'Brooklyn Bridge Walk', description:'The classic walk from Brooklyn to Manhattan offers unforgettable views of the city skyline. Go early to avoid crowds.', locations:[{name:"DUMBO - Washington Street", why:"Starting point for the classic photo"}, {name:"Brooklyn Bridge Pedestrian Walkway", why:'The walk itself'}]},
+  heliTour:{ title:"Manhattan Helicopter Tour", description:"A truly epic way to see the entire island of Manhattan, Statue of Liberty, and the surrounding landmarks.", locations:[{name:"Downtown Manhattan Heliport", why:"Common departure point for tours"}]}
+};
+
+/* ========== UTILITY MAPPING ========== */
+const wmoIcon = (code) => ({0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",61:"🌦️",63:"🌧️",80:"🌧️",95:"⛈️"}[code] || "🌡️");
+const wmoAnimType = (code) => ({0:"sunny",1:"cloudy",2:"cloudy",3:"cloudy",45:"cloudy",61:"rainy",63:"rainy",80:"rainy",95:"rainy"}[code] || "cloudy");
+const wmoAnimHTML = (type) => {
+  if (type === "rainy") return Array.from({length:32}).map(()=>`<div class="rain-drop" style="left:${Math.random()*100}%; top:${Math.random()*80}%; animation-delay:${(Math.random()*1.2).toFixed(2)}s; animation-duration:${(0.7+Math.random()*0.7).toFixed(2)}s"></div>`).join('');
+  return "";
+};
+const weatherDescriptions = {0:"Clear",1:"Mainly Clear",2:"Partly Cloudy",3:"Overcast",45:"Fog",61:"Slight Rain",63:"Rain",80:"Showers",95:"Thunderstorm"};
+
 </script>
 </body>
 </html>
