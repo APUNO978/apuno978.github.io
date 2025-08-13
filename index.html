@@ -415,14 +415,20 @@ margin-top: 24px;
     padding: 4px 0; /* Reset horizontal padding */
     scrollbar-width: none;
     scroll-snap-type: x mandatory;
-    scroll-padding-left: 20px; /* Ensures snap point respects padding */
   }
   .moments-grid::-webkit-scrollbar { display: none; }
   .moments-grid .moment-card {
     flex-shrink: 0;
-    width: 75vw;
-    max-width: 290px;
+    width: 68vw;
+    max-width: 260px;
     scroll-snap-align: start;
+  }
+  /* Add padding to the right of the scroll area for better visual finish */
+  .moments-grid::after {
+      content: '';
+      display: block;
+      flex-shrink: 0;
+      width: 8px;
   }
 }
 .animate-on-scroll{opacity:0;transform:translateY(20px);transition:all 0.6s var(--ease-ios);}
@@ -433,20 +439,21 @@ margin-top: 24px;
 <header class="status-aware-header">
 <div class="nav-container">
 <div class="logo">USA 2025 ✈️</div>
-<!-- NEW: Hamburger button -->
 <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu">
     <span class="bar"></span><span class="bar"></span><span class="bar"></span>
 </button>
 </div>
 </header>
 
-<!-- NEW: Mobile navigation menu -->
 <div class="mobile-nav-overlay" id="mobile-nav-overlay">
   <nav class="mobile-nav" id="mobile-nav">
     <a href="#route-timeline">Road Trip Map</a>
     <a href="#destinations-hub">Destinations</a>
     <a href="#dynamic-moments-section">Epic Moments</a>
     <a href="#dynamic-flights-section">Journey Hub</a>
+    <a href="#trip-planner-section">Trip Planner</a>
+    <a href="#currency-converter-section">GBP to USD Tracker</a>
+    <a href="#vegas-birthday-section">Vegas Jackpot</a>
   </nav>
 </div>
 
@@ -530,7 +537,7 @@ margin-top: 24px;
     </div>
 </section>
 
-<div class="content-section trip-planner animate-on-scroll">
+<div id="trip-planner-section" class="content-section trip-planner animate-on-scroll">
     <div class="planner-header">
         <h2>Trip Planner</h2>
         <div class="planner-dots" id="planner-dots"></div>
@@ -597,7 +604,7 @@ margin-top: 24px;
     </div>
 </div>
 
-<div class="content-section currency-converter animate-on-scroll">
+<div id="currency-converter-section" class="content-section currency-converter animate-on-scroll">
     <h2>🦄 GBP to USD Tracker</h2>
     <div class="currency-rate" id="currency-rate">£1 = $....</div>
     <div class="currency-rate-sub" id="currency-rate-sub">Fetching latest rate...</div>
@@ -618,7 +625,7 @@ margin-top: 24px;
     <button class="action-btn">Set Rate Alert</button>
 </div>
 
-<section class="vegas-birthday animate-on-scroll grid-span-2">
+<section id="vegas-birthday-section" class="vegas-birthday animate-on-scroll grid-span-2">
   <div class="vegas-backdrop"></div>
   <canvas id="vegasConfettiCanvas"></canvas>
   <div class="vegas-content">
@@ -793,7 +800,7 @@ switchCity(currentCityId, true);
 updateJourneyHub(); // Initial call
 if(journeyHubInterval) clearInterval(journeyHubInterval);
 journeyHubInterval = setInterval(updateJourneyHub, 5000);
-setupMobileMenu(); // UPDATED: Initialize hamburger menu with new logic
+setupMobileMenu();
 });
 
 /* ========== CORE UI & LAYOUT ========== */
@@ -813,7 +820,7 @@ document.getElementById('seconds').textContent = String(Math.floor((diff % 6e4) 
 }, 1000);
 }
 
-// UPDATED: Hamburger Menu Logic with functional navigation
+// Hamburger Menu Logic
 function setupMobileMenu() {
     const btn = document.getElementById('hamburger-btn');
     const overlay = document.getElementById('mobile-nav-overlay');
@@ -835,28 +842,21 @@ function setupMobileMenu() {
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            // Prevent the default browser jump
             e.preventDefault();
-            
             const targetId = link.getAttribute('href');
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
-                // First, close the menu
                 toggleMenu(true);
-
-                // Calculate the correct scroll position, accounting for the sticky header
                 const header = document.querySelector('.status-aware-header');
                 const headerHeight = header ? header.offsetHeight : 0;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
                 
-                // Manually scroll to the element's position
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
             } else {
-                // If for some reason the target doesn't exist, just close the menu
                 toggleMenu(true);
             }
         });
@@ -892,7 +892,7 @@ function setupTripPlanner() {
     let autoPlayInterval;
 
     const goToSlide = (index) => {
-        currentIndex = (index + numSlides) % numSlides; // Loop around
+        currentIndex = (index + numSlides) % numSlides;
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
         dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
     };
@@ -909,30 +909,29 @@ function setupTripPlanner() {
         dot.setAttribute('aria-label', `Go to tip ${i + 1}`);
         dot.addEventListener('click', () => {
             goToSlide(i);
-            startAutoPlay(); // Restart timer on manual click
+            startAutoPlay();
         });
         dotsContainer.appendChild(dot);
     });
 
     const dots = Array.from(dotsContainer.children);
 
-    // Swipe functionality for Trip Planner
     let touchStartX = 0;
     carousel.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
-        clearInterval(autoPlayInterval); // Pause on touch
+        clearInterval(autoPlayInterval);
     }, { passive: true });
 
     carousel.addEventListener('touchend', e => {
         const touchEndX = e.changedTouches[0].clientX;
         const swipeDiff = touchStartX - touchEndX;
-        if (Math.abs(swipeDiff) > 50) { // Threshold for swipe
+        if (Math.abs(swipeDiff) > 50) {
             goToSlide(currentIndex + (swipeDiff > 0 ? 1 : -1));
         }
-        startAutoPlay(); // Resume autoplay after swipe
+        startAutoPlay();
     }, { passive: true });
 
-    startAutoPlay(); // Initial start
+    startAutoPlay();
 }
 async function fetchCurrencyRate() {
 try {
@@ -974,7 +973,6 @@ resultEl.classList.remove('visible');
 }
 }
 function renderCurrencyChart() {
-// Generates a random-looking path for visual effect
 let d = "M0,40";
 for (let i = 1; i <= 10; i++) {
 const x = i * 30;
