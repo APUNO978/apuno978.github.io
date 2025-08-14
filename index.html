@@ -279,14 +279,37 @@ padding: 0 24px;
 .moment-description{font-size:14px;color:var(--text-secondary);line-height:1.5;}
 /* ========== Journey Hub Styles ========== */
 .flights-list{display:grid;gap:16px;}
-.flight-card{background:var(--surface);border:1px solid var(--separator);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm); transition: all 0.4s var(--ease-ios);}
-.flight-card-content{padding:16px 20px;}
+.flight-card, .drive-card {
+    background:var(--surface);
+    border:1px solid var(--separator);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    transition: all 0.4s var(--ease-ios);
+}
+.drive-card {
+    border-left: 4px solid var(--secondary);
+}
+.flight-card-content, .drive-card-content {padding:16px 20px;}
 .flight-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .flight-route{font-size:20px;font-weight:700;}
 .flight-date{font-size:14px;color:var(--text-secondary);}
 .flight-details{display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:16px; margin-top: 16px; border-top: 1px solid var(--separator); padding-top: 16px;}
 .detail-label{font-size:12px;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:4px;}
 .detail-value{font-size:16px;font-weight:600;}
+.drive-fact {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--separator);
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+.drive-fact::before {
+    content: '💡';
+    margin-right: 8px;
+    font-size: 16px;
+}
 .flight-status{background:rgba(52,199,89,0.15);color:#34C759;font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--radius-lg);display:inline-block;}
 .flight-card.get-ready{border-color:var(--primary); box-shadow:var(--shadow-lg);}
 .flight-card.travel-day { border-color:var(--secondary); box-shadow:var(--shadow-xl);}
@@ -518,6 +541,13 @@ margin-top: 24px;
       flex-shrink: 0;
       width: 8px;
   }
+}
+
+@media (max-width: 420px) {
+    .hero-subtitle {
+        font-size: 16px;
+        white-space: nowrap;
+    }
 }
 
 /* ========== FIX: Countdown on small screens ========== */
@@ -807,12 +837,13 @@ moments:[
 {id:"cableCar", icon:"🚃", title:"Ride a Cable Car", description:"Climb the hills of SF."},
 {id:"muirWoods", icon:"🌲", title:"Walk with Giants", description:"Visit the majestic redwood forest at Muir Woods."}
 ],
-flights:[ { id: "flight01", route:"LON → SFO", airline: "British Airways", number:"BA 285", status:"Booked", departureTime: "2025-09-19T11:15:00-00:00", arrivalTime: "2025-09-19T14:10:00-07:00", checkinURL: "https://www.britishairways.com/travel/olci/public/en_gb" } ],
+flights:[ { id: "flight01", route:"LON → SFO", airline: "Virgin Atlantic", number:"VS19", status:"Booked", departureTime: "2025-09-19T11:15:00+01:00", arrivalTime: "2025-09-19T14:20:00-07:00", duration: "11h 5m", checkinURL: "https://www.virginatlantic.com/gb/en/travel-information/check-in.html" } ],
 concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco"}, {icon:"☕", label:"Coffee", url:"https://www.google.com/maps/search/?api=1&query=coffee+near+Union+Square+SF"}, {icon:"💊", label:"Pharmacy", url:"https://www.google.com/maps/search/?api=1&query=pharmacy+near+Union+Square+SF"}, {icon:"🌱", label:"Vegetarian", url:"https://www.google.com/maps/search/?api=1&query=vegetarian+food+near+Union+Square+SF"}, {icon:"🛍️", label:"Shopping", url:"https://www.google.com/maps/search/?api=1&query=shopping+near+Union+Square+SF"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
 },
 yosemite:{
 name:"Yosemite", hero:"https://images.unsplash.com/photo-1516687401797-25297ff1462c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
 stay:{ address: "Yosemite Valley Lodge, Yosemite National Park, CA 95389", mapsLink: "https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Lodge" },
+driveInfo: { from: "San Francisco", duration: "Approx. 4 hours", fact: "The drive takes you through California's Central Valley, one of the world's most productive agricultural regions.", mapsLink: "https://www.google.com/maps/dir/San+Francisco/Yosemite+Valley+Lodge" },
 food:[
 {icon:"🍕", name:"Curry Village Pizza", desc:"Casual outdoor patio pies.", url:"https://www.google.com/maps/search/?api=1&query=Curry+Village+Pizza+Deck"},
 {icon:"🍔", name:"Village Grill Deck", desc:"Classic grill fare with great views. Veggie burgers available.", url:"https://www.google.com/maps/search/?api=1&query=Village+Grill+Yosemite", veg:true},
@@ -829,6 +860,7 @@ concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com
 vegas:{
 name:"Las Vegas", hero:"https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1768&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
 stay:{ address: "The Cosmopolitan of Las Vegas, 3708 S Las Vegas Blvd, Las Vegas, NV 89109", mapsLink: "https://www.google.com/maps/search/?api=1&query=The+Cosmopolitan+of+Las+Vegas" },
+driveInfo: { from: "Yosemite", duration: "Approx. 5-6 hours", fact: "This stunning drive can pass near Death Valley, featuring dramatic changes in elevation from the mountains to the desert.", mapsLink: "https://www.google.com/maps/dir/Yosemite+Valley+Lodge/The+Cosmopolitan+of+Las+Vegas" },
 food:[
 {icon:"🍽️", name:"Bacchanal Buffet", desc:"Caesars’ legendary mega buffet.", url:"https://www.google.com/maps/search/?api=1&query=Bacchanal+Buffet"},
 {icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
@@ -840,7 +872,7 @@ moments:[
 {id:"sphere", icon:"🌐", title:"MSG Sphere", description:"Arrive early, centre seats for full dome experience."},
 {id:"hooverDam", icon:"🌊", title:"Hoover Dam", description:"Morning tour, Boulder City coffee stop."},
 ],
-flights:[ { id: "flight02", route:"LAS → NYC", airline: "JetBlue", number:"B6 276", status:"Booked", departureTime: "2025-10-01T09:10:00-07:00", arrivalTime: "2025-10-01T17:18:00-04:00", checkinURL: "https://www.jetblue.com/checkin" } ],
+flights:[ { id: "flight02", route:"LAS → NYC", airline: "JetBlue", number:"B6348", status:"Booked", departureTime: "2025-10-01T13:35:00-07:00", arrivalTime: "2025-10-01T21:49:00-04:00", duration: "5h 14m", checkinURL: "https://www.jetblue.com/checkin" } ],
 concierge:[ {icon:"🎰", label:"Casinos", url:"https://www.google.com/maps/search/?api=1&query=casinos+Las+Vegas+Strip"}, {icon:"🍸", label:"Best Bars", url:"https://www.google.com/search?q=best+cocktail+bars+las+vegas"}, {icon:"🎭", label:"Shows", url:"https://www.google.com/search?q=las+vegas+shows+tickets"}, {icon:"🍽️",label:"Buffets", url:"https://www.google.com/search?q=best+buffets+las+vegas"}, {icon:"☀️", label:"Pool Parties", url:"https://www.google.com/search?q=las+vegas+day+clubs+pool+parties"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
 },
 nyc:{
@@ -857,7 +889,7 @@ moments:[
 {id:"topOfRock", icon:"🏙️", title:"Top of the Rock", description:"Unbeatable skyline views."},
 {id:"brooklynBridge", icon:"🌉", title:"Brooklyn Bridge Walk", description:"Iconic walk for incredible skyline views."},
 ],
-flights:[ { id: "flight03", route:"NYC → LON", airline: "Virgin Atlantic", number:"VS 46", status:"Booked", departureTime: "2025-10-03T20:00:00-04:00", arrivalTime: "2025-10-04T08:00:00-00:00", checkinURL: "https://www.virginatlantic.com/gb/en/travel-information/check-in.html" } ],
+flights:[ { id: "flight03", route:"NYC → LON", airline: "Virgin Atlantic", number:"VS138", status:"Booked", departureTime: "2025-10-03T23:00:00-04:00", arrivalTime: "2025-10-04T11:10:00+01:00", duration: "7h 10m", checkinURL: "https://www.virginatlantic.com/gb/en/travel-information/check-in.html" } ],
 concierge:[ {icon:"🚇", label:"Subway Map", url:"https://new.mta.info/map/5256"}, {icon:"🍕", label:"Best Pizza", url:"https://www.google.com/search?q=best+pizza+slice+nyc"}, {icon:"🎭", label:"Broadway", url:"https://www.broadway.com/"}, {icon:"🏛️", label:"Museums", url:"https://www.google.com/search?q=best+museums+in+nyc"}, {icon:"🍸", label:"Rooftops", url:"https://www.google.com/search?q=best+rooftop+bars+nyc"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
 }
 };
@@ -1212,29 +1244,71 @@ setTimeout(updateContent, 300);
 }
 }
 function renderDynamicSections(cityId) {
-const city = cities[cityId];
+    const city = cities[cityId];
 
-const momentsSection = document.getElementById('dynamic-moments-section');
-const momentsGrid = document.getElementById('dynamic-moments-grid');
-if (city.moments?.length > 0) {
-momentsSection.style.display = 'block';
-momentsGrid.innerHTML = city.moments.map(moment => `<article class="moment-card" onclick="openCustomModal('${moment.id}')"><div class="moment-header"><div class="moment-icon">${moment.icon}</div><h3 class="moment-title">${moment.title}</h3></div><p class="moment-description">${moment.description}</p></article>`).join('');
-} else {
-momentsSection.style.display = 'none';
+    const momentsSection = document.getElementById('dynamic-moments-section');
+    const momentsGrid = document.getElementById('dynamic-moments-grid');
+    if (city.moments?.length > 0) {
+        momentsSection.style.display = 'block';
+        momentsGrid.innerHTML = city.moments.map(moment => `<article class="moment-card" onclick="openCustomModal('${moment.id}')"><div class="moment-header"><div class="moment-icon">${moment.icon}</div><h3 class="moment-title">${moment.title}</h3></div><p class="moment-description">${moment.description}</p></article>`).join('');
+    } else {
+        momentsSection.style.display = 'none';
+    }
+
+    const journeySection = document.getElementById('dynamic-flights-section');
+    const journeyList = document.getElementById('dynamic-flights-list');
+    
+    const cityFlights = city.flights || [];
+    const cityDriveInfo = city.driveInfo;
+
+    if (cityFlights.length > 0) {
+        journeySection.style.display = 'block';
+        journeyList.innerHTML = cityFlights.map(flight => `<article class="flight-card" id="${flight.id}"></article>`).join('');
+        updateJourneyHub();
+    } else if (cityDriveInfo) {
+        journeySection.style.display = 'block';
+        const routeMap = { "San Francisco": "SFO", "Yosemite": "YOS", "Las Vegas": "LAS" };
+        const fromCode = routeMap[cityDriveInfo.from] || cityDriveInfo.from.substring(0,3).toUpperCase();
+        const toCode = routeMap[city.name] || city.name.substring(0,3).toUpperCase();
+        
+        const stopInfo = stops.find(s => s.id === cityId);
+        let formattedDate = city.dates.split('–')[0].trim(); // Fallback
+        if (stopInfo) {
+            // Add T12:00:00 to avoid timezone issues where it might show the previous day
+            const driveDate = new Date(stopInfo.start + 'T12:00:00');
+            formattedDate = driveDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        journeyList.innerHTML = `
+            <article class="drive-card">
+                <div class="drive-card-content">
+                    <div class="flight-header">
+                        <div class="flight-route">🚗 ${fromCode} → ${toCode}</div>
+                        <div class="flight-date">${formattedDate}</div>
+                    </div>
+                    <div class="flight-details">
+                        <div>
+                            <div class="detail-label">Est. Duration</div>
+                            <div class="detail-value">${cityDriveInfo.duration}</div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Mode</div>
+                            <div class="detail-value" style="display:flex; align-items:center; gap: 6px;">
+                                <span>By Car</span>
+                                <a href="${cityDriveInfo.mapsLink}" target="_blank" rel="noopener" style="font-size:12px; font-weight: 500;">Maps</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drive-fact">${cityDriveInfo.fact}</div>
+                </div>
+            </article>
+        `;
+    } else {
+        journeySection.style.display = 'none';
+        journeyList.innerHTML = '';
+    }
 }
 
-const flightsSection = document.getElementById('dynamic-flights-section');
-const flightsList = document.getElementById('dynamic-flights-list');
-const cityFlights = city.flights || [];
-
-if (cityFlights.length > 0) {
-flightsSection.style.display = 'block';
-flightsList.innerHTML = cityFlights.map(flight => `<article class="flight-card" id="${flight.id}" data-departure-time="${flight.departureTime}" data-arrival-time="${flight.arrivalTime}" data-checkin-url="${flight.checkinURL}"></article>`).join('');
-updateJourneyHub();
-} else {
-flightsSection.style.display = 'none';
-}
-}
 
 /* ========== INTERACTIVITY HOOKS FOR NEW MAP ========== */
 function showLocationDetails(cityId) {
@@ -1259,12 +1333,14 @@ if (flight) return { flight, city: cities[cityId] };
 return null;
 }
 function getDestinationCityByFlight(flight) {
-const destinationCode = flight.route.split(' → ')[1];
-const cityMap = { SFO: 'sanfran', YOS: 'yosemite', LAS: 'vegas', NYC: 'nyc' };
-for (const code in cityMap) {
-if (destinationCode.includes(code)) return cities[cityMap[code]];
-}
-return null;
+    const destinationCode = flight.route.split(' → ')[1];
+    const cityMap = { SFO: 'sanfran', YOS: 'yosemite', LAS: 'vegas', NYC: 'nyc' };
+    for (const code in cityMap) {
+        if (destinationCode.includes(code)) {
+            return cities[cityMap[code]];
+        }
+    }
+    return null;
 }
 function formatTimeDiff(diffMs) {
 diffMs = Math.max(0, diffMs);
@@ -1293,7 +1369,7 @@ currentState = 'pre-flight';
 currentState = 'get-ready';
 }
 
-const defaultHTML = `<div class="flight-card-content"><div class="flight-header"><div class="flight-route">${flight.route}</div><div class="flight-date">${new Date(flight.departureTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div></div><div class="flight-details"><div><div class="detail-label">Flight</div><div class="detail-value">${flight.airline} ${flight.number}</div></div><div><div class="detail-label">Status</div><div class="flight-status">${flight.status}</div></div></div></div>`;
+const defaultHTML = `<div class="flight-card-content"><div class="flight-header"><div class="flight-route">${flight.route}</div><div class="flight-date">${new Date(flight.departureTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div></div><div class="flight-details"><div><div class="detail-label">Flight</div><div class="detail-value">${flight.airline} ${flight.number}</div></div><div><div class="detail-label">Duration</div><div class="detail-value">${flight.duration || '--'}</div></div><div><div class="detail-label">Status</div><div class="flight-status">${flight.status}</div></div></div></div>`;
 let contentHTML = defaultHTML;
 cardEl.className = 'flight-card default';
 
@@ -1513,7 +1589,7 @@ isSpinning = false;
 
 function celebrateBirthday() {
 triggerJackpotConfetti();
-showVegasToast('🎉', 'JACKPOT! Lets Win Eveb BIGGER in Vegas!');
+showVegasToast('🎉', 'JACKPOT! Lets Win Even BIGGER in Vegas!');
 if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 }
 
