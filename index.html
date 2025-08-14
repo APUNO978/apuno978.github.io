@@ -843,7 +843,7 @@ concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/sear
 yosemite:{
 name:"Yosemite", hero:"https://images.unsplash.com/photo-1516687401797-25297ff1462c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
 stay:{ address: "Yosemite Valley Lodge, Yosemite National Park, CA 95389", mapsLink: "https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Lodge" },
-driveInfo: { from: "San Francisco", duration: "Approx. 4 hours", fact: "The drive takes you through California's Central Valley, one of the world's most productive agricultural regions.", mapsLink: "https://www.google.com/maps/dir/San+Francisco/Yosemite+Valley+Lodge" },
+driveInfo: { from: "San Francisco", duration: "Approx. 6 hours", fact: "The drive takes you through California's Central Valley, one of the world's most productive agricultural regions.", mapsLink: "https://www.google.com/maps/dir/San+Francisco,+CA/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA" },
 food:[
 {icon:"🍕", name:"Curry Village Pizza", desc:"Casual outdoor patio pies.", url:"https://www.google.com/maps/search/?api=1&query=Curry+Village+Pizza+Deck"},
 {icon:"🍔", name:"Village Grill Deck", desc:"Classic grill fare with great views. Veggie burgers available.", url:"https://www.google.com/maps/search/?api=1&query=Village+Grill+Yosemite", veg:true},
@@ -860,7 +860,7 @@ concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com
 vegas:{
 name:"Las Vegas", hero:"https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1768&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
 stay:{ address: "The Cosmopolitan of Las Vegas, 3708 S Las Vegas Blvd, Las Vegas, NV 89109", mapsLink: "https://www.google.com/maps/search/?api=1&query=The+Cosmopolitan+of+Las+Vegas" },
-driveInfo: { from: "Yosemite", duration: "Approx. 5-6 hours", fact: "This stunning drive can pass near Death Valley, featuring dramatic changes in elevation from the mountains to the desert.", mapsLink: "https://www.google.com/maps/dir/Yosemite+Valley+Lodge/The+Cosmopolitan+of+Las+Vegas" },
+driveInfo: { from: "Yosemite", duration: "Approx. 9-10 hours", fact: "This epic drive takes you through the dramatic landscapes of Death Valley National Park.", mapsLink: "https://www.google.com/maps/dir/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA/Furnace+Creek,+CA/The+Cosmopolitan+of+Las+Vegas,+Las+Vegas,+NV" },
 food:[
 {icon:"🍽️", name:"Bacchanal Buffet", desc:"Caesars’ legendary mega buffet.", url:"https://www.google.com/maps/search/?api=1&query=Bacchanal+Buffet"},
 {icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
@@ -1261,9 +1261,12 @@ function renderDynamicSections(cityId) {
     const cityFlights = city.flights || [];
     const cityDriveInfo = city.driveInfo;
 
+    // Reset list
+    journeyList.innerHTML = '';
+
     if (cityFlights.length > 0) {
         journeySection.style.display = 'block';
-        journeyList.innerHTML = cityFlights.map(flight => `<article class="flight-card" id="${flight.id}"></article>`).join('');
+        journeyList.innerHTML += cityFlights.map(flight => `<article class="flight-card" id="${flight.id}"></article>`).join('');
         updateJourneyHub();
     } else if (cityDriveInfo) {
         journeySection.style.display = 'block';
@@ -1274,12 +1277,11 @@ function renderDynamicSections(cityId) {
         const stopInfo = stops.find(s => s.id === cityId);
         let formattedDate = city.dates.split('–')[0].trim(); // Fallback
         if (stopInfo) {
-            // Add T12:00:00 to avoid timezone issues where it might show the previous day
             const driveDate = new Date(stopInfo.start + 'T12:00:00');
             formattedDate = driveDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
-        journeyList.innerHTML = `
+        journeyList.innerHTML += `
             <article class="drive-card">
                 <div class="drive-card-content">
                     <div class="flight-header">
@@ -1303,9 +1305,52 @@ function renderDynamicSections(cityId) {
                 </div>
             </article>
         `;
-    } else {
+    }
+
+    // Special case for Yosemite: show the outbound drive as well
+    if (cityId === 'yosemite' && cities.vegas.driveInfo) {
+        const nextDriveInfo = cities.vegas.driveInfo;
+        const nextCity = cities.vegas;
+        const routeMap = { "Yosemite": "YOS", "Las Vegas": "LAS" };
+        const fromCode = routeMap[nextDriveInfo.from] || nextDriveInfo.from.substring(0,3).toUpperCase();
+        const toCode = routeMap[nextCity.name] || nextCity.name.substring(0,3).toUpperCase();
+
+        const stopInfo = stops.find(s => s.id === 'vegas');
+        let formattedDate = nextCity.dates.split('–')[0].trim(); // Fallback
+        if (stopInfo) {
+            const driveDate = new Date(stopInfo.start + 'T12:00:00');
+            formattedDate = driveDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+         journeyList.innerHTML += `
+            <article class="drive-card">
+                <div class="drive-card-content">
+                    <div class="flight-header">
+                        <div class="flight-route">🚗 ${fromCode} → ${toCode}</div>
+                        <div class="flight-date">${formattedDate}</div>
+                    </div>
+                    <div class="flight-details">
+                        <div>
+                            <div class="detail-label">Est. Duration</div>
+                            <div class="detail-value">${nextDriveInfo.duration}</div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Mode</div>
+                            <div class="detail-value" style="display:flex; align-items:center; gap: 6px;">
+                                <span>By Car</span>
+                                <a href="${nextDriveInfo.mapsLink}" target="_blank" rel="noopener" style="font-size:12px; font-weight: 500;">Maps</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drive-fact">${nextDriveInfo.fact}</div>
+                </div>
+            </article>
+        `;
+    }
+
+    // Hide section if no content was added
+    if (!journeyList.innerHTML) {
         journeySection.style.display = 'none';
-        journeyList.innerHTML = '';
     }
 }
 
