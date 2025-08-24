@@ -871,6 +871,20 @@ margin-top: 24px;
     </div>
 </section>
 
+<section id="ai-food-concierge" class="content-section animate-on-scroll grid-span-2" style="display: none;">
+    <div class="section-header">
+        <h2 class="section-title">What's Good Now?</h2>
+        <p class="section-subtitle" id="ai-food-subtitle"></p>
+    </div>
+    <div class="section-content">
+        <div class="widget" style="padding:0; border:none; box-shadow:none;">
+            <div class="widget-list" id="ai-food-recommendations">
+                <!-- Recommendations will be injected here -->
+            </div>
+        </div>
+    </div>
+</section>
+
 <div id="trip-planner-section" class="content-section trip-planner animate-on-scroll">
     <div class="planner-header">
         <h2>Trip Planner</h2>
@@ -1087,16 +1101,40 @@ margin-top: 24px;
 
 <script>
 /* ========== GLOBAL STATE & DATA ========== */
+
+// --- DEBUG MODE ---
+// To test the page as if you are on the trip, set a date below.
+// This will make the "What's Good Now?", countdown, and header status behave as if it's that time.
+// To use the real current date, set this to null.
+// Example: new Date('2025-09-28T13:00:00-07:00') // Vegas lunch time
+// Example: new Date('2025-09-20T08:30:00-07:00') // San Francisco breakfast time
+// const debugDate = new Date('2025-10-02T19:00:00-04:00'); // NYC Dinner time
+const debugDate = null; // LIVE MODE
+
 const cities = {
 sanfran:{
-name:"San Francisco", hero:"https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"19–23 Sep", area:"Union Square", lat:37.7749, lon:-122.4194,
+name:"San Francisco", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"19–23 Sep", area:"Union Square", lat:37.7749, lon:-122.4194,
 stay:{ address:"123 Union Square Plaza, San Francisco, CA 94108", mapsLink:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco" },
-food:[
-{icon:"🍞", name:"Boudin Bakery", desc:"Sourdough bowls at the Wharf.", url:"https://www.google.com/maps/search/?api=1&query=Boudin+Bakery+Fisherman%27s+Wharf"},
-{icon:"🥗", name:"Greens Restaurant", desc:"Iconic vegetarian dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Greens+Restaurant+Fort+Mason", veg:true},
-{icon:"🌯", name:"La Taqueria", desc:"Authentic Mission-style burritos.", url:"https://www.google.com/maps/search/?api=1&query=La+Taqueria+San+Francisco"},
-{icon:"🍫", name:"Ghirardelli Square", desc:"World-famous chocolate & sundaes.", url:"https://www.google.com/maps/search/?api=1&query=Ghirardelli+Square"}
-],
+foodRecommendations: {
+    breakfast: [
+        {icon:"🥞", name:"Dottie's True Blue Cafe", desc:"Classic American breakfast & brunch.", url:"https://www.google.com/maps/search/?api=1&query=Dottie's+True+Blue+Cafe+San+Francisco", veg: true},
+        {icon:"🥐", name:"Tartine Bakery", desc:"World-famous pastries and coffee.", url:"https://www.google.com/maps/search/?api=1&query=Tartine+Bakery+San+Francisco", veg: true},
+        {icon:"🍳", name:"Mama's on Washington", desc:"Beloved spot for brunch classics.", url:"https://www.google.com/maps/search/?api=1&query=Mama's+on+Washington+Square", veg: true}
+    ],
+    lunch: [
+        {icon:"🍞", name:"Boudin Bakery", desc:"Sourdough bowls at the Wharf.", url:"https://www.google.com/maps/search/?api=1&query=Boudin+Bakery+Fisherman%27s+Wharf", veg: true},
+        {icon:"🌯", name:"La Taqueria", desc:"Authentic Mission-style burritos.", url:"https://www.google.com/maps/search/?api=1&query=La+Taqueria+San+Francisco", veg: true},
+        {icon:"🥗", name:"Souvla", desc:"Quick and delicious Greek salads.", url:"https://www.google.com/maps/search/?api=1&query=Souvla+San+Francisco", veg:true}
+    ],
+    dinner: [
+        {icon:"🌱", name:"Greens Restaurant", desc:"Iconic vegetarian dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Greens+Restaurant+Fort+Mason", veg:true},
+        {icon:"🥩", name:"House of Prime Rib", desc:"An old-school SF institution.", url:"https://www.google.com/maps/search/?api=1&query=House+of+Prime+Rib+San+Francisco"},
+        {icon:"🐦", name:"State Bird Provisions", desc:"Adventurous, modern American food.", url:"https://www.google.com/maps/search/?api=1&query=State+Bird+Provisions", veg: true}
+    ],
+    anytime: [
+        {icon:"🍔", name:"In-N-Out Burger", desc:"California's iconic fast-food burger.", url:"https://www.google.com/maps/search/?api=1&query=In-N-Out+Burger+San+Francisco", veg: true}
+    ]
+},
 moments:[
 {id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind."},
 {id:"alcatraz", icon:"⛓️", title:"Alcatraz Island Tour", description:"Explore the infamous prison."},
@@ -1107,14 +1145,23 @@ flights:[ { id: "flight01", route:"LON → SFO", airline: "Virgin Atlantic", num
 concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco"}, {icon:"☕", label:"Coffee", url:"https://www.google.com/maps/search/?api=1&query=coffee+near+Union+Square+SF"}, {icon:"💊", label:"Pharmacy", url:"https://www.google.com/maps/search/?api=1&query=pharmacy+near+Union+Square+SF"}, {icon:"🌱", label:"Vegetarian", url:"https://www.google.com/maps/search/?api=1&query=vegetarian+food+near+Union+Square+SF"}, {icon:"🛍️", label:"Shopping", url:"https://www.google.com/maps/search/?api=1&query=shopping+near+Union+Square+SF"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
 },
 yosemite:{
-name:"Yosemite", hero:"https://images.unsplash.com/photo-1516687401797-25297ff1462c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
+name:"Yosemite", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1516687401797-25297ff1462c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
 stay:{ address: "Yosemite Valley Lodge, Yosemite National Park, CA 95389", mapsLink: "https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Lodge" },
 driveInfo: { from: "San Francisco", duration: "Approx. 6 hours", fact: "The drive takes you through California's Central Valley, one of the world's most productive agricultural regions.", mapsLink: "https://www.google.com/maps/dir/San+Francisco,+CA/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA" },
-food:[
-{icon:"🍕", name:"Curry Village Pizza", desc:"Casual outdoor patio pies.", url:"https://www.google.com/maps/search/?api=1&query=Curry+Village+Pizza+Deck"},
-{icon:"🍔", name:"Village Grill Deck", desc:"Classic grill fare with great views. Veggie burgers available.", url:"https://www.google.com/maps/search/?api=1&query=Village+Grill+Yosemite", veg:true},
-{icon:"🏨", name:"The Ahwahnee Dining", desc:"Historic fine dining experience.", url:"https://www.google.com/maps/search/?api=1&query=The+Ahwahnee+Dining+Room"}
-],
+foodRecommendations:{
+    breakfast: [
+        {icon:"☕", name:"Degnan's Kitchen", desc:"Grab-and-go breakfast and coffee.", url:"https://www.google.com/maps/search/?api=1&query=Degnan's+Kitchen+Yosemite", veg: true},
+        {icon:"食堂", name:"Base Camp Eatery", desc:"Cafeteria-style with good options.", url:"https://www.google.com/maps/search/?api=1&query=Base+Camp+Eatery+Yosemite", veg: true}
+    ],
+    lunch: [
+        {icon:"🍔", name:"Village Grill Deck", desc:"Classic grill fare with great views.", url:"https://www.google.com/maps/search/?api=1&query=Village+Grill+Yosemite", veg:true},
+        {icon:"🍕", name:"Curry Village Pizza", desc:"Casual outdoor patio pies.", url:"https://www.google.com/maps/search/?api=1&query=Curry+Village+Pizza+Deck", veg: true}
+    ],
+    dinner: [
+        {icon:"🏨", name:"The Ahwahnee Dining", desc:"Historic fine dining experience.", url:"https://www.google.com/maps/search/?api=1&query=The+Ahwahnee+Dining+Room", veg: true},
+        {icon:"🥩", name:"Mountain Room", desc:"Upscale lodge dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Mountain+Room+Restaurant+Yosemite", veg: true}
+    ]
+},
 moments:[
 {id:"stargazing", icon:"🌌", title:"Yosemite Stargazing", description:"Milky Way hunt from Glacier Point or Tunnel View."},
 {id:"mistTrail", icon:"💦", title:"Hike the Mist Trail", description:"Get soaked by Vernal Fall."},
@@ -1124,15 +1171,31 @@ moments:[
 concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Visitor+Center"}, {icon:"🥾", label:"Trail Maps", url:"https://www.nps.gov/yose/planyourvisit/maps.htm"}, {icon:"🚌", label:"Shuttle", url:"https://www.nps.gov/yose/planyourvisit/publictransportation.htm"}, {icon:"⛽", label:"Gas", url:"https://www.nps.gov/yose/planyourvisit/gas.htm"}, {icon:"🚗", label:"Roads", url:"https://www.nps.gov/yose/planyourvisit/conditions.htm"}, {icon:"📸", label:"Webcams", url:"https://www.nps.gov/yose/learn/photosmultimedia/webcams.htm"} ]
 },
 vegas:{
-name:"Las Vegas", hero:"https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1768&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
+name:"Las Vegas", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1768&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
 stay:{ address: "The Cosmopolitan of Las Vegas, 3708 S Las Vegas Blvd, Las Vegas, NV 89109", mapsLink: "https://www.google.com/maps/search/?api=1&query=The+Cosmopolitan+of+Las+Vegas" },
 driveInfo: { from: "Yosemite", duration: "Approx. 9-10 hours", fact: "This epic drive takes you through the dramatic landscapes of Death Valley National Park.", mapsLink: "https://www.google.com/maps/dir/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA/Furnace+Creek,+CA/The+Cosmopolitan+of+Las+Vegas,+Las+Vegas,+NV" },
-food:[
-{icon:"🍽️", name:"Bacchanal Buffet", desc:"Caesars’ legendary mega buffet.", url:"https://www.google.com/maps/search/?api=1&query=Bacchanal+Buffet"},
-{icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
-{icon:"🌮", name:"Tacos El Gordo", desc:"Famous Tijuana-style tacos.", url:"https://www.google.com/maps/search/?api=1&query=Tacos+El+Gordo+Las+Vegas"},
-{icon:"🥩", name:"Gordon Ramsay Steak", desc:"High-end steakhouse experience.", url:"https://www.google.com/maps/search/?api=1&query=Gordon+Ramsay+Steak+Las+Vegas"}
-],
+foodRecommendations:{
+    breakfast: [
+        {icon:"🍳", name:"Eggslut", desc:"Gourmet breakfast sandwiches.", url:"https://www.google.com/maps/search/?api=1&query=Eggslut+Las+Vegas", veg: true},
+        {icon:"🌿", name:"Tableau", desc:"Upscale brunch with great veg options.", url:"https://www.google.com/maps/search/?api=1&query=Tableau+Las+Vegas", veg: true},
+        {icon:"🐔", name:"Hash House A Go Go", desc:"Famously huge portions.", url:"https://www.google.com/maps/search/?api=1&query=Hash+House+A+Go+Go+Las+Vegas", veg: true}
+    ],
+    lunch: [
+        {icon:"🌮", name:"Tacos El Gordo", desc:"Famous Tijuana-style tacos.", url:"https://www.google.com/maps/search/?api=1&query=Tacos+El+Gordo+Las+Vegas", veg: true},
+        {icon:"🍽️", name:"Bacchanal Buffet", desc:"Legendary buffet with endless options.", url:"https://www.google.com/maps/search/?api=1&query=Bacchanal+Buffet", veg: true},
+        {icon:"🍕", name:"Secret Pizza", desc:"Hidden spot for a great slice.", url:"https://www.google.com/maps/search/?api=1&query=Secret+Pizza+Las+Vegas", veg: true}
+    ],
+    dinner: [
+        {icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
+        {icon:"🇹🇭", name:"Lotus of Siam", desc:"Often called the best Thai food in the US.", url:"https://www.google.com/maps/search/?api=1&query=Lotus+of+Siam+Las+Vegas", veg: true},
+        {icon:"🥩", name:"Gordon Ramsay Steak", desc:"High-end steakhouse experience.", url:"https://www.google.com/maps/search/?api=1&query=Gordon+Ramsay+Steak+Las+Vegas"}
+    ],
+    anytime: [
+        {icon:"🍔", name:"In-N-Out Burger", desc:"The best fast-food burger, period.", url:"https://www.google.com/maps/search/?api=1&query=In-N-Out+Burger+Las+Vegas", veg: true},
+        {icon:"🌮", name:"Taco Bell Cantina", desc:"Boozy slushies and tacos on the Strip.", url:"https://www.google.com/maps/search/?api=1&query=Taco+Bell+Cantina+Las+Vegas+Strip", veg: true},
+        {icon:"🍽️", name:"The Henry", desc:"24/7 classy diner inside The Cosmo.", url:"https://www.google.com/maps/search/?api=1&query=The+Henry+at+The+Cosmopolitan+of+Las+Vegas", veg: true}
+    ]
+},
 moments:[
 {id:"vegasNight", icon:"🎰", title:"Vegas Boys Night", description:"A celebratory night out exploring iconic bars and neon-lit streets."},
 {id:"sphere", icon:"🌐", title:"MSG Sphere", description:"Arrive early, centre seats for full dome experience."},
@@ -1142,14 +1205,30 @@ flights:[ { id: "flight02", route:"LAS → NYC", airline: "JetBlue", number:"B63
 concierge:[ {icon:"🎰", label:"Casinos", url:"https://www.google.com/maps/search/?api=1&query=casinos+Las+Vegas+Strip"}, {icon:"🍸", label:"Best Bars", url:"https://www.google.com/search?q=best+cocktail+bars+las+vegas"}, {icon:"🎭", label:"Shows", url:"https://www.google.com/search?q=las+vegas+shows+tickets"}, {icon:"🍽️",label:"Buffets", url:"https://www.google.com/search?q=best+buffets+las+vegas"}, {icon:"☀️", label:"Pool Parties", url:"https://www.google.com/search?q=las+vegas+day+clubs+pool+parties"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
 },
 nyc:{
-name:"New York City", hero:"https://images.unsplash.com/photo-1570304816841-906a17d7b067?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"1–3 Oct", area:"Midtown", lat:40.7128, lon:-74.0060,
+name:"New York City", timezone: "America/New_York", hero:"https://images.unsplash.com/photo-1570304816841-906a17d7b067?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"1–3 Oct", area:"Midtown", lat:40.7128, lon:-74.0060,
 stay:{ address: "Arlo Midtown, 351 W 38th St, New York, NY 10018", mapsLink: "https://www.google.com/maps/search/?api=1&query=Arlo+Midtown+New+York" },
-food:[
-{icon:"🍕", name:"Joe’s Pizza", desc:"The quintessential NY slice.", url:"https://www.google.com/maps/search/?api=1&query=Joe%27s+Pizza+NYC"},
-{icon:"🥙", name:"The Halal Guys", desc:"Famous street cart (falafel avail.)", url:"https://www.google.com/maps/search/?api=1&query=The+Halal+Guys", veg: true},
-{icon:"🥯", name:"Russ & Daughters", desc:"Iconic bagels and lox.", url:"https://www.google.com/maps/search/?api=1&query=Russ+%26+Daughters"},
-{icon:"🍜", name:"Ippudo", desc:"World-class ramen bowls.", url:"https://www.google.com/maps/search/?api=1&query=Ippudo+NYC"}
-],
+foodRecommendations: {
+    breakfast: [
+        {icon:"🥯", name:"Ess-a-Bagel", desc:"A true classic New York bagel.", url:"https://www.google.com/maps/search/?api=1&query=Ess-a-Bagel", veg: true},
+        {icon:"🥞", name:"Clinton St. Baking Co.", desc:"Famous for incredible pancakes.", url:"https://www.google.com/maps/search/?api=1&query=Clinton+St.+Baking+Company+%26+Restaurant", veg: true},
+        {icon:"🥟", name:"Nom Wah Tea Parlor", desc:"Historic dim sum in Chinatown.", url:"https://www.google.com/maps/search/?api=1&query=Nom+Wah+Tea+Parlor", veg: true}
+    ],
+    lunch: [
+        {icon:"🍕", name:"Joe’s Pizza", desc:"The quintessential NY slice.", url:"https://www.google.com/maps/search/?api=1&query=Joe%27s+Pizza+NYC", veg: true},
+        {icon:"🥙", name:"Mamoun's Falafel", desc:"Legendary, cheap, and delicious falafel.", url:"https://www.google.com/maps/search/?api=1&query=Mamoun's+Falafel+NYC", veg: true},
+        {icon:"🥪", name:"Katz's Delicatessen", desc:"Legendary pastrami sandwiches.", url:"https://www.google.com/maps/search/?api=1&query=Katz's+Delicatessen"}
+    ],
+    dinner: [
+        {icon:"🍜", name:"Ippudo", desc:"World-class ramen bowls.", url:"https://www.google.com/maps/search/?api=1&query=Ippudo+NYC", veg: true},
+        {icon:"🌱", name:"Hangawi", desc:"Upscale, traditional Korean vegetarian.", url:"https://www.google.com/maps/search/?api=1&query=Hangawi+NYC", veg: true},
+        {icon:"🥩", name:"Peter Luger Steak House", desc:"An iconic Brooklyn steakhouse.", url:"https://www.google.com/maps/search/?api=1&query=Peter+Luger+Steak+House"}
+    ],
+    anytime: [
+        {icon:"🍔", name:"McDonald's", desc:"Open late, you know what it is.", url:"https://www.google.com/maps/search/?api=1&query=McDonalds+near+Midtown+New+York", veg: true},
+        {icon:"🍗", name:"Popeyes", desc:"Louisiana-style fried chicken.", url:"https://www.google.com/maps/search/?api=1&query=Popeyes+near+Midtown+New+York"},
+        {icon:"🇨🇺", name:"Coppelia", desc:"24/7 Cuban-American diner.", url:"https://www.google.com/maps/search/?api=1&query=Coppelia+NYC", veg: true}
+    ]
+},
 moments:[
 {id:"broadway", icon:"🎭", title:"Broadway Show", description:"Matinee + dinner or late show + stroll."},
 {id:"topOfRock", icon:"🏙️", title:"Top of the Rock", description:"Unbeatable skyline views."},
@@ -1238,17 +1317,22 @@ document.addEventListener('DOMContentLoaded', () => {
         updateJourneyHub();
         updateRealProgress();
         updateContextualHeader();
+        updateFoodConcierge();
     };
     allUpdates();
     if(masterInterval) clearInterval(masterInterval);
-    masterInterval = setInterval(allUpdates, 5000);
+    masterInterval = setInterval(allUpdates, 60000); 
 });
 
 /* ========== CORE UI & LAYOUT ========== */
+function getCurrentTime() {
+    return debugDate || new Date();
+}
+
 function setupCountdown() {
 const tripDate = new Date('2025-09-19T09:00:00-07:00');
 const countdownInterval = setInterval(() => {
-const diff = tripDate.getTime() - new Date().getTime();
+const diff = tripDate.getTime() - getCurrentTime().getTime();
 if (diff <= 0) {
 document.querySelector('.countdown-container').innerHTML = `<div style="font-size:18px;font-weight:600;color:var(--success);">🎉 Adventure Time!</div>`;
 clearInterval(countdownInterval);
@@ -1307,7 +1391,7 @@ function updateTimelineStatus(){
 const el = document.getElementById('timelineStatus');
 if(!el) return;
 const start = new Date('2025-09-19T00:00:00-07:00');
-const days = Math.floor((start - new Date())/86400000);
+const days = Math.floor((start - getCurrentTime())/86400000);
 el.textContent = days>0 ? `🛤️ ~${days} day${days!==1?'s':''} until your journey begins!`
 : `🛤️ You're on the road — make it count!`;
 }
@@ -1323,7 +1407,7 @@ function updateRealProgress(){
   
   const tripStart = new Date(stops[0].start);
   const tripEnd = new Date(stops.at(-1).end);
-  const now = new Date();
+  const now = getCurrentTime();
   
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
   const ratio = clamp((now - tripStart) / (tripEnd - tripStart), 0, 1);
@@ -1336,7 +1420,7 @@ function updateContextualHeader() {
     const statusEl = document.getElementById('contextual-status');
     if (!statusEl) return;
 
-    const now = new Date();
+    const now = getCurrentTime();
     const tripStart = new Date(stops[0].start);
     const tripEnd = new Date(stops.at(-1).end);
 
@@ -1352,14 +1436,11 @@ function updateContextualHeader() {
             }
         }
     }
-
-    for (const stop of stops) {
-        const start = new Date(stop.start);
-        const end = new Date(stop.end);
-        if (now >= start && now <= end) {
-            statusEl.innerHTML = `📍 Now in: <span class="val">${cities[stop.id].name}</span>`;
-            return;
-        }
+    
+    const currentCityOnTrip = getCurrentCityOnTrip();
+    if(currentCityOnTrip) {
+        statusEl.innerHTML = `📍 Now in: <span class="val">${currentCityOnTrip.data.name}</span>`;
+        return;
     }
     
     if (now.getMonth() === 8 && now.getDate() === 28 && now.getFullYear() === 2025) {
@@ -1375,6 +1456,7 @@ function updateContextualHeader() {
         statusEl.innerHTML = `✅ Adventure Complete!`;
     }
 }
+
 
 function observeScrollAnimations() {
 const observer = new IntersectionObserver((entries) => {
@@ -1490,14 +1572,14 @@ container.innerHTML = Object.keys(cities).map((id, i) =>
 container.addEventListener('click', e => { if (e.target.matches('.tab')) switchCity(e.target.dataset.city); });
 }
 function switchCity(cityId, isInitial = false) {
-currentCityId = cityId;
+currentCityId = cityId; // Update the global state
 const city = cities[cityId];
 const card = document.getElementById('main-card');
 const updateContent = () => {
 document.getElementById('hero-image').style.backgroundImage = `url('${city.hero}')`;
 document.getElementById('hero-title-text').textContent = city.name;
 document.getElementById('hero-area').textContent = city.area;
-const foodHtml = city.food?.length > 0 ? `<div class="widget"><h3>Good Food Spots</h3><div class="widget-list">${city.food.map(item => `<a class="widget-item a" href="${item.url}" target="_blank" rel="noopener"><div class="widget-icon">${item.icon}</div><div class="widget-text"><h4>${item.name} ${item.veg ? '<span style="color:var(--success);font-size:12px;">🌱</span>' : ''}</h4><p>${item.desc}</p></div></a>`).join('')}</div></div>` : '';
+const foodHtml = city.foodRecommendations ? `<div class="widget"><h3>Good Food Spots</h3><div class="widget-list">${Object.values(city.foodRecommendations).flat().slice(0, 3).map(item => `<a class="widget-item a" href="${item.url}" target="_blank" rel="noopener"><div class="widget-icon">${item.icon}</div><div class="widget-text"><h4>${item.name} ${item.veg ? '<span style="color:var(--success);font-size:12px;">🌱</span>' : ''}</h4><p>${item.desc}</p></div></a>`).join('')}</div></div>` : '';
 document.getElementById('content-column').innerHTML = `<div style="background:var(--surface);padding:16px;border-radius:var(--radius-lg);"><div class="info-item"><span>Dates</span><span>${city.dates}</span></div><div class="info-item"><span>Area</span><span>${city.area}</span></div></div><div class="widget" style="cursor:pointer;" id="weather-widget"><h3>Live Weather</h3><div class="weather-main"><div class="weather-icon">⏳</div><div><div class="weather-temp">--°C</div><div class="weather-desc">Loading...</div></div></div></div>${foodHtml}`;
 renderWeather(cityId);
 renderDynamicSections(cityId);
@@ -1507,6 +1589,7 @@ t.classList.toggle('active', isActive);
 t.setAttribute('aria-selected', isActive);
 });
 card.classList.add('visible');
+updateFoodConcierge(); // Update food recommendations whenever a city is switched
 };
 if (isInitial) {
 updateContent();
@@ -1515,6 +1598,86 @@ card.classList.remove('visible');
 setTimeout(updateContent, 300);
 }
 }
+
+/* ========== AI FOOD CONCIERGE ========== */
+function getCurrentCityOnTrip() {
+    const now = getCurrentTime();
+    for (const stop of stops) {
+        const start = new Date(stop.start);
+        const end = new Date(stop.end);
+        end.setHours(23, 59, 59, 999);
+        if (now >= start && now <= end) {
+            return { id: stop.id, data: cities[stop.id] };
+        }
+    }
+    return null;
+}
+
+function updateFoodConcierge() {
+    const conciergeSection = document.getElementById('ai-food-concierge');
+    const subtitleEl = document.getElementById('ai-food-subtitle');
+    const recommendationsList = document.getElementById('ai-food-recommendations');
+
+    const now = getCurrentTime();
+    const cityInfo = cities[currentCityId];
+    
+    // Get the current hour IN THE DESTINATION'S TIMEZONE
+    const cityTimezone = cityInfo.timezone;
+    const timeInCity = new Date(now.toLocaleString('en-US', { timeZone: cityTimezone }));
+    const currentHour = timeInCity.getHours();
+
+    // The section should only be visible if the user is "on the trip" according to the timeline.
+    const currentCityOnTrip = getCurrentCityOnTrip();
+    if (!currentCityOnTrip) {
+        conciergeSection.style.display = 'none';
+        return;
+    }
+    
+    let mealType = null;
+    let mealIcon = '';
+    let isLateNight = false;
+
+    if (currentHour >= 7 && currentHour < 12) { mealType = 'breakfast'; mealIcon = '🍳'; }
+    else if (currentHour >= 12 && currentHour < 17) { mealType = 'lunch'; mealIcon = '🍔'; }
+    else if (currentHour >= 17 && currentHour < 22) { mealType = 'dinner'; mealIcon = '🌙'; }
+    else { isLateNight = true; mealIcon = '🦉'; }
+
+    const cityFoodData = cityInfo.foodRecommendations;
+    if (!cityFoodData) {
+        conciergeSection.style.display = 'none';
+        return;
+    }
+
+    const anytimeRecommendations = cityFoodData.anytime || [];
+    let mealRecommendations = [];
+    let finalRecommendations = [];
+
+    if (mealType && cityFoodData[mealType]) {
+        mealRecommendations = cityFoodData[mealType];
+        finalRecommendations = [...mealRecommendations, ...anytimeRecommendations];
+        subtitleEl.textContent = `${mealIcon} Here are some ${mealType} spots in ${cityInfo.name}:`;
+    } else if (isLateNight) {
+        finalRecommendations = anytimeRecommendations;
+        subtitleEl.textContent = `${mealIcon} Late night? Here are some spots open now in ${cityInfo.name}:`;
+    }
+
+    if (finalRecommendations.length > 0) {
+        conciergeSection.style.display = 'block';
+        recommendationsList.innerHTML = finalRecommendations.map(item =>
+            `<a class="widget-item a" href="${item.url}" target="_blank" rel="noopener">
+                <div class="widget-icon">${item.icon}</div>
+                <div class="widget-text">
+                    <h4>${item.name} ${item.veg ? '<span style="color:var(--success);font-size:12px;">🌱</span>' : ''}</h4>
+                    <p>${item.desc}</p>
+                </div>
+            </a>`
+        ).join('');
+    } else {
+        conciergeSection.style.display = 'none';
+    }
+}
+
+
 function renderDynamicSections(cityId) {
     const city = cities[cityId];
 
@@ -1664,7 +1827,7 @@ return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).
 }
 
 function updateJourneyHub() {
-    const now = new Date();
+    const now = getCurrentTime();
 
     document.querySelectorAll('.flight-container').forEach(cardEl => {
         const flightData = getFlightById(cardEl.id);
@@ -1889,7 +2052,7 @@ document.getElementById('wx-feels').textContent = `${Math.round(current.apparent
 document.getElementById('wx-hum').textContent = `${current.relative_humidity_2m}%`;
 document.getElementById('wx-wind').textContent = `${Math.round(current.wind_speed_10m)} km/h`;
 document.getElementById('wx-rain').textContent = `${current.precipitation_probability}%`;
-const startIndex = hourly.time.findIndex(t => new Date(t) > new Date());
+const startIndex = hourly.time.findIndex(t => new Date(t) > getCurrentTime());
 document.getElementById('wx-hourly-cards').innerHTML = hourly.time.slice(startIndex, startIndex + 8).map((time, i) => `<div class="wx-hour"><div>${new Date(time).getHours()}:00</div><div style="font-size:22px;margin:4px 0">${wmoIcon(hourly.weather_code[startIndex+i])}</div><div class="t">${Math.round(hourly.temperature_2m[startIndex+i])}°</div></div>`).join('');
 document.getElementById('wx-days-cards').innerHTML = daily.time.slice(0, 3).map((date, i) => `<div class="wx-day"><div>${new Date(date).toLocaleDateString('en-US', {weekday:'short'})}</div><div style="font-size:22px;margin:6px 0">${wmoIcon(daily.weather_code[i])}</div><div><span class="hi">${Math.round(daily.temperature_2m_max[i])}°</span>/<span class="lo">${Math.round(daily.temperature_2m_min[i])}°</span></div></div>`).join('');
 toggleWx(true);
