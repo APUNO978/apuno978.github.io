@@ -588,11 +588,16 @@ margin-top: 24px;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
-.intelligence-card.alert { border-color: #FF9500; /* Orange for alerts */ }
-.intelligence-card.critical { border-color: var(--primary); /* Red for critical */ }
+.intelligence-card.alert { border-color: #FF9500; }
+.intelligence-card.critical { border-color: var(--primary); }
+.intelligence-card.briefing {
+    border-color: var(--secondary);
+    background: linear-gradient(45deg, rgba(0, 166, 153, 0.05), transparent);
+}
 .intelligence-card .icon { font-size: 24px; margin-top: 2px; }
 .intelligence-card .content h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .intelligence-card .content p { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+.intelligence-card .content p strong { font-weight: 600; color: var(--text-primary); }
 .intelligence-card .meta { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; }
 .intelligence-list .placeholder {
     text-align: center;
@@ -1179,10 +1184,10 @@ foodRecommendations: {
     ]
 },
 moments:[
-{id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind."},
-{id:"alcatraz", icon:"⛓️", title:"Alcatraz Island Tour", description:"Explore the infamous prison."},
-{id:"cableCar", icon:"🚃", title:"Ride a Cable Car", description:"Climb the hills of SF."},
-{id:"muirWoods", icon:"🌲", title:"Walk with Giants", description:"Visit the majestic redwood forest at Muir Woods."}
+{id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind.", type: "photo_op"},
+{id:"alcatraz", icon:"⛓️", title:"Alcatraz Island Tour", description:"Explore the infamous prison.", type: "activity"},
+{id:"cableCar", icon:"🚃", title:"Ride a Cable Car", description:"Climb the hills of SF.", type: "activity"},
+{id:"muirWoods", icon:"🌲", title:"Walk with Giants", description:"Visit the majestic redwood forest at Muir Woods.", type: "activity"}
 ],
 flights:[ { id: "flight01", route:"LON → SFO", airline: "Virgin Atlantic", number:"VS19", status:"Booked", departureTime: "2025-09-19T11:15:00+01:00", arrivalTime: "2025-09-19T14:20:00-07:00", duration: "11h 5m", checkinURL: "https://www.virginatlantic.com/gb/en/travel-information/check-in.html" } ],
 concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco"}, {icon:"☕", label:"Coffee", url:"https://www.google.com/maps/search/?api=1&query=coffee+near+Union+Square+SF"}, {icon:"💊", label:"Pharmacy", url:"https://www.google.com/maps/search/?api=1&query=pharmacy+near+Union+Square+SF"}, {icon:"🌱", label:"Vegetarian", url:"https://www.google.com/maps/search/?api=1&query=vegetarian+food+near+Union+Square+SF"}, {icon:"🛍️", label:"Shopping", url:"https://www.google.com/maps/search/?api=1&query=shopping+near+Union+Square+SF"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
@@ -1207,10 +1212,10 @@ foodRecommendations:{
     ]
 },
 moments:[
-{id:"stargazing", icon:"🌌", title:"Yosemite Stargazing", description:"Milky Way hunt from Glacier Point or Tunnel View."},
-{id:"mistTrail", icon:"💦", title:"Hike the Mist Trail", description:"Get soaked by Vernal Fall."},
-{id:"sequoias", icon:"🌲", title:"Mariposa Grove", description:"Walk among giant sequoias."},
-{id:"tunnelViewSunset", icon:"🌅", title:"Tunnel View Sunset", description:"Watch the valley light up at golden hour."}
+{id:"stargazing", icon:"🌌", title:"Yosemite Stargazing", description:"Milky Way hunt from Glacier Point or Tunnel View.", type: "activity"},
+{id:"mistTrail", icon:"💦", title:"Hike the Mist Trail", description:"Get soaked by Vernal Fall.", type: "hike"},
+{id:"sequoias", icon:"🌲", title:"Mariposa Grove", description:"Walk among giant sequoias.", type: "hike"},
+{id:"tunnelViewSunset", icon:"🌅", title:"Tunnel View Sunset", description:"Watch the valley light up at golden hour.", type: "photo_op", bestTime: "sunset"}
 ],
 concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Visitor+Center"}, {icon:"🥾", label:"Trail Maps", url:"https://www.nps.gov/yose/planyourvisit/maps.htm"}, {icon:"🚌", label:"Shuttle", url:"https://www.nps.gov/yose/planyourvisit/publictransportation.htm"}, {icon:"⛽", label:"Gas", url:"https://www.nps.gov/yose/planyourvisit/gas.htm"}, {icon:"🚗", label:"Roads", url:"https://www.nps.gov/yose/planyourvisit/conditions.htm"}, {icon:"📸", label:"Webcams", url:"https://www.nps.gov/yose/learn/photosmultimedia/webcams.htm"} ]
 },
@@ -1242,9 +1247,9 @@ foodRecommendations:{
     ]
 },
 moments:[
-{id:"vegasNight", icon:"🎰", title:"Vegas Boys Night", description:"A celebratory night out exploring iconic bars and neon-lit streets."},
-{id:"sphere", icon:"🌐", title:"MSG Sphere", description:"Arrive early, centre seats for full dome experience."},
-{id:"hooverDam", icon:"🌊", title:"Hoover Dam", description:"Morning tour, Boulder City coffee stop."},
+{id:"vegasNight", icon:"🎰", title:"Vegas Boys Night", description:"A celebratory night out exploring iconic bars and neon-lit streets.", type: "activity"},
+{id:"sphere", icon:"🌐", title:"MSG Sphere", description:"Arrive early, centre seats for full dome experience.", type: "activity"},
+{id:"hooverDam", icon:"🌊", title:"Hoover Dam", description:"Morning tour, Boulder City coffee stop.", type: "activity"},
 ],
 flights:[ { id: "flight02", route:"LAS → NYC", airline: "JetBlue", number:"B6348", status:"Booked", departureTime: "2025-10-01T13:35:00-07:00", arrivalTime: "2025-10-01T21:49:00-04:00", duration: "5h 14m", checkinURL: "https://www.jetblue.com/checkin" } ],
 concierge:[ {icon:"🎰", label:"Casinos", url:"https://www.google.com/maps/search/?api=1&query=casinos+Las+Vegas+Strip"}, {icon:"🍸", label:"Best Bars", url:"https://www.google.com/search?q=best+cocktail+bars+las+vegas"}, {icon:"🎭", label:"Shows", url:"https://www.google.com/search?q=las+vegas+shows+tickets"}, {icon:"🍽️",label:"Buffets", url:"https://www.google.com/search?q=best+buffets+las+vegas"}, {icon:"☀️", label:"Pool Parties", url:"https://www.google.com/search?q=las+vegas+day+clubs+pool+parties"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
@@ -1276,9 +1281,9 @@ foodRecommendations: {
     ]
 },
 moments:[
-{id:"broadway", icon:"🎭", title:"Broadway Show", description:"Matinee + dinner or late show + stroll."},
-{id:"topOfRock", icon:"🏙️", title:"Top of the Rock", description:"Unbeatable skyline views."},
-{id:"brooklynBridge", icon:"🌉", title:"Brooklyn Bridge Walk", description:"Iconic walk for incredible skyline views."},
+{id:"broadway", icon:"🎭", title:"Broadway Show", description:"Matinee + dinner or late show + stroll.", type: "activity"},
+{id:"topOfRock", icon:"🏙️", title:"Top of the Rock", description:"Unbeatable skyline views.", type: "photo_op"},
+{id:"brooklynBridge", icon:"🌉", title:"Brooklyn Bridge Walk", description:"Iconic walk for incredible skyline views.", type: "activity"},
 ],
 flights:[ { id: "flight03", route:"NYC → LON", airline: "Virgin Atlantic", number:"VS138", status:"Booked", departureTime: "2025-10-03T23:00:00-04:00", arrivalTime: "2025-10-04T11:10:00+01:00", duration: "7h 10m", checkinURL: "https://www.virginatlantic.com/gb/en/travel-information/check-in.html" } ],
 concierge:[ {icon:"🚇", label:"Subway Map", url:"https://new.mta.info/map/5256"}, {icon:"🍕", label:"Best Pizza", url:"https://www.google.com/search?q=best+pizza+slice+nyc"}, {icon:"🎭", label:"Broadway", url:"https://www.broadway.com/"}, {icon:"🏛️", label:"Museums", url:"https://www.google.com/search?q=best+museums+in+nyc"}, {icon:"🍸", label:"Rooftops", url:"https://www.google.com/search?q=best+rooftop+bars+nyc"}, {icon:"🚕", label:"Uber", url:"https://m.uber.com/ul/"} ]
@@ -1340,6 +1345,9 @@ const airlineColors = {
     'JetBlue': { primary: '#003876', secondary: '#005E9B', text: '#FFFFFF' },
     'default': { primary: '#36475f', secondary: '#2c394f', text: '#FFFFFF' }
 };
+
+// --- SINGLE SOURCE OF TRUTH for trip start time ---
+const TRIP_START_DATE = new Date(cities.sanfran.flights[0].departureTime);
 
 let currentCityId = 'sanfran';
 let masterInterval;
@@ -1426,6 +1434,49 @@ async function fetchLiveIntelligence(cityId) {
     return combinedData;
 }
 
+/**
+ * NEW: Generates the "Today's Briefing" card based on context.
+ * @returns {string} The HTML for the briefing card, or an empty string.
+ */
+async function generateTodaysBriefing() {
+    const currentCityOnTrip = getCurrentCityOnTrip();
+    if (!currentCityOnTrip) return ''; // No briefing if not on the trip
+
+    const city = currentCityOnTrip.data;
+    const cityId = currentCityOnTrip.id;
+    const weather = await fetchWeather(city);
+    if (!weather) return ''; // Need weather data to give a briefing
+
+    const cityTime = new Date(getCurrentTime().toLocaleString('en-US', { timeZone: city.timezone }));
+    const currentHour = cityTime.getHours();
+    
+    // Proactive weather advice for a planned hike
+    const plannedHike = city.moments.find(m => m.type === 'hike');
+    if (plannedHike && [61, 63, 65, 80, 95].includes(weather.current.weather_code)) {
+        return `<div class="intelligence-card briefing">
+            <div class="icon">💡</div>
+            <div class="content">
+                <h4>Today's Briefing</h4>
+                <p>Heads up: The forecast shows <strong>rain later today.</strong> Your planned hike, <strong>${plannedHike.title}</strong>, might be slippery. Remember to pack waterproof gear!</p>
+            </div>
+        </div>`;
+    }
+
+    // Proactive suggestion for a sunset photo op
+    const sunsetMoment = city.moments.find(m => m.bestTime === 'sunset');
+    if (sunsetMoment && currentHour >= 16 && currentHour <= 19 && [0, 1, 2, 3].includes(weather.current.weather_code)) {
+        return `<div class="intelligence-card briefing">
+            <div class="icon">💡</div>
+            <div class="content">
+                <h4>Today's Briefing</h4>
+                <p><strong>Golden hour is approaching!</strong> Conditions are looking great to head to <strong>${sunsetMoment.title}</strong> for that photo op you have planned.</p>
+            </div>
+        </div>`;
+    }
+
+    return ''; // No specific briefing to show
+}
+
 
 /* ========== INITIALIZATION ========== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1455,9 +1506,8 @@ function getCurrentTime() {
 }
 
 function setupCountdown() {
-const tripDate = new Date('2025-09-19T09:00:00-07:00');
 const countdownInterval = setInterval(() => {
-const diff = tripDate.getTime() - getCurrentTime().getTime();
+const diff = TRIP_START_DATE.getTime() - getCurrentTime().getTime();
 if (diff <= 0) {
 document.querySelector('.countdown-container').innerHTML = `<div style="font-size:18px;font-weight:600;color:var(--success);">🎉 Adventure Time!</div>`;
 clearInterval(countdownInterval);
@@ -1513,13 +1563,25 @@ function setupMobileMenu() {
 }
 
 function updateTimelineStatus(){
-const el = document.getElementById('timelineStatus');
-if(!el) return;
-const start = new Date('2025-09-19T00:00:00-07:00');
-const days = Math.floor((start - getCurrentTime())/86400000);
-el.textContent = days>0 ? `🛤️ ~${days} day${days!==1?'s':''} until your journey begins!`
-: `🛤️ You're on the road — make it count!`;
+    const el = document.getElementById('timelineStatus');
+    if(!el) return;
+
+    const diff = TRIP_START_DATE.getTime() - getCurrentTime().getTime();
+
+    if (diff <= 0) {
+        el.textContent = `🛤️ You're on the road — make it count!`;
+        return;
+    }
+
+    const days = Math.floor(diff / 86400000);
+
+    if (days > 0) {
+        el.textContent = `🛤️ ~${days} day${days !== 1 ? 's' : ''} until your journey begins!`;
+    } else {
+        el.textContent = `🚀 Departs in less than a day!`;
+    }
 }
+
 
 function updateRealProgress(){
   const road = document.querySelector('.route66__road');
@@ -1546,7 +1608,6 @@ function updateContextualHeader() {
     if (!statusEl) return;
 
     const now = getCurrentTime();
-    const tripStart = new Date(stops[0].start);
     const tripEnd = new Date(stops.at(-1).end);
 
     for (const cityId in cities) {
@@ -1573,9 +1634,9 @@ function updateContextualHeader() {
          return;
     }
 
-    if (now < tripStart) {
-        const diff = tripStart.getTime() - now.getTime();
-        const days = Math.floor(diff / 864e5);
+    if (now < TRIP_START_DATE) {
+        const diff = TRIP_START_DATE.getTime() - now.getTime();
+        const days = Math.ceil(diff / 864e5);
         statusEl.innerHTML = `🚀 Departs in: <span class="val">${days} days</span>`;
     } else {
         statusEl.innerHTML = `✅ Adventure Complete!`;
@@ -1921,25 +1982,25 @@ async function renderLiveIntelligence(cityId) {
     }
 
     try {
+        const briefingHtml = await generateTodaysBriefing();
         const data = await fetchLiveIntelligence(cityId);
-        displayIntelligence(data);
+        displayIntelligence(data, briefingHtml);
     } catch (error) {
         console.error("Failed to render live intelligence:", error);
         listContainer.innerHTML = '<div class="placeholder">⚠️ Could not load live data.</div>';
     }
 }
 
-function displayIntelligence(data) {
+function displayIntelligence(data, briefingHtml = '') {
     const listContainer = document.getElementById('intelligence-list');
     
     const criticalItems = data.filter(item => item.type === 'critical');
     const otherItems = data.filter(item => item.type !== 'critical');
 
-    let finalHtml = '';
+    let finalHtml = briefingHtml; // Start with the AI briefing
 
     if (criticalItems.length > 0) {
-        // If there are critical items, only show them to maximize impact
-        finalHtml = criticalItems.map(item => `
+        finalHtml += criticalItems.map(item => `
             <a href="${item.link || '#'}" target="_blank" rel="noopener" class="intelligence-card ${item.type}">
                 <div class="icon">${item.icon}</div>
                 <div class="content">
@@ -1950,8 +2011,7 @@ function displayIntelligence(data) {
             </a>
         `).join('');
     } else if (otherItems.length > 0) {
-        // If no critical items, show the top 2 other items
-        finalHtml = otherItems.slice(0, 2).map(item => `
+        finalHtml += otherItems.slice(0, 2).map(item => `
             <a href="${item.link || '#'}" target="_blank" rel="noopener" class="intelligence-card ${item.type}">
                 <div class="icon">${item.icon}</div>
                 <div class="content">
@@ -1966,7 +2026,6 @@ function displayIntelligence(data) {
     if (finalHtml) {
         listContainer.innerHTML = finalHtml;
     } else {
-        // If no items at all, show the reassuring "all clear" message
         listContainer.innerHTML = '<div class="placeholder">✅ All clear! No major alerts or disruptions for your area right now.</div>';
     }
 }
