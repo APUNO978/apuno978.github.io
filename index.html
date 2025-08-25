@@ -1505,6 +1505,57 @@ async function getGeneralNews(city) {
     return null;
 }
 
+async function getOpenStreetMapPlaces(city) {
+    const categories = {
+        '☕': { key: 'amenity', value: 'cafe', name: 'Cafe' },
+        '🏛️': { key: 'tourism', value: 'museum', name: 'Museum' },
+        '🏞️': { key: 'leisure', value: 'park', name: 'Park' },
+        '🖼️': { key: 'tourism', value: 'artwork', name: 'Public Art' }
+    };
+    const randomIcon = Object.keys(categories)[Math.floor(Math.random() * Object.keys(categories).length)];
+    const category = categories[randomIcon];
+
+    const overpassQuery = `
+        [out:json][timeout:25];
+        (
+          node["${category.key}"="${category.value}"](around:5000,${city.lat},${city.lon});
+        );
+        out body;
+        >;
+        out skel qt;
+    `;
+
+    try {
+        const response = await fetch('https://overpass-api.de/api/interpreter', {
+            method: 'POST',
+            body: `data=${encodeURIComponent(overpassQuery)}`
+        });
+        if (!response.ok) throw new Error(`Overpass API error! status: ${response.status}`);
+        const data = await response.json();
+
+        const validPlaces = data.elements.filter(place => place.tags && place.tags.name);
+
+        if (validPlaces.length > 0) {
+            const place = validPlaces[Math.floor(Math.random() * validPlaces.length)];
+            const placeName = place.tags.name;
+            const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeName + ' ' + city.name)}`;
+            
+            return {
+                icon: randomIcon,
+                type: 'briefing',
+                title: `Nearby Gem: ${placeName}`,
+                desc: `Discover this local <strong>${category.name.toLowerCase()}</strong> just a short distance away.`,
+                link: mapsLink,
+                source: 'OpenStreetMap'
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error("Error fetching OpenStreetMap data:", error);
+        return null;
+    }
+}
+
 
 /**
  * The main intelligence engine. Fetches and prioritizes various types of content.
@@ -1518,6 +1569,7 @@ async function generateIntelligenceCards(cityId) {
     const providers = [
         () => getWeatherAlerts(city),
         () => getProactiveBriefing(city),
+        () => getOpenStreetMapPlaces(city),
         () => getSportsNews(city),
         () => getTrafficUpdate(city),
         () => getFoodHighlight(city),
