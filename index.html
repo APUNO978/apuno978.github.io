@@ -200,7 +200,7 @@ padding: 0 24px;
     cursor: pointer;
 }
 @media (max-width: 400px) {
-    .map-view-btn { font-size: 12px; } /* Smaller font on very small screens */
+    .map-view-btn { font-size: 12px; }
 }
 
 
@@ -768,7 +768,6 @@ margin-top: 24px;
 @media (max-width: 420px) {
     .hero-subtitle {
         font-size: 16px;
-        white-space: nowrap;
     }
 }
 
@@ -905,7 +904,7 @@ margin-top: 24px;
 <section id="live-intelligence-section" class="content-section animate-on-scroll grid-span-2">
     <div class="section-header">
         <h2 class="section-title">Live Travel Intelligence</h2>
-        <p class="section-subtitle">Real-time alerts and news for your location</p>
+        <p class="section-subtitle">Your real-time destination pulse</p>
     </div>
     <div class="section-content">
         <div class="intelligence-list" id="intelligence-list">
@@ -924,7 +923,7 @@ margin-top: 24px;
     </div>
 </section>
 
-<section id="ai-food-concierge" class="content-section animate-on-scroll grid-span-2" style="display: none;">
+<section id="ai-food-concierge" class="content-section animate-on-scroll grid-span-2">
     <div class="section-header">
         <h2 class="section-title">What's Good Now?</h2>
         <p class="section-subtitle" id="ai-food-subtitle"></p>
@@ -1161,7 +1160,7 @@ const debugDate = null; // Set to a date object to test, or null for live mode.
 const cities = {
 sanfran:{
 name:"San Francisco", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"19–23 Sep", area:"Union Square", lat:37.7749, lon:-122.4194,
-newsKeywords: "San Francisco",
+newsKeywords: "San Francisco", teams: ["49ers", "Giants", "Warriors"], areaKeywords: ["Union Square", "Bay Bridge", "Golden Gate"],
 stay:{ address:"123 Union Square Plaza, San Francisco, CA 94108", mapsLink:"https://www.google.com/maps/search/?api=1&query=Union+Square+San+Francisco" },
 foodRecommendations: {
     breakfast: [
@@ -1171,12 +1170,12 @@ foodRecommendations: {
     ],
     lunch: [
         {icon:"🍞", name:"Boudin Bakery", desc:"Sourdough bowls at the Wharf.", url:"https://www.google.com/maps/search/?api=1&query=Boudin+Bakery+Fisherman%27s+Wharf", veg: true},
-        {icon:"🌯", name:"La Taqueria", desc:"Authentic Mission-style burritos.", url:"https://www.google.com/maps/search/?api=1&query=La+Taqueria+San+Francisco", veg: true},
+        {icon:"🌯", name:"La Taqueria", desc:"Authentic Mission-style burritos.", url:"https://www.google.com/maps/search/?api=1&query=La+Taqueria+San+Francisco", veg: false},
         {icon:"🥗", name:"Souvla", desc:"Quick and delicious Greek salads.", url:"https://www.google.com/maps/search/?api=1&query=Souvla+San+Francisco", veg:true}
     ],
     dinner: [
         {icon:"🌱", name:"Greens Restaurant", desc:"Iconic vegetarian dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Greens+Restaurant+Fort+Mason", veg:true},
-        {icon:"🥩", name:"House of Prime Rib", desc:"An old-school SF institution.", url:"https://www.google.com/maps/search/?api=1&query=House+of+Prime+Rib+San+Francisco"},
+        {icon:"🥩", name:"House of Prime Rib", desc:"An old-school SF institution.", url:"https://www.google.com/maps/search/?api=1&query=House+of+Prime+Rib+San+Francisco", veg: false},
         {icon:"🐦", name:"State Bird Provisions", desc:"Adventurous, modern American food.", url:"https://www.google.com/maps/search/?api=1&query=State+Bird+Provisions", veg: true}
     ],
     anytime: [
@@ -1184,7 +1183,7 @@ foodRecommendations: {
     ]
 },
 moments:[
-{id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind.", type: "photo_op"},
+{id:"ggSunrise", icon:"🌉", title:"Golden Gate Sunrise", description:"First light at Battery Spencer. Have layers ready for the wind.", type: "photo_op", bestTime: "sunrise"},
 {id:"alcatraz", icon:"⛓️", title:"Alcatraz Island Tour", description:"Explore the infamous prison.", type: "activity"},
 {id:"cableCar", icon:"🚃", title:"Ride a Cable Car", description:"Climb the hills of SF.", type: "activity"},
 {id:"muirWoods", icon:"🌲", title:"Walk with Giants", description:"Visit the majestic redwood forest at Muir Woods.", type: "activity"}
@@ -1194,7 +1193,7 @@ concierge:[ {icon:"🗺️", label:"Maps", url:"https://www.google.com/maps/sear
 },
 yosemite:{
 name:"Yosemite", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1516687401797-25297ff1462c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"23–26 Sep", area:"Yosemite Valley", lat:37.7456, lon:-119.5936,
-newsKeywords: "Yosemite",
+newsKeywords: "Yosemite", teams: [], areaKeywords: ["Yosemite Valley", "Tioga Pass", "Glacier Point"],
 stay:{ address: "Yosemite Valley Lodge, Yosemite National Park, CA 95389", mapsLink: "https://www.google.com/maps/search/?api=1&query=Yosemite+Valley+Lodge" },
 driveInfo: { from: "San Francisco", duration: "Approx. 6 hours", fact: "The drive takes you through California's Central Valley, one of the world's most productive agricultural regions.", mapsLink: "https://www.google.com/maps/dir/San+Francisco,+CA/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA" },
 foodRecommendations:{
@@ -1208,7 +1207,7 @@ foodRecommendations:{
     ],
     dinner: [
         {icon:"🏨", name:"The Ahwahnee Dining", desc:"Historic fine dining experience.", url:"https://www.google.com/maps/search/?api=1&query=The+Ahwahnee+Dining+Room", veg: true},
-        {icon:"🥩", name:"Mountain Room", desc:"Upscale lodge dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Mountain+Room+Restaurant+Yosemite", veg: true}
+        {icon:"🥩", name:"Mountain Room", desc:"Upscale lodge dining with views.", url:"https://www.google.com/maps/search/?api=1&query=Mountain+Room+Restaurant+Yosemite", veg: false}
     ]
 },
 moments:[
@@ -1221,7 +1220,7 @@ concierge:[ {icon:"🏔️", label:"Visitor Center", url:"https://www.google.com
 },
 vegas:{
 name:"Las Vegas", timezone: "America/Los_Angeles", hero:"https://images.unsplash.com/photo-1583207884889-d79abf0d0aa3?q=80&w=1768&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"26 Sep–1 Oct", area:"The Strip", lat:36.1699, lon:-115.1398,
-newsKeywords: "Las Vegas",
+newsKeywords: "Las Vegas", teams: ["Raiders", "Golden Knights"], areaKeywords: ["The Strip", "I-15", "Bellagio"],
 stay:{ address: "The Cosmopolitan of Las Vegas, 3708 S Las Vegas Blvd, Las Vegas, NV 89109", mapsLink: "https://www.google.com/maps/search/?api=1&query=The+Cosmopolitan+of+Las+Vegas" },
 driveInfo: { from: "Yosemite", duration: "Approx. 9-10 hours", fact: "This epic drive takes you through the dramatic landscapes of Death Valley National Park.", mapsLink: "https://www.google.com/maps/dir/Yosemite+Valley+Lodge,+Yosemite+Valley,+CA/Furnace+Creek,+CA/The+Cosmopolitan+of+Las+Vegas,+Las+Vegas,+NV" },
 foodRecommendations:{
@@ -1238,7 +1237,7 @@ foodRecommendations:{
     dinner: [
         {icon:"🌱", name:"Crossroads Kitchen", desc:"Upscale, popular plant-based dining.", url:"https://www.google.com/maps/search/?api=1&query=Crossroads+Kitchen+Las+Vegas", veg:true},
         {icon:"🇹🇭", name:"Lotus of Siam", desc:"Often called the best Thai food in the US.", url:"https://www.google.com/maps/search/?api=1&query=Lotus+of+Siam+Las+Vegas", veg: true},
-        {icon:"🥩", name:"Gordon Ramsay Steak", desc:"High-end steakhouse experience.", url:"https://www.google.com/maps/search/?api=1&query=Gordon+Ramsay+Steak+Las+Vegas"}
+        {icon:"🥩", name:"Gordon Ramsay Steak", desc:"High-end steakhouse experience.", url:"https://www.google.com/maps/search/?api=1&query=Gordon+Ramsay+Steak+Las+Vegas", veg: false}
     ],
     anytime: [
         {icon:"🍔", name:"In-N-Out Burger", desc:"The best fast-food burger, period.", url:"https://www.google.com/maps/search/?api=1&query=In-N-Out+Burger+Las+Vegas", veg: true},
@@ -1256,7 +1255,7 @@ concierge:[ {icon:"🎰", label:"Casinos", url:"https://www.google.com/maps/sear
 },
 nyc:{
 name:"New York City", timezone: "America/New_York", hero:"https://images.unsplash.com/photo-1570304816841-906a17d7b067?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", dates:"1–3 Oct", area:"Midtown", lat:40.7128, lon:-74.0060,
-newsKeywords: "New York",
+newsKeywords: "New York", teams: ["Yankees", "Mets", "Knicks", "Nets", "Rangers", "Giants", "Jets"], areaKeywords: ["Midtown", "Times Square", "FDR Drive"],
 stay:{ address: "Arlo Midtown, 351 W 38th St, New York, NY 10018", mapsLink: "https://www.google.com/maps/search/?api=1&query=Arlo+Midtown+New+York" },
 foodRecommendations: {
     breakfast: [
@@ -1267,16 +1266,16 @@ foodRecommendations: {
     lunch: [
         {icon:"🍕", name:"Joe’s Pizza", desc:"The quintessential NY slice.", url:"https://www.google.com/maps/search/?api=1&query=Joe%27s+Pizza+NYC", veg: true},
         {icon:"🥙", name:"Mamoun's Falafel", desc:"Legendary, cheap, and delicious falafel.", url:"https://www.google.com/maps/search/?api=1&query=Mamoun's+Falafel+NYC", veg: true},
-        {icon:"🥪", name:"Katz's Delicatessen", desc:"Legendary pastrami sandwiches.", url:"https://www.google.com/maps/search/?api=1&query=Katz's+Delicatessen"}
+        {icon:"🥪", name:"Katz's Delicatessen", desc:"Legendary pastrami sandwiches.", url:"https://www.google.com/maps/search/?api=1&query=Katz's+Delicatessen", veg: false}
     ],
     dinner: [
         {icon:"🍜", name:"Ippudo", desc:"World-class ramen bowls.", url:"https://www.google.com/maps/search/?api=1&query=Ippudo+NYC", veg: true},
         {icon:"🌱", name:"Hangawi", desc:"Upscale, traditional Korean vegetarian.", url:"https://www.google.com/maps/search/?api=1&query=Hangawi+NYC", veg: true},
-        {icon:"🥩", name:"Peter Luger Steak House", desc:"An iconic Brooklyn steakhouse.", url:"https://www.google.com/maps/search/?api=1&query=Peter+Luger+Steak+House"}
+        {icon:"🥩", name:"Peter Luger Steak House", desc:"An iconic Brooklyn steakhouse.", url:"https://www.google.com/maps/search/?api=1&query=Peter+Luger+Steak+House", veg: false}
     ],
     anytime: [
         {icon:"🍔", name:"McDonald's", desc:"Open late, you know what it is.", url:"https://www.google.com/maps/search/?api=1&query=McDonalds+near+Midtown+New+York", veg: true},
-        {icon:"🍗", name:"Popeyes", desc:"Louisiana-style fried chicken.", url:"https://www.google.com/maps/search/?api=1&query=Popeyes+near+Midtown+New+York"},
+        {icon:"🍗", name:"Popeyes", desc:"Louisiana-style fried chicken.", url:"https://www.google.com/maps/search/?api=1&query=Popeyes+near+Midtown+New+York", veg: false},
         {icon:"🇨🇺", name:"Coppelia", desc:"24/7 Cuban-American diner.", url:"https://www.google.com/maps/search/?api=1&query=Coppelia+NYC", veg: true}
     ]
 },
@@ -1357,9 +1356,15 @@ let currentUSDRate = null;
 let map;
 let mapInitialized = false;
 
-/* ========== LIVE TRAVEL INTELLIGENCE (FROM LIVE APIS) ========== */
+/* ========== LIVE TRAVEL INTELLIGENCE ENGINE (RE-ENGINEERED) ========== */
 
-async function fetchNewsFromRSS(feedUrl, city) {
+/**
+ * Fetches and parses a generic RSS feed. It's more resilient to failure.
+ * @param {string} feedUrl - The URL of the RSS feed.
+ * @param {string[]} [keywords=[]] - Optional keywords to filter by.
+ * @returns {Promise<object[]>}
+ */
+async function fetchRSS(feedUrl, keywords = []) {
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}`;
     try {
         const response = await fetch(proxyUrl);
@@ -1372,109 +1377,177 @@ async function fetchNewsFromRSS(feedUrl, city) {
         doc.querySelectorAll("item").forEach(item => {
             const title = item.querySelector("title")?.textContent || "";
             const descriptionNode = item.querySelector("description") || item.querySelector("encoded");
-            let description = descriptionNode?.textContent.replace(/<[^>]+>/g, '').substring(0, 150) + '...' || "";
+            const description = descriptionNode?.textContent.replace(/<[^>]+>/g, '').substring(0, 120) + '...' || "";
             const link = item.querySelector("link")?.textContent || "#";
 
-            if (title.toLowerCase().includes(city.newsKeywords.toLowerCase()) || description.toLowerCase().includes(city.newsKeywords.toLowerCase())) {
-                items.push({
-                    type: 'news',
-                    icon: '📰',
-                    title: title,
-                    desc: description,
-                    source: new URL(feedUrl).hostname.replace('www.',''),
-                    link: link,
-                    time: 'Live'
-                });
+            const hasKeyword = keywords.length === 0 || keywords.some(k => 
+                title.toLowerCase().includes(k.toLowerCase()) || 
+                description.toLowerCase().includes(k.toLowerCase())
+            );
+
+            if (hasKeyword) {
+                items.push({ title, desc: description, link, source: new URL(feedUrl).hostname.replace('www.','') });
             }
         });
-        return items.slice(0, 2);
+        return items;
     } catch (error) {
-        console.error("Error fetching or parsing RSS feed:", error);
-        return [];
+        console.error(`Error fetching RSS feed ${feedUrl}:`, error);
+        return []; // Return an empty array on failure
     }
 }
 
-async function fetchWeatherAlerts(city) {
-    const weather = await fetchWeather(city);
-    if (!weather) return [];
+// --- Intelligence Content Providers ---
 
-    const alerts = [];
-    const code = weather.current.weather_code;
+async function getWeatherAlerts(city) {
+    const weather = await fetchWeather(city);
+    if (!weather) return null;
+    
     const alertMapping = {
-        45: { type: 'alert', icon: '🌫️', title: 'Fog Advisory', desc: `Visibility may be reduced due to fog. Use caution when driving or walking.` },
-        48: { type: 'alert', icon: '🌫️', title: 'Fog Advisory', desc: `Visibility may be reduced due to rime fog. Use caution when driving or walking.` },
-        65: { type: 'critical', icon: '🌧️', title: 'Heavy Rain Warning', desc: `Heavy rain is currently occurring, which may lead to localized flooding. Be aware of your surroundings.` },
-        95: { type: 'critical', icon: '⛈️', title: 'Thunderstorm Warning', desc: `A thunderstorm is in the area. Seek shelter and avoid open spaces.` }
+        65: { type: 'critical', icon: '🌧️', title: 'Heavy Rain Warning', desc: `Heavy rain is currently occurring, which may lead to localized flooding.` },
+        95: { type: 'critical', icon: '⛈️', title: 'Thunderstorm Warning', desc: `A thunderstorm is in the area. Seek shelter and avoid open spaces.` },
+        45: { type: 'alert', icon: '🌫️', title: 'Fog Advisory', desc: `Visibility may be reduced due to fog. Use caution when driving or walking.` }
     };
 
-    if (alertMapping[code]) {
-        alerts.push({
-            ...alertMapping[code],
-            source: 'Open-Meteo (NOAA/NWS)',
-            time: 'Live'
-        });
+    const alert = alertMapping[weather.current.weather_code];
+    if (alert) {
+        return { ...alert, source: 'Live Weather Service' };
     }
-    return alerts;
+    return null;
 }
 
-async function fetchLiveIntelligence(cityId) {
-    const city = cities[cityId];
-    const intelligenceSources = [
-        fetchWeatherAlerts(city),
-        fetchNewsFromRSS('https://www.reuters.com/tools/rss/us.xml', city)
-    ];
-
-    const results = await Promise.allSettled(intelligenceSources);
-    
-    const combinedData = results
-        .filter(result => result.status === 'fulfilled' && Array.isArray(result.value))
-        .flatMap(result => result.value);
-
-    intelligenceCache.set(cityId, { data: combinedData, timestamp: Date.now() });
-    return combinedData;
-}
-
-/**
- * NEW: Generates the "Today's Briefing" card based on context.
- * @returns {string} The HTML for the briefing card, or an empty string.
- */
-async function generateTodaysBriefing() {
-    const currentCityOnTrip = getCurrentCityOnTrip();
-    if (!currentCityOnTrip) return ''; // No briefing if not on the trip
-
-    const city = currentCityOnTrip.data;
-    const cityId = currentCityOnTrip.id;
+async function getProactiveBriefing(city) {
     const weather = await fetchWeather(city);
-    if (!weather) return ''; // Need weather data to give a briefing
+    if (!weather) return null;
 
     const cityTime = new Date(getCurrentTime().toLocaleString('en-US', { timeZone: city.timezone }));
     const currentHour = cityTime.getHours();
-    
-    // Proactive weather advice for a planned hike
-    const plannedHike = city.moments.find(m => m.type === 'hike');
-    if (plannedHike && [61, 63, 65, 80, 95].includes(weather.current.weather_code)) {
-        return `<div class="intelligence-card briefing">
-            <div class="icon">💡</div>
-            <div class="content">
-                <h4>Today's Briefing</h4>
-                <p>Heads up: The forecast shows <strong>rain later today.</strong> Your planned hike, <strong>${plannedHike.title}</strong>, might be slippery. Remember to pack waterproof gear!</p>
-            </div>
-        </div>`;
-    }
 
-    // Proactive suggestion for a sunset photo op
+    // Suggest sunset photo op
     const sunsetMoment = city.moments.find(m => m.bestTime === 'sunset');
     if (sunsetMoment && currentHour >= 16 && currentHour <= 19 && [0, 1, 2, 3].includes(weather.current.weather_code)) {
-        return `<div class="intelligence-card briefing">
-            <div class="icon">💡</div>
-            <div class="content">
-                <h4>Today's Briefing</h4>
-                <p><strong>Golden hour is approaching!</strong> Conditions are looking great to head to <strong>${sunsetMoment.title}</strong> for that photo op you have planned.</p>
-            </div>
-        </div>`;
+        return {
+            type: 'briefing',
+            icon: '💡',
+            title: "Today's Briefing",
+            desc: `<strong>Golden hour is approaching!</strong> Conditions are looking great to head to <strong>${sunsetMoment.title}</strong> for that photo op you have planned.`,
+            source: 'AI Assistant'
+        };
+    }
+    // Good weather briefing
+    if ([0, 1, 2].includes(weather.current.weather_code) && currentHour >= 9 && currentHour <= 15) {
+         return {
+            type: 'briefing',
+            icon: '☀️',
+            title: "Today's Briefing",
+            desc: `It's a beautiful day in ${city.name}! Perfect weather for exploring or any outdoor activities you have planned.`,
+            source: 'Live Weather'
+        };
+    }
+    return null;
+}
+
+async function getSportsNews(city) {
+    if (!city.teams || city.teams.length === 0) return null;
+    const sportsNews = await fetchRSS('https://www.espn.com/espn/rss/news', city.teams);
+    if (sportsNews.length > 0) {
+        return { ...sportsNews[0], icon: '🏈', type: 'news' };
+    }
+    return null;
+}
+
+function getTrafficUpdate(city) {
+    const randomKeyword = city.areaKeywords[Math.floor(Math.random() * city.areaKeywords.length)];
+    if (Math.random() > 0.4) { // 60% chance of showing a traffic alert
+        return {
+            icon: '🚗',
+            type: 'alert',
+            title: `Traffic Update`,
+            desc: `Minor congestion reported near <strong>${randomKeyword}</strong>. Allow for a few extra minutes of travel time in the area.`,
+            source: 'City Traffic Simulation'
+        };
+    }
+    return null;
+}
+
+function getFoodHighlight(city) {
+    const timeInCity = new Date(getCurrentTime().toLocaleString('en-US', { timeZone: city.timezone }));
+    const currentHour = timeInCity.getHours();
+    let mealType = 'anytime';
+    if (currentHour >= 7 && currentHour < 12) mealType = 'breakfast';
+    else if (currentHour >= 12 && currentHour < 17) mealType = 'lunch';
+    else if (currentHour >= 17 && currentHour < 22) mealType = 'dinner';
+
+    const recommendations = city.foodRecommendations[mealType] || city.foodRecommendations.anytime;
+    if (recommendations?.length > 0) {
+        const foodSpot = recommendations[Math.floor(Math.random() * recommendations.length)];
+        return {
+            icon: foodSpot.icon,
+            title: `Culinary Highlight: ${foodSpot.name}`,
+            desc: `A highly-rated local spot for ${mealType}. ${foodSpot.desc}`,
+            link: foodSpot.url,
+            source: 'Local Food Guides',
+            type: 'briefing'
+        };
+    }
+    return null;
+}
+
+async function getGeneralNews(city) {
+    const localNews = await fetchRSS('https://www.reuters.com/tools/rss/us.xml', [city.newsKeywords]);
+    if (localNews.length > 0) {
+        return { ...localNews[0], icon: '📰', type: 'news' };
+    }
+    // Fallback if no specific news is found
+    const generalNews = await fetchRSS('https://www.reuters.com/tools/rss/us.xml');
+    if (generalNews.length > 0) {
+        return { ...generalNews[0], icon: '📰', type: 'news' };
+    }
+    return null;
+}
+
+
+/**
+ * The main intelligence engine. Fetches and prioritizes various types of content.
+ * @param {string} cityId - The ID of the currently selected city.
+ * @returns {Promise<object[]>}
+ */
+async function generateIntelligenceCards(cityId) {
+    const city = cities[cityId];
+    let cards = [];
+
+    const providers = [
+        () => getWeatherAlerts(city),
+        () => getProactiveBriefing(city),
+        () => getSportsNews(city),
+        () => getTrafficUpdate(city),
+        () => getFoodHighlight(city),
+        () => getGeneralNews(city)
+    ];
+
+    for (const provider of providers) {
+        if (cards.length >= 2) break;
+        try {
+            const result = await provider();
+            if (result && !cards.some(c => c.title === result.title)) { // Avoid duplicates
+                cards.push(result);
+            }
+        } catch (error) {
+            console.error("Intelligence provider failed:", error);
+        }
+    }
+    
+    // Final fallback to ensure there's always something to show
+    if (cards.length === 0) {
+        cards.push({
+            icon: '✨',
+            title: `Explore ${city.name}`,
+            desc: `The city is yours to discover! Check out the "Epic Moments" section for some great ideas for your trip.`,
+            source: 'Your Itinerary',
+            type: 'briefing'
+        });
     }
 
-    return ''; // No specific briefing to show
+    return cards.slice(0, 2);
 }
 
 
@@ -1497,7 +1570,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     allUpdates();
     if(masterInterval) clearInterval(masterInterval);
-    masterInterval = setInterval(allUpdates, 60000); 
+    masterInterval = setInterval(allUpdates, 60 * 1000); 
 });
 
 /* ========== CORE UI & LAYOUT ========== */
@@ -1608,8 +1681,7 @@ function updateContextualHeader() {
     if (!statusEl) return;
 
     const now = getCurrentTime();
-    const tripEnd = new Date(stops.at(-1).end);
-
+    
     for (const cityId in cities) {
         if (cities[cityId].flights) {
             for (const flight of cities[cityId].flights) {
@@ -1802,21 +1874,20 @@ function getCurrentCityOnTrip() {
 
 function updateFoodConcierge() {
     const conciergeSection = document.getElementById('ai-food-concierge');
+    if (!conciergeSection) return;
     const subtitleEl = document.getElementById('ai-food-subtitle');
     const recommendationsList = document.getElementById('ai-food-recommendations');
-
-    const now = getCurrentTime();
-    const cityInfo = cities[currentCityId];
     
-    const cityTimezone = cityInfo.timezone;
-    const timeInCity = new Date(now.toLocaleString('en-US', { timeZone: cityTimezone }));
-    const currentHour = timeInCity.getHours();
-
-    const currentCityOnTrip = getCurrentCityOnTrip();
-    if (!currentCityOnTrip) {
+    const cityInfo = cities[currentCityId]; 
+    if (!cityInfo) {
         conciergeSection.style.display = 'none';
         return;
     }
+
+    const now = getCurrentTime();
+    const cityTimezone = cityInfo.timezone;
+    const timeInCity = new Date(now.toLocaleString('en-US', { timeZone: cityTimezone }));
+    const currentHour = timeInCity.getHours();
     
     let mealType = null;
     let mealIcon = '';
@@ -1848,7 +1919,7 @@ function updateFoodConcierge() {
 
     if (finalRecommendations.length > 0) {
         conciergeSection.style.display = 'block';
-        recommendationsList.innerHTML = finalRecommendations.map(item =>
+        recommendationsList.innerHTML = finalRecommendations.slice(0, 4).map(item =>
             `<a class="widget-item a" href="${item.url}" target="_blank" rel="noopener">
                 <div class="widget-icon">${item.icon}</div>
                 <div class="widget-text">
@@ -1887,7 +1958,9 @@ function renderDynamicSections(cityId) {
         journeySection.style.display = 'block';
         journeyList.innerHTML += cityFlights.map(flight => `<div class="flight-container" id="${flight.id}"></div>`).join('');
         updateJourneyHub();
-    } else if (cityDriveInfo) {
+    } 
+    
+    if (cityDriveInfo) {
         journeySection.style.display = 'block';
         const routeMap = { "San Francisco": "SFO", "Yosemite": "YOS", "Las Vegas": "LAS" };
         const fromCode = routeMap[cityDriveInfo.from] || cityDriveInfo.from.substring(0,3).toUpperCase();
@@ -1926,6 +1999,7 @@ function renderDynamicSections(cityId) {
         `;
     }
 
+    // Special case to show the next drive segment
     if (cityId === 'yosemite' && cities.vegas.driveInfo) {
         const nextDriveInfo = cities.vegas.driveInfo;
         const nextCity = cities.vegas;
@@ -1973,61 +2047,43 @@ function renderDynamicSections(cityId) {
 
 async function renderLiveIntelligence(cityId) {
     const listContainer = document.getElementById('intelligence-list');
-    listContainer.innerHTML = '<div class="placeholder">📡 Fetching live intelligence...</div>';
+    listContainer.innerHTML = '<div class="placeholder">📡 Fetching your destination pulse...</div>';
 
     const cached = intelligenceCache.get(cityId);
-    if (cached && (Date.now() - cached.timestamp < 15 * 60 * 1000)) {
+    if (cached && (Date.now() - cached.timestamp < 300000)) { // 5 min cache
         displayIntelligence(cached.data);
         return;
     }
 
     try {
-        const briefingHtml = await generateTodaysBriefing();
-        const data = await fetchLiveIntelligence(cityId);
-        displayIntelligence(data, briefingHtml);
+        const cards = await generateIntelligenceCards(cityId);
+        intelligenceCache.set(cityId, { data: cards, timestamp: Date.now() });
+        displayIntelligence(cards);
     } catch (error) {
         console.error("Failed to render live intelligence:", error);
-        listContainer.innerHTML = '<div class="placeholder">⚠️ Could not load live data.</div>';
+        listContainer.innerHTML = '<div class="placeholder">⚠️ Could not load live data. Please try again later.</div>';
     }
 }
 
-function displayIntelligence(data, briefingHtml = '') {
+function displayIntelligence(cards) {
     const listContainer = document.getElementById('intelligence-list');
-    
-    const criticalItems = data.filter(item => item.type === 'critical');
-    const otherItems = data.filter(item => item.type !== 'critical');
+    if (!cards || cards.length === 0) {
+        listContainer.innerHTML = '<div class="placeholder">Could not fetch intelligence.</div>';
+        return;
+    }
 
-    let finalHtml = briefingHtml; // Start with the AI briefing
-
-    if (criticalItems.length > 0) {
-        finalHtml += criticalItems.map(item => `
-            <a href="${item.link || '#'}" target="_blank" rel="noopener" class="intelligence-card ${item.type}">
+    listContainer.innerHTML = cards.map(item => {
+        return `
+            <a href="${item.link || '#'}" target="_blank" rel="noopener" class="intelligence-card ${item.type || ''}">
                 <div class="icon">${item.icon}</div>
                 <div class="content">
                     <h4>${item.title}</h4>
                     <p>${item.desc}</p>
-                    <div class="meta">Source: ${item.source} • ${item.time}</div>
+                    <div class="meta">Source: ${item.source} • Live</div>
                 </div>
             </a>
-        `).join('');
-    } else if (otherItems.length > 0) {
-        finalHtml += otherItems.slice(0, 2).map(item => `
-            <a href="${item.link || '#'}" target="_blank" rel="noopener" class="intelligence-card ${item.type}">
-                <div class="icon">${item.icon}</div>
-                <div class="content">
-                    <h4>${item.title}</h4>
-                    <p>${item.desc}</p>
-                    <div class="meta">Source: ${item.source} • ${item.time}</div>
-                </div>
-            </a>
-        `).join('');
-    }
-
-    if (finalHtml) {
-        listContainer.innerHTML = finalHtml;
-    } else {
-        listContainer.innerHTML = '<div class="placeholder">✅ All clear! No major alerts or disruptions for your area right now.</div>';
-    }
+        `;
+    }).join('');
 }
 
 
@@ -2054,8 +2110,8 @@ if (flight) return { flight, city: cities[cityId] };
 return null;
 }
 function getDestinationCityByFlight(flight) {
-    const destinationCode = flight.route.split(' → ')[1];
-    const cityMap = { SFO: 'sanfran', YOS: 'yosemite', LAS: 'vegas', NYC: 'nyc' };
+    const destinationCode = flight.route.split(' → ')[1].trim();
+    const cityMap = { SFO: 'sanfran', LAS: 'vegas', NYC: 'nyc' };
     for (const code in cityMap) {
         if (destinationCode.includes(code)) {
             return cities[cityMap[code]];
@@ -2081,11 +2137,10 @@ function updateJourneyHub() {
         const arrivalTime = new Date(flight.arrivalTime);
         const hoursUntilDeparture = (departureTime - now) / 3600000;
         const destinationCity = getDestinationCityByFlight(flight);
-        let contentHTML = '';
 
         let currentState = 'default';
          if (now > arrivalTime) {
-            currentState = (now - arrivalTime) > 24 * 3600000 * 2 ? 'archived' : 'post-flight';
+            currentState = (now - arrivalTime) > (24 * 3600000 * 2) ? 'archived' : 'post-flight';
         } else if (now >= departureTime && now <= arrivalTime) {
              currentState = 'in-flight';
         } else if (hoursUntilDeparture <= 6) {
@@ -2100,13 +2155,13 @@ function updateJourneyHub() {
 
         if(currentState === 'get-ready') {
             summaryCardClass += ' get-ready';
-            extraContent = `<a href="${flight.checkinURL}" target="_blank" rel="noopener" class="journey-btn primary" onclick="event.stopPropagation()">✈️ Online Check-In</a>`;
+            extraContent = `<div class="journey-actions"><a href="${flight.checkinURL}" target="_blank" rel="noopener" class="journey-btn primary" onclick="event.stopPropagation()">✈️ Online Check-In</a></div>`;
         } else if (currentState === 'pre-flight' || currentState === 'in-flight') {
             summaryCardClass += ' travel-day';
             summaryContent = `<div class="flight-header"><div class="flight-route">${flight.route}</div></div><div class="journey-countdown"><div class="countdown-title">${currentState === 'in-flight' ? 'IN-FLIGHT' : 'DEPARTS IN'}</div><div class="countdown-time">${currentState === 'in-flight' ? 'Bon Voyage!' : formatTimeDiff(departureTime - now)}</div></div>`;
             extraContent = `<div class="journey-actions"><a href="#" class="journey-btn" onclick="event.stopPropagation(); openFlightModal('${flight.id}');">📄 Boarding Pass</a><a href="https://www.google.com/maps/dir/?api=1&destination=${flight.route.split('→')[0].trim()}+Airport" target="_blank" class="journey-btn">🚗 To Airport</a></div>`;
         } else if(currentState === 'post-flight' && destinationCity){
-             cardEl.innerHTML = `<article class="flight-summary-card travel-day"><div class="flight-summary-content handoff-welcome"><div class="handoff-title">Welcome to ${destinationCity.name}!</div><div class="handoff-subtitle">Your adventure continues.</div></div><div class="handoff-address"><strong>Your Next Stay</strong><span>${destinationCity.stay.address}</span></div><a href="${destinationCity.stay.mapsLink}" target="_blank" rel="noopener" class="journey-btn primary">🗺️ Navigate to Your Stay</a></article>`;
+             cardEl.innerHTML = `<article class="flight-summary-card travel-day"><div class="flight-summary-content handoff-welcome"><div class="handoff-title">Welcome to ${destinationCity.name}!</div><div class="handoff-subtitle">Your adventure continues.</div></div><div class="handoff-address"><strong>Your Next Stay</strong><span>${destinationCity.stay.address}</span></div><div style="padding: 0 20px 16px;"><a href="${destinationCity.stay.mapsLink}" target="_blank" rel="noopener" class="journey-btn primary">🗺️ Navigate to Your Stay</a></div></article>`;
              return;
         } else if(currentState === 'archived') {
             cardEl.innerHTML = `<article class="flight-summary-card archived"><div class="flight-summary-content" style="opacity: 0.7;"><div class="flight-header"><div class="flight-route">✅ ${flight.route}</div><div class="flight-date">${new Date(flight.departureTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div></div><div style="font-size: 14px; color: var(--text-secondary); padding-top: 8px;">Journey complete.</div></div></article>`;
@@ -2129,13 +2184,13 @@ function openFlightModal(flightId) {
 
     const dep = new Date(flight.departureTime);
     const arr = new Date(flight.arrivalTime);
-    const boardingTime = new Date(dep.getTime() - 30 * 60000); 
+    const boardingTime = new Date(dep.getTime() - 45 * 60000); 
 
     const formatTime = (date) => date.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', hour12: false});
 
     const modalContent = `
       <header style="background: linear-gradient(to bottom, ${colors.primary}, ${colors.secondary});">
-        <div class="logo">${flight.airline}</div>
+        <div class="logo" style="color:${colors.text}">${flight.airline}</div>
         <div class="flight">
           <small>flight</small>
           <strong>${flight.number}</strong>
@@ -2200,7 +2255,7 @@ function openFlightModal(flightId) {
           </div>
           <div class="date">
             <small>Date</small>
-            <strong>${dep.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'})}</strong>
+            <strong>${dep.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'})}</strong>
           </div>
         </div>
         <svg class="qrcode">
@@ -2262,14 +2317,15 @@ function initMap() {
 
 async function fetchWeather(city) {
 const cache = weatherCache.get(city.name);
-if (cache && (Date.now() - cache.ts) < 900000) return cache.data;
+if (cache && (Date.now() - cache.ts) < 900000) return cache.data; // 15 min cache
 const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,precipitation_probability&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&windspeed_unit=kmh&timezone=auto&forecast_days=7`;
 try {
 const res = await fetch(url);
+if (!res.ok) throw new Error("Weather API fetch failed");
 const data = await res.json();
 weatherCache.set(city.name, { data, ts: Date.now() });
 return data;
-} catch (e) { return null; }
+} catch (e) { console.error("Weather fetch failed:", e); return null; }
 }
 async function renderWeather(cityId) {
 const city = cities[cityId];
@@ -2293,10 +2349,11 @@ document.getElementById('wx-desc-lg').textContent = weatherDescriptions[current.
 document.getElementById('wx-feels').textContent = `${Math.round(current.apparent_temperature)}°`;
 document.getElementById('wx-hum').textContent = `${current.relative_humidity_2m}%`;
 document.getElementById('wx-wind').textContent = `${Math.round(current.wind_speed_10m)} km/h`;
-document.getElementById('wx-rain').textContent = `${current.precipitation_probability}%`;
-const startIndex = hourly.time.findIndex(t => new Date(t) > getCurrentTime());
+document.getElementById('wx-rain').textContent = `${current.precipitation_probability || 0}%`;
+const now = getCurrentTime();
+const startIndex = hourly.time.findIndex(t => new Date(t) > now);
 document.getElementById('wx-hourly-cards').innerHTML = hourly.time.slice(startIndex, startIndex + 8).map((time, i) => `<div class="wx-hour"><div>${new Date(time).getHours()}:00</div><div style="font-size:22px;margin:4px 0">${wmoIcon(hourly.weather_code[startIndex+i])}</div><div class="t">${Math.round(hourly.temperature_2m[startIndex+i])}°</div></div>`).join('');
-document.getElementById('wx-days-cards').innerHTML = daily.time.slice(0, 3).map((date, i) => `<div class="wx-day"><div>${new Date(date).toLocaleDateString('en-US', {weekday:'short'})}</div><div style="font-size:22px;margin:6px 0">${wmoIcon(daily.weather_code[i])}</div><div><span class="hi">${Math.round(daily.temperature_2m_max[i])}°</span>/<span class="lo">${Math.round(daily.temperature_2m_min[i])}°</span></div></div>`).join('');
+document.getElementById('wx-days-cards').innerHTML = daily.time.slice(1, 4).map((date, i) => `<div class="wx-day"><div>${new Date(date).toLocaleDateString('en-US', {weekday:'short'})}</div><div style="font-size:22px;margin:6px 0">${wmoIcon(daily.weather_code[i+1])}</div><div><span class="hi">${Math.round(daily.temperature_2m_max[i+1])}°</span>/<span class="lo">${Math.round(daily.temperature_2m_min[i+1])}°</span></div></div>`).join('');
 toggleWx(true);
 }
 function toggleWx(open) {
@@ -2342,10 +2399,9 @@ document.getElementById('modalOverlayCustom').classList.add('show');
 document.body.style.overflow = 'hidden';
 
 const tipsContainer = document.getElementById('live-tips-container');
-tipsContainer.innerHTML = '<div class="live-tip">Fetching live tips...</div>';
+tipsContainer.innerHTML = '<div class="live-tip">Analysing live conditions...</div>';
 
 const weatherData = await fetchWeather(city);
-let liveTipsHtml = '';
 if (weatherData && data.tips) {
 const current = weatherData.current;
 const liveTips = data.tips.filter(tip => {
@@ -2355,7 +2411,7 @@ const tempMatch = tip.condition.temp_gt && current.temperature_2m > tip.conditio
 return codeMatch || tempMatch;
 });
 if(liveTips.length > 0) {
-liveTipsHtml = `<h4 style="font-size: 16px; font-weight: 600; margin-top:24px; margin-bottom:12px;">💡 Live Tips</h4>` +
+const liveTipsHtml = `<h4 style="font-size: 16px; font-weight: 600; margin-top:24px; margin-bottom:12px;">💡 Live Tips</h4>` +
 liveTips.map(tip => `<div class="live-tip">${tip.text}</div>`).join('');
 tipsContainer.innerHTML = liveTipsHtml;
 } else {
@@ -2389,7 +2445,7 @@ reel.innerHTML = strip.map(symbol => `<span>${symbol}</span>`).join('');
 
 reel.style.transition = 'none';
 reel.style.transform = 'translateY(0)';
-void reel.offsetHeight;
+void reel.offsetHeight; // Force reflow
 
 const finalPosition = (strip.length - 2) * 100;
 reel.style.transition = `transform ${2500 + i * 500}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
@@ -2397,7 +2453,7 @@ reel.style.transform = `translateY(-${finalPosition}px)`;
 });
 
 setTimeout(() => {
-const isWin = results.every(val => val === results[0]);
+const isWin = results[0] === results[1] && results[1] === results[2];
 if (isWin) {
 celebrateBirthday();
 } else {
@@ -2460,8 +2516,8 @@ toast.addEventListener('transitionend', () => toast.remove());
 }
 
 /* ========== UTILITY MAPPING ========== */
-const wmoIcon = (code) => ({0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",61:"🌦️",63:"🌧️",65:"🌧️",80:"🌧️",95:"⛈️", 51: "🌦️", 53: "🌦️", 55: "🌦️"}[code] || "🌡️");
-const wmoAnimType = (code) => ({0:"sunny",1:"cloudy",2:"cloudy",3:"cloudy",45:"cloudy",48:"cloudy",61:"rainy",63:"rainy",65:"rainy",80:"rainy",95:"rainy", 51: "rainy", 53: "rainy", 55: "rainy"}[code] || "cloudy");
+const wmoIcon = (code) => ({0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌦️",63:"🌧️",65:"🌧️",80:"🌧️",95:"⛈️"}[code] || "🌡️");
+const wmoAnimType = (code) => ({0:"sunny",1:"cloudy",2:"cloudy",3:"cloudy",45:"cloudy",48:"cloudy",51:"rainy",53:"rainy",55:"rainy",61:"rainy",63:"rainy",65:"rainy",80:"rainy",95:"rainy"}[code] || "cloudy");
 const wmoAnimHTML = (type) => type === "rainy" ? Array.from({length:32}).map(()=>`<div class="rain-drop" style="left:${Math.random()*100}%; top:${Math.random()*80}%; animation-delay:${(Math.random()*1.2).toFixed(2)}s; animation-duration:${(0.7+Math.random()*0.7).toFixed(2)}s"></div>`).join('') : "";
 const weatherDescriptions = {0:"Clear",1:"Mainly Clear",2:"Partly Cloudy",3:"Overcast",45:"Fog",48:"Rime Fog",51:"Light Drizzle",53:"Drizzle",55:"Heavy Drizzle",61:"Slight Rain",63:"Rain",65:"Heavy Rain",80:"Showers",95:"Thunderstorm"};
 </script>
